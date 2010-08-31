@@ -1,0 +1,32 @@
+<form method="post" action="index.php">
+<input type="hidden" name="do" value="admin" />
+<input type="hidden" name="admin" value="Innkalling av nye" />
+	
+<div class="right_column">
+
+	<h1>Innkalling av nyimporterte</h1>
+	
+	<p class="txt">
+		For &aring; tildele dugnader, g&aring; du til <a href="index.php?do=admin&admin=Nye%20beboere">Nye beboere</a> p&aring; forrige side.
+		Her kan du kun skrive ut dugnadsinnkallingen til de som allerede har blitt tildelt dugnad.
+	</p>
+	
+	<p class="txt">
+		For &aring; skrive ut innkallingslapper til de som ble tilf&oslash;yd sist, holder
+		det &aring; taste inn passordet.
+	</p>
+
+	[hidden]
+
+	<p class="txt">[importeringsliste]</p>
+
+	<p class="txt_bottom">
+		Passord:<br /><input type="password" size="15" name="pw" value="" maxlength="15" />
+	</p>
+	
+	<p>
+		<input type="reset" value="Nullstill">
+		<input type="submit" value="OK">
+	</p>
+</div>
+</form>

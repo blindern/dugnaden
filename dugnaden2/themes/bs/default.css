@@ -1,0 +1,489 @@
+/*
+ * CSS for Blindern Studenterhjem
+ * Skrevet av Henrik Steen
+ * www.henrist.net
+ *
+ * Beskyttet av åndsverkloven
+ * Alle rettigheter tilhører Henrik Steen dersom ikke annet er oppgitt
+ *
+ * Copyright (c) 2010 All rights reserved
+ */
+
+
+html {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	/* box */
+	margin: 0;
+	padding: 10px;
+}
+
+/** Fonter */
+body,
+input,
+select,
+textarea {
+	/* font etc */
+	font-family: Tahoma, Sans, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+
+/** Bilder */
+img {
+	border: 0;
+}
+
+
+/** overskrifter */
+h1, h2, h3, h4, h5, h6 {
+	font-familiy: Tahoma, Sans, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	
+	margin: 0;
+	padding: 0;
+}
+
+/* heading 1 */
+h1 {
+	color: #000;
+}
+
+/* heading 2 */
+h2 {
+	color: #000;
+}
+
+
+/** Avsnitt */
+p {
+	padding: 0;
+}
+
+
+/** Forskjellige tekst størrelser og margins */
+h1 { font-size: 18px; margin: 1em /*0.67em*/ 0 }
+h2 { font-size: 16px; margin: 1em /*0.75em*/ 0 }
+h3 { font-size: 14px; margin: 1em /*0.83em*/ 0 }
+h4, p, .p, blockquote, ul, fieldset, form, ol, dl, dir, menu { margin: 1em 0 }
+h5 { font-size: 10px; margin: 1em /*1.5em*/ 0 }
+h6 { font-size: 10px; margin: 1em /*1.67em*/ 0 }
+
+
+/** Linker */
+a, .fakelink {
+	color: #7000B0;
+	text-decoration: underline;
+	cursor: pointer;
+}
+a:hover, .fakelink:hover {
+	color: #E04000;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+
+/**
+ * Horisontal linje
+ * Syntax: <div class="hr"><hr /></div>
+ */
+hr { display: none }
+div.hr {
+	border-bottom: 1px dashed #383838;
+	margin: 1.4em 0;
+	padding: 0;
+}
+
+
+
+/** Feilmeldinger og informasjonsmeldinger */
+.error_box {
+	margin: 1em 0; /* 10px 0 0 0 */
+	padding: 0.5em; /* 5px */
+	background: #432222 url(../../static/icon/exclamation.png) no-repeat 5px 5px !important;
+	padding-left: 26px !important;
+	color: #EEEEEE !important;
+}
+.info_box {
+	margin: 1em 0; /* 10px 0 10px 0 */
+	padding: 0.5em; /* 5px */
+	background: #223843 url(../../static/icon/information.png) no-repeat 5px 5px !important;
+	padding-left: 26px !important;
+	color: #EEEEEE !important;
+}
+.information {
+	background-color: #335566;
+}
+.info_box_img {
+	margin: 1px 5px 2px 0;
+	float: left;
+}
+.error_box p, .info_box p { margin: 0 !important }
+.error_box p + p, .info_box p + p { margin-top: 0.5em !important }
+
+/* advarsel/varsel felt */
+.warning, .information {
+	background: #663333 url(../../static/icon/exclamation.png) no-repeat 5px center;
+	margin: 10px 0;
+	padding: 0 10px 0 26px;
+	overflow: hidden;
+}
+.information {
+	background: #335566 url(../../static/icon/information.png) no-repeat 5px center;
+}
+
+
+/** Justeringer av tekst */
+tbody.r td, .r, .l .r, .c .r, .j .r {
+	text-align: right !important;
+}
+tbody.l td, .l, .r .l, .c .l, .j .l {
+	text-align: left !important;
+}
+tbody.c td, .c, .r .c, .l .c, .j .c {
+	text-align: center !important;
+}
+tbody.j td, .j, .r .l, .r .j, .l .j {
+	text-align: justify !important;
+}
+
+
+/** Fieldsets */
+fieldset {
+	margin: 1.3em 0; padding: 0 10px; border: 1px solid #878787;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	background-color: #EEEEEE;
+}
+legend { color: #000; background-color: #EEE; padding: 3px 5px }
+fieldset fieldset legend { color: #000; background-color: #EEE }
+
+
+/** Tabeller */
+table, .table {
+	border-collapse: collapse;
+}
+.table {
+	margin: 0; /* 15px 0 15px 0 */
+	padding: 0;
+	font-size: 11px;
+}
+
+/* margins (for å unngå firefox problem med margin-collapse pga. table table) */
+.tablemt {
+	margin-top: 1em;
+}
+.tablemb {
+	margin-bottom: 1em;
+}
+.tablem {
+	margin: 1em 0;
+}
+
+
+/* alle celler */
+.table th, .table td {
+	border-right: 1px solid #FAFAFA;
+	border-bottom: 1px solid #FAFAFA;
+}
+.table th:last-child, .table td:last-child {
+	border-right: 0;
+}
+.table tbody tr:last-child th, .table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+/* heading */
+.table th, .table thead td {
+	font-weight: bold;
+	background-color: #BBBBBB;
+	text-align: center;
+	
+	padding: 0; /* 3px */
+}
+.table tbody th {
+	text-align: left;
+	padding: 5px 5px 4px 5px; /* 5px 5px 4px 5px */
+	/*font-size: 11px;*/
+	font-weight: normal;
+	color: #444444;
+	/*line-height: 1.2em;*/
+}
+.table th a {
+	/* linker i overskrifter har ingen understrek */
+	text-transform: none;
+}
+
+/* underoverskrift */
+.table thead td {
+	background-color: #AFAFAF;
+	padding: 3px 3px 2px 3px; /* 3px 3px 2px 3px */
+	/*font-size: 11px;*/
+	font-weight: normal;
+	color: #666666;
+}
+
+/* hovedoverskrifter */
+.table thead th {
+	padding: 5px 5px 4px 5px;
+	/*font-size: 12px;*/
+	font-weight: normal;
+	color: #444444;
+	/*line-height: 1.2em;*/
+}
+
+/* vanlige celler */
+.table td {
+	background-color: #EEEEEE;
+	padding: 3px 5px;
+}
+.table tr.color td {
+	/* egen bakgrunn (for forskjell på odd/even rader) */
+	background-color: #F3F3F3;
+}
+.table tr.highlight td {
+	/* highlight */
+	background-color: #C6CCCC;
+}
+
+/* celler som brukes sammen med boxhandle */
+.table .spacerfix td, .table.spacerfix td, td.spacerfix {
+	padding: 4px 6px;
+}
+
+
+
+/** Standard bredder som kan brukes */
+.w30 { width: 30px }
+.w40 { width: 40px }
+.w50 { width: 50px }
+.w60 { width: 60px }
+.w75 { width: 75px }
+.w80 { width: 80px }
+.w90 { width: 90px }
+.w100 { width: 100px }
+.w120 { width: 120px }
+.w125 { width: 125px }
+.w150 { width: 150px }
+.w175 { width: 175px }
+.w180 { width: 180px }
+.w200 { width: 200px }
+.w250 { width: 250px }
+.w300 { width: 300px }
+.w350 { width: 350px }
+.w400 { width: 400px }
+.w450 { width: 450px }
+
+
+/** Skjemaer */
+form {
+	display: inline;
+}
+
+
+/** Skrivefelt */
+input.styled {
+	margin: 0;
+	padding: 2px 4px;
+	border: 1px solid #AAA;
+	background-color: #FAFAFA;
+	color: #000;
+	text-decoration: none;
+}
+.trident5 input.styled {
+	/* ie7 fix */
+	vertical-align: -3px;
+}
+textarea {
+	margin: 0;
+	padding: 2px 4px; /* 2px 5px */
+	border: 1px solid #222222;
+	background-color: #2D2D2D;
+	color: #EEEEEE;
+	resize: vertical;
+}
+
+
+/** Avmerkeringsbokser */
+input[type=checkbox] {
+	margin: 0;
+	vertical-align: text-bottom;
+}
+
+
+/** Dropdown */
+select {
+	margin: 0; /* -2px 0 0 0 */
+	padding: 0;
+	border: 2px solid #CCC;
+	background-color: #FAFAFA;
+	color: #000;
+	/*font-size: 12px;*/
+}
+
+
+/** Definisjonslister */
+dt, dd {
+	padding: 0;
+	margin: 0;
+}
+dl {
+	/*margin: 10px 0 10px 0;*/
+	/*position: relative;*/
+	overflow: hidden;
+}
+dt, dd {
+	/*line-height: 1.7em;*/
+	overflow: hidden;
+}
+dt {
+	clear: both;
+	float: left;
+	padding: 3px 0 2px 0;
+	/*padding: 3px 2px 2px 0;*/
+	/*color: #CCCCCC;*/
+	/*min-height: 19px;*/
+	/*position: relative;*/
+}
+dd {
+	float: right;
+	clear: right;
+	padding: 3px 0 2px 0;
+	/*padding: 3px 0 2px 2px;*/
+	/*min-height: 19px;*/
+}
+
+/* ulike bredder */
+dl.dl_10 dd { width: 90% }
+dl.dl_15 dd { width: 85% }
+dl.dl_20 dd { width: 80% }
+dl.dl_30 dd { width: 70% }
+dl.dl_35 dd { width: 65% }
+dl.dl_40 dd { width: 60% }
+dl.dl_45 dd { width: 55% }
+dl.dl_50 dd { width: 50% }
+dl.dl_60 dd { width: 40% }
+dl.dl_70 dd { width: 30% }
+
+/* FIXME: størrelse må justeres på dd og ikke dt */
+dl.dl_50px dt { width: 50px }
+dl.dl_100px dt { width: 100px }
+dl.dl_150px dt { width: 150px }
+dl.dl_200px dt { width: 200px }
+
+dl.dl_2x dt, dl.dl_2x dd { /*margin-bottom: 7px*/ }
+dl.dl_2x dt { margin-top: 2px }
+.dd_right dd { text-align: right }
+
+
+/** Lister */
+ul, ol {
+	padding: 0 0 0 1.8em;
+}
+ol ul, ul ol, ul ul, ol ol {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+ul.spacer li, ol.spacer li {
+	margin-top: 1em;
+}
+
+/* ikke bruk som liste */
+.nolist {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.nolist li {
+	margin: 0;
+	padding: 0;
+}
+
+
+/** Runde hjørner (delvis CSS3 - funker ikke i IE og Opera) */
+.r4, .r4l, .r4t, .r4tl { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; border-top-left-radius: 4px }
+.r4, .r4r, .r4t, .r4tr { -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; border-top-right-radius: 4px }
+.r4, .r4l, .r4b, .r4bl { -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px }
+.r4, .r4r, .r4b, .r4br { -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px }
+
+.r3, .r3l, .r3t, .r3tl { -moz-border-radius-topleft: 7px; -webkit-border-top-left-radius: 7px; border-top-left-radius: 7px }
+.r3, .r3r, .r3t, .r3tr { -moz-border-radius-topright: 7px; -webkit-border-top-right-radius: 7px; border-top-right-radius: 7px }
+.r3, .r3l, .r3b, .r3bl { -moz-border-radius-bottomleft: 7px; -webkit-border-bottom-left-radius: 7px; border-bottom-left-radius: 7px }
+.r3, .r3r, .r3b, .r3br { -moz-border-radius-bottomright: 7px; -webkit-border-bottom-right-radius: 7px; border-bottom-right-radius: 7px }
+
+.r2, .r2l, .r2t, .r2tl { -moz-border-radius-topleft: 11px; -webkit-border-top-left-radius: 11px; border-top-left-radius: 11px }
+.r2, .r2r, .r2t, .r2tr { -moz-border-radius-topright: 11px; -webkit-border-top-right-radius: 11px; border-top-right-radius: 11px }
+.r2, .r2l, .r2b, .r2bl { -moz-border-radius-bottomleft: 11px; -webkit-border-bottom-left-radius: 11px; border-bottom-left-radius: 11px }
+.r2, .r2r, .r2b, .r2br { -moz-border-radius-bottomright: 11px; -webkit-border-bottom-right-radius: 11px; border-bottom-right-radius: 11px }
+
+.r1, .r1l, .r1t, .r1tl { -moz-border-radius-topleft: 15px; -webkit-border-top-left-radius: 15px; border-top-left-radius: 15px }
+.r1, .r1r, .r1t, .r1tr { -moz-border-radius-topright: 15px; -webkit-border-top-right-radius: 15px; border-top-right-radius: 15px }
+.r1, .r1l, .r1b, .r1bl { -moz-border-radius-bottomleft: 15px; -webkit-border-bottom-left-radius: 15px; border-bottom-left-radius: 15px }
+.r1, .r1r, .r1b, .r1br { -moz-border-radius-bottomright: 15px; -webkit-border-bottom-right-radius: 15px; border-bottom-right-radius: 15px }
+
+
+/** Plain tekst (blokktekst) */
+.plain { font-family: "Courier New", Courier, monospace }
+
+
+/** Gjennomsiktighet */
+.op25 {
+	/* 25 % */
+	opacity: 0.25;
+	filter: alpha(opacity=25);
+}
+.op50 {
+	/* 50 % */
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+}
+.op75 {
+	/* 75 % */
+	opacity: 0.75;
+	filter: alpha(opacity=75);
+}
+/* fjern gjennomsiktighet på linker ved hover */
+a.op25:hover, a:hover .op25,
+a.op50:hover, a:hover .op50,
+a.op75:hover, a:hover .op75 { opacity: 1; filter: alpha(opacity=100) }
+
+
+/** Plassere ting i midten på siden (block elementer) */
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+/** Skjule ting (som senere kan vises med javascript f.eks. */
+.hide { display: none }
+
+
+/** Ikke wrappe ting */
+.nowrap { white-space: nowrap }
+.wrap { white-space: normal }
+
+
+/** Template: default */
+
+@media screen {
+	
+}
+
+/* utskrift */
+@media print {
+	.print { display: block }
+	.noprint { display: none }
+	
+	ul, ol { color: #000 }
+}
+
+
+
+/*** CSS relatert til egne sider */
+

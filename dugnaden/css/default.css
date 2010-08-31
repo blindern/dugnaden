@@ -1,0 +1,857 @@
+/* STILDEFINISJONER
+------------------------------------------------------------------------------
+
+ Dette er en felles formatering for metodeboken gastro, prosedyre og urologi.
+ Stildefinisjoner gjør det mulig å foreta globale endringer av formateringen
+ ved å rette på definisjonene i et sentralt dokument.
+
+ I prinsippet skal det ikke være nødvendig å endre stort i denne filen.
+ 
+------------------------------------------------------------------------------ */
+
+
+/* Farger - alle farger er definert under:
+------------------------------------------------------------------------------ */
+
+body
+{
+	background-color: #f0c080;
+}
+
+body#red
+{
+	background-color: #269E15;
+}
+
+div.navBar
+{
+  background-color: #CA8F66;
+  border-color: #000000;
+}
+
+body, body .main .content h1.avdeling
+{
+	color: #000000;
+}
+
+.content
+{
+	background-color: #ffffff;
+	border-color: #000000;
+}
+
+.footer
+{
+	border-color: #000000;
+}
+
+.noteBox, .noteBox_wide
+{
+	background-color: #f5f2f2;
+	border-color: #909090;
+}
+
+.sideBox
+{
+  background-color: #f0e0d0;
+  border-color: #d0a070;
+}
+
+.marginBlock
+{
+  border-color: #000000;
+}
+
+.containingBlock
+{
+  background-color:#d0d0d0;
+  border-color: #000000;
+}
+
+.contentBlock
+{
+  background-color:#f0f0f0;
+}
+
+
+a
+{
+  color: #7000b0;
+}
+
+a:hover
+{
+  color: #e04000;
+}
+
+.updated, div.navBar
+{
+	color: #a04030;
+}
+
+
+
+/* Denne stilen brukes av all tekst som ikke er tildelt en gyldig stil.
+------------------------------------------------------------------------------ */
+body
+{
+	font: normal 12px/16px Verdana, Arial, sans-serif;
+	text-align: center;
+	margin-top: 0px;
+}
+
+/* Definisjoner brukt for hver enkelt sykdom.
+------------------------------------------------------------------------------ */
+
+.main {
+  margin: 0px auto;
+  text-align: left;
+  width: 95%;
+}
+
+.navBar {
+  margin: 30px 0px 0px 0px;
+  padding: 6px;
+  border: 1px solid;
+}
+
+.navBar_heading {
+  padding-left: 8px;
+  text-align: left;
+}
+
+.navBar_menu {
+  padding-right: 8px;
+  text-align: right;
+  float: right;
+  font-weight: regular;
+}
+
+.content
+{
+	border: 1px solid;
+	border-top-width: 0px;
+ 	padding: 30px 40px 30px 30px;
+}
+
+.footer
+{
+	margin-bottom: 0px;
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+	border: 1px solid;
+}
+
+
+/* h1.avdeling (Header 1) er en spesialutgave av hovedoverskriften.
+------------------------------------------------------------------------------ */
+h1.avdeling
+{
+	margin: 0px 0px 0px 0px;
+	font: normal 22px/24px Verdana, Arial, sans-serif;
+	text-align: center;
+}
+
+/* h1 (Header 1) er hovedoverskriften og brukes hovedsaklig til sykdomsnavn.
+------------------------------------------------------------------------------ */
+body .main .content h1
+{
+	margin: 0px;
+	font: normal 24px/26px Verdana, Arial, sans-serif;
+}
+
+/* h2 (underoverskrift) brukes for hver seksjon under hver enkelt sykdom.
+------------------------------------------------------------------------------ */
+body .main .content h2
+{
+	margin: 0px 0px 0px 0px;
+	font: bold 14px Verdana, Arial, sans-serif;
+}
+
+/* h3 (under under) er ikke i bruk, valgte likevel å legge opp en definisjon.
+------------------------------------------------------------------------------ */
+body .main .content h3
+{
+	margin: 20px 80px 0px 0px;
+	font: italic 12px/14px Verdana, Arial, sans-serif;
+}
+
+/* Ordnet liste, hvert enkelt punkt blir ikke formatert.
+------------------------------------------------------------------------------ */
+
+li
+{
+	margin: 0px 60px 10px 0px;
+	text-align: left;
+}
+
+
+/* Bilde som tar full bredde, tekst tvinges enten over eller under.
+------------------------------------------------------------------------------ */
+img.fullbredde
+{
+	position: relative;
+	display: block;
+	border: 0;
+	padding: 10px 0px 0px 0px;
+	margin: 0;
+}
+
+/* Bilde som legges til venstre, tekst flyter rundt bildet.
+------------------------------------------------------------------------------ */
+img.venstre
+{
+	position: relative;
+	display: inline;
+	border: 0;
+	padding: 10px 10px 0px 0px;
+	margin: 0;
+	float: left;
+}
+
+/* Bilde som legges til hoyre, tekst flyter rundt bildet.
+------------------------------------------------------------------------------ */
+img.hoyre
+{
+	border: 0px;
+	padding: 10px 0px 50px 50px;
+	margin: 0px;
+	float: right;
+}
+
+/* Bilde som legges til venstre, tekst flyter rundt bildet.
+------------------------------------------------------------------------------ */
+img.dugnads_status
+{
+	border: 0;
+	padding: 0px 3px 0px 0px;
+	margin: 0;
+}
+
+img.password
+{
+	margin-top: -17px;
+	border: 0px;
+	padding: 0px;
+	float: right;
+}
+
+
+/* Tekstbokser, lurt å bruke for ting som utmerker seg.
+------------------------------------------------------------------------------ */
+.noteBox_wide
+{
+	border-style: solid;
+	border-width: 1px;
+	padding: 20px;
+	margin: 15px 0px 15px 20px;
+	float: right;
+	width: 38%;
+}
+
+.noteBox
+{
+	border-style: solid;
+	border-width: 1px;
+	padding: 20px;
+	margin: 15px 20px 15px 0px;
+	float: left;
+	width: 140px;
+}
+
+.noteBox H1
+{
+	font: bold italic 14px Verdana, Arial, sans-serif;
+}
+
+
+.sideBox {
+  border-style: solid;
+  border-width: 1px;
+  float: right;
+  padding: .5em;
+  margin-top: 0px;
+  margin-left: 8px;
+  margin-bottom: 8px;
+  margin-right: 0px;
+  width: 12em;
+}
+
+.marginBlock {
+  border-style: dotted;
+  border-width: 1px;
+  font-weight: normal;
+  padding: 1em;
+  text-align: left;
+  width: 90%;
+  margin: 20px auto;
+}
+
+.containingBlock {
+  border-style:solid;
+  border-width: 4px;
+  padding: 1em;
+}
+
+.contentBlock {
+  font-size: 12pt;
+}
+
+
+/* Nettlenker, sidereferanser, alle klikkbare elementer på siden.
+------------------------------------------------------------------------------ */
+a
+{
+  font-weight: bold;
+  text-decoration: none;
+}
+
+
+/* Hjelp, ordforklaringer
+------------------------------------------------------------------------------ */
+
+.help
+{
+  cursor: help;
+}
+
+
+
+/* Formatering av menyen.
+------------------------------------------------------------------------------ */
+
+h1
+{
+	margin: 30px 30px 0px 23px;
+	font: bold 18px Verdana, Arial, sans-serif;
+	text-align: left;
+}
+
+h2
+{
+	margin: 30px 30px 0px 23px;
+	font: bold 14px Verdana, Arial, sans-serif;
+	text-align: left;	
+}
+
+
+.updated
+{
+	font: normal 10px Verdana, Arial, sans-serif;
+	text-align: center;
+	margin: 20px 40px 40px 40px;
+}
+
+.txt
+{
+	width: 65%;
+}
+
+.txt_bottom
+{
+	width: 65%;
+	margin: 15px 0px 30px 0px;
+}
+
+.code
+{
+	font: normal 10px monospace;
+	margin: 0px 0px 0px 20px;
+}
+
+.success
+{
+	color: #208920;
+	font-weight: bold;
+	margin: 0px 0px 30px 0px;
+}
+
+.failure
+{
+	color: #892020;
+	font-weight: bold;
+	margin: 0px 0px 30px 0px;
+}
+
+.saturday_container
+{
+	margin: 10px 0px 20px 0px;
+	float:left;
+}
+
+.saturday
+{
+	width: 120px;
+	float: left;
+}
+
+.disabled
+{
+	color: #afafaf;
+	font-size: 10px/12px;
+}
+
+.saturday_off
+{
+	color: #afafaf;
+	width: 120px;
+	float: left;
+}
+
+.check_space
+{
+	margin: 0px 0px 0px 30px;
+}
+
+.right_space
+{
+	margin: 0px 30px 0px 0px;
+}
+
+.postit_note
+{
+	margin: 0px 0px 0px 5px;
+}
+
+/* LAYOUT FOR THE LIST:
+--------------------------------------------------------------- */
+
+div.row_header
+{
+	min-height: 30px;
+	width: 100%;
+	background: #cd4040;
+	padding: 10px 10px 4px 10px;
+}
+
+div.row_explained
+{
+	min-height: 20px;
+	width: 100%;
+	background: #cd4040;
+	padding: 10px 10px 4px 10px;
+}
+
+div.dagdugnad_beboerselect
+{
+	min-height: 20px;
+	width: 100%;
+	background: #3AAE52;
+	padding: 10px 10px 4px 10px;
+}
+
+div.row_explained_day
+{
+	min-height: 20px;
+	width: 100%;
+	background: #B86764;
+	padding: 10px 10px 4px 10px;
+}
+
+div.row_odd
+{
+	min-height: 30px;
+	width: 100%;
+	background: #F4E9DB;
+	padding: 10px 10px 4px 10px;
+}
+
+div.row_disabled_odd
+{
+	min-height: 30px;
+	width: 100%;
+	background: #F4E9DB;
+	padding: 10px 10px 4px 10px;
+	color: #AFAFAF;
+}
+
+div.row
+{
+	min-height: 30px;
+	width: 100%;
+	padding: 10px 10px 4px 10px;
+}
+
+div.row_disabled
+{
+	min-height: 30px;
+	width: 100%;
+	padding: 10px 10px 4px 10px;
+	color: #AFAFAF;
+}
+
+div.spacer
+{
+	clear: all;
+}
+
+div.spacer_small
+{
+	margin-bottom: 0px;
+}
+
+div.note
+{
+	float: right;
+}
+
+div.check_left
+{
+	float: left;
+	width: 20px;
+}
+
+div.name_wide
+{
+	float: left;
+	width: 60%;
+}
+
+div.name_wide_success
+{
+	float: left;
+	width: 60%;
+	color: #208920;
+}
+
+div.name
+{
+	float: left;
+	width: 25%;
+}
+
+div.name_success
+{
+	float: left;
+	width: 25%;
+	color: #208920;
+}
+
+div.name_ctrl
+{
+	float: left;
+	width: 20%;
+}
+
+div.room_ctrl
+{
+	float: left;
+	margin: 0px 20px 0px 0px;
+}
+
+div.when_ctrl
+{
+	float: left;
+}
+
+div.when
+{
+	float: left;
+}
+
+div.notat_annulering
+{
+	float: left;
+	margin-left: 80px;
+}
+
+div.name_narrow
+{
+	float: left;
+	width: 18%;
+}
+
+div.select_narrow
+{
+	float: left;
+	margin: 0px 20px 0px 0px;
+}
+
+div.checkbox_narrow
+{
+	float: left;
+	width: 5%;
+}
+
+div.when_narrow
+{
+	float: left;
+}
+
+.done_dugnad
+{
+	font: bold 13px/15px Verdana, Arial, sans-serif;
+	color: #20CD20;
+	padding: 0px 20px 0px 0px;
+}
+
+.damn_dugnad
+{
+	font: bold 13px/15px Verdana, Arial, sans-serif;
+	color: #CD2020;
+	padding: 0px 20px 0px 0px;
+}
+
+.valid_dugnad
+{
+	font: normal 13px/15px Verdana, Arial, sans-serif;
+	color: black;
+	padding: 0px 20px 0px 0px;
+}
+
+div.row_header
+{
+	min-height: 30px;
+	width: 100%;
+	background: #cd4040;
+	padding: 10px 10px 4px 10px;
+}
+
+div.day_spacer
+{
+	margin: 40px;
+}
+
+div.menu
+{
+	clear: all;
+}
+
+div.right_floater
+{
+	float: right;
+}
+
+div.left_column
+{
+	width: 100%
+}
+
+form.no_block, form.mini_block
+{
+	display: inline;
+}
+
+form.full_width
+{
+	display: inline;
+}
+
+form.no_block input, form.no_block select, img.password_small
+{
+	margin-right: 30px;
+}
+
+form.mini_block input
+{
+	margin: 0px 10px 0px 0px;
+}
+
+.hint
+{
+	color: #cdcdcd;
+}
+
+
+/* --------------------------------------------------------------- *
+ *
+ * Used to make rounded corners on the main ADMIN page
+ *
+ * --------------------------------------------------------------- */
+
+.bl
+{
+	background: url(../images/corner_bottom_left.gif) 0 100% no-repeat #F4E9DB;
+	width: 100%;
+	display: block;
+	margin-top: 50px;
+	clear: both;
+}
+
+.br
+{
+	background: url(../images/corner_bottom_right.gif) 100% 100% no-repeat;
+} 
+.tl
+{
+	background: url(../images/corner_top_left.gif) 0 0 no-repeat;
+}
+
+.tr
+{
+	background: url(../images/corner_top_right.gif) 100% 0 no-repeat;
+	padding:10px;
+} 
+
+.clear
+{
+	font-size: 1px;
+	height: 1px;
+}
+
+/* --------------------------------------------------------------- *
+ *
+ * Used to make rounded corners on the main BEBOER page
+ *
+ * --------------------------------------------------------------- */
+
+.bl_beboer
+{
+	background: url(../images/corner_bottom_left.gif) 0 100% no-repeat #F4E9DB;
+	width: 100%;
+	display: block;
+	margin-top: 50px;
+	clear: both;
+}
+
+.br_beboer
+{
+	background: url(../images/corner_bottom_right.gif) 100% 100% no-repeat;
+} 
+.tl_beboer
+{
+	background: url(../images/corner_top_left.gif) 0 0 no-repeat;
+}
+
+.tr_beboer
+{
+	background: url(../images/corner_top_right.gif) 100% 0 no-repeat;
+	padding:10px;
+} 
+
+/* --------------------------------------------------------------- *
+ *
+ * Used to make rounded corners on the GREEN / NO PASSWORD rectangle
+ *
+ * --------------------------------------------------------------- */
+
+.bl_green
+{
+	background: url(../images/green_bottom_left.gif) 0 100% no-repeat #168E39;
+	width: 100%;
+	display: block;
+	margin-top: 5px;
+	clear: both;
+}
+
+.br_green
+{
+	background: url(../images/green_bottom_right.gif) 100% 100% no-repeat;
+}
+
+.tl_green
+{
+	background: url(../images/green_top_left.gif) 0 0 no-repeat;
+}
+
+.tr_green
+{
+	background: url(../images/green_top_right.gif) 100% 0 no-repeat;
+	padding:10px;
+}
+
+/* --------------------------------------------------------------- *
+ *
+ * Used to make rounded corners on the RED (for errors)
+ *
+ * --------------------------------------------------------------- */
+
+.bl_red
+{
+	background: url(../images/red_bottom_left.gif) 0 100% no-repeat #d72525;
+	width: 100%;
+	display: block;
+	margin-top: 5px;
+	clear: both;
+	font: bold 10px/16px Verdana, Arial, sans-serif;	
+	color: white;
+	text-align: center;
+}
+
+.br_red
+{
+	background: url(../images/red_bottom_right.gif) 100% 100% no-repeat;
+}
+
+.tl_red
+{
+	background: url(../images/red_top_left.gif) 0 0 no-repeat;
+}
+
+.tr_red
+{
+	background: url(../images/red_top_right.gif) 100% 0 no-repeat;
+	padding:10px;
+}
+
+/* Import beboere
+---------------------------------------------------------------------- */
+
+.date
+{
+	color: #10CD10;
+}
+
+li.compact
+{
+	margin: 0px;
+	padding: 0px;
+}
+div.code
+{
+	font-weight: bold;
+	font: monospace;
+	font-size: 9pt/12pt;
+}
+div.code span.key
+{
+	color: blue;
+}
+div.code span.group
+{
+	color: #991515;
+}
+div.code span.regexp
+{
+	color: red;
+}
+
+input.closer
+{
+	margin: 0px;
+	padding: 0px;
+}
+
+.footer_info
+{
+	color: #AA543F;
+	margin: 10px 30px 30px 30px;
+	font: normal 10px/16px Verdana, Arial, sans-serif;
+}
+
+.footer_info a, div.footer_info a:visited
+{
+	text-decoration: underline;
+	color: #AA3A21;
+	font: normal 10px/16px Verdana, Arial, sans-serif;
+}
+
+.footer_info a:hover
+{
+	color: blue;
+	font: normal 10px/16px Verdana, Arial, sans-serif;
+}
+
+/* ADDED NEWLY SINCE THE MOVE TO blindern-studenterhjem.no */
+
+p.white_message
+{	color: white;
+	font-weight: bold;
+	margin: 10px 30px 10px 30px;
+}
+
+
+
+#queries_list {
+	text-align: left;
+}
