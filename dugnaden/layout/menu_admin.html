@@ -1,0 +1,41 @@
+<form action="index.php" method="post">
+	<input type="hidden" name="do" value="admin" />
+	
+<div class="right_column">
+
+	<h1><img src="./images/mouse.gif" class="hoyre" />Dugnadsadmin</h1>
+	
+	<p class="txt">
+		Du kan her velge &aring; generere neste dugnadsliste, oppdatere siste dugnadsfrav&aelig;ret, se hele dugnadslisten,
+		annulere b&oslash;ter, aksessere funksjoner for dugnadsordningen og listen med alle b&oslash;ter.
+	</p>
+	
+	<p class="txt">
+		Det fungerer enkelt; for alle operasjoner kreves det at du taster inn passordet.
+		Litt tungvindt, men det er s&aring; mye lettere &aring; implementere.
+		Hvis du ikke har passordet, s&aring; kan du dessverre ikke utf&oslash;re noen av kommandoene under.
+	</p>
+	
+	[db_error]
+	
+	<div class="bl">
+		<div class="br">
+			<div class="tl">
+				<div class="tr">
+					<input type="submit" name="admin" value="Neste dugnadsliste" title="Skrive ut neste dugnadsliste.">
+					<input type="submit" name="admin" value="Oppdatere siste" title="Oppdatere frav&aelig;r og b&oslash;ter for siste utf&oslash;rte dugnad.">
+					<input type="submit" name="admin" value="Dugnadsliste" title="Se hele dugnadslisten.">
+					<input type="submit" name="admin" value="Annulere bot" title="Annulere en bot, enten den er fakturert eller ikke.">
+					&nbsp;&nbsp;&nbsp;
+					<input type="submit" name="admin" value="Innstillinger" title="Rette beboernavn, endre passord, velge dugnadsledere og gjennomg&aring; semesterstartsaktiviteter.">		
+					&nbsp;&nbsp;&nbsp;
+					<input type="submit" name="admin" value="Botliste" title="Se en liste over b&oslash;ter som skal faktureres. Tjenesten er ment brukt av BS administrasjonen.">
+					<input type="submit" name="admin" value="Dagdugnad" title="Her kan beboere tilf&oslash;yes og slettes fra dagdugnadslisten. Kun beboere som er oppf&oslash;rt med dagdugnad vil vises.">
+				</div>
+			</div>
+		</div>
+	</div> 
+	<div class="clear">&nbsp;</div>
+</div>
+	
+</form>

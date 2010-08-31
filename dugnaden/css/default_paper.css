@@ -1,0 +1,84 @@
+/* FLYER: formatting the flyers
+------------------------------------------------------ */
+
+body
+{
+	font: normal 12pt/15pt Verdana, Arial, sans-serif;
+}
+
+div.flyer_rom_info
+{
+	float: right;
+	width: 220px;
+	border: 2px solid;
+	margin: 0px 0px 5px 5px;
+	font: normal 10pt/13pt Verdana, Arial, sans-serif;
+	text-align: center;
+	min-height: 40px;
+}
+
+div.flyer_info
+{
+	border-style: dotted; 
+	font: normal 10pt/12pt Verdana, Arial, sans-serif;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 1px;
+	border-left-width: 0px;
+	margin: 0px 0px 20px 0px;
+	padding: 0px 0px 20px 0px;
+}
+
+div.flyer_info_break
+{
+	font: normal 10pt/12pt Verdana, Arial, sans-serif;
+	border: 0px;
+	margin: 0px 0px 10px 0px;
+	padding: 0px 0px 10px 0px;
+	page-break-after: always;	
+}
+
+div.flyer_botlist
+{
+	font: normal 10pt/12pt Verdana, Arial, sans-serif;
+	margin: 0px 0px 20px 0px;
+	padding: 0px 0px 20px 0px;
+}
+
+.flyer_info h1
+{
+	font: bold 18pt/20pt Verdana, Arial, sans-serif;
+}
+
+div.row_odd
+{
+	background: #cdcdcd;
+	width: 600px;
+}
+
+div.row
+{
+	width: 600px;
+}
+
+div.name
+{
+	float: left;
+	width: 300px;
+}
+
+div.when
+{
+	float: left;
+	width: 100px;
+}
+
+div.spacer
+{
+	clear: all;
+}
+
+div.note
+{
+	float: right;
+}
