@@ -3,9 +3,9 @@
 /* SQL Database init
 ------------------------------------------------------------------------------------------ */
 $srv = "127.0.0.1";
-$usr = "dugnad";
-$pas = "PDjhwb3PD";
-$db  = "dugnad";
+$usr = "blindern";
+$pas = "dugnaden";
+$db  = "blindern";
 
 // Set this to true to be allowed to delete the DB at any time.
 // If set to false, the database can not be deleted if

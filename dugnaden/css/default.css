@@ -849,3 +849,9 @@ p.white_message
 	font-weight: bold;
 	margin: 10px 30px 10px 30px;
 }
+
+
+
+#queries_list {
+	text-align: left;
+}

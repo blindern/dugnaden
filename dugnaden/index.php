@@ -138,7 +138,7 @@
 						if(!strcmp($formdata["pw_2"], $formdata["pw_b"]) )
 						{
 							$query = "UPDATE bs_beboer SET beboer_passord = '". $formdata["pw_2"] ."' WHERE beboer_id = '". $formdata["beboer"] ."'";
-							@mysql_query($query);
+							@run_query($query);
 							
 							if(mysql_errno() == 0)
 							{
@@ -256,6 +256,18 @@ if(!strcmp($formdata["do"], "admin"))
 }
 	
 print $append_myphpadmin_link ."<p class=\"footer_info\">Viser ". $using_layout ."</p>";
+
+if (isset($GLOBALS['queries']) && DEVELOPER_MODE && $_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR'])
+{
+	echo '
+	<pre id="queries_list">Spørringer:
+
+'.implode("
+
+
+", $GLOBALS['queries']).'
+</pre>';
+}
 
 ?>
 </body>
