@@ -2,10 +2,10 @@
 
 /* SQL Database init
 ------------------------------------------------------------------------------------------ */
-$srv = "mysql.webdeal.no";
-$usr = "blindern";
-$pas = "Kk1zdMDp";
-$db  = "blindern";
+$srv = "83.143.87.202";
+$usr = "blindern_dugnad";
+$pas = "7YbByOAe";
+$db  = "blindern_dugnad";
 
 // Set this to true to be allowed to delete the DB at any time.
 // If set to false, the database can not be deleted if
