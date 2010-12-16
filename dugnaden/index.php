@@ -233,6 +233,8 @@
 <meta name="keywords" content="Blindern Studenterhjems dugnadsordning p&aring; nettet." />
 <meta name="author" content="Dugnadslederne H. W. Basberg" />
 
+<meta name="robots" content="noindex, nofollow" />
+
 <link href="./css/default<?php print $paper; ?>.css" rel="stylesheet" type="text/css">
 
 </head>
