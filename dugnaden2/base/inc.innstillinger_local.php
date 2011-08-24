@@ -67,7 +67,8 @@ define("CACHE_FILES_PREFIX", "blinderncache_");
 
 
 // databaseinnstillinger
-define("DBHOST", "127.0.0.1");
+require "/etc/mysqlserver.php";
+define("DBHOST", $mysqlserver);
 #define("DBHOST", ":/var/lib/mysql/mysql.sock"); // linux
 
 // brukernavn til MySQL
