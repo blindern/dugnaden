@@ -938,6 +938,7 @@ function do_admin()
 							$new_flyer["format_print"] = "_break" . $new_flyer["format_print"];
 						}
 						
+						$new_flyer["gutta"] = get_dugnadsledere() . $new_flyer["gutta"];
 						$new_flyer["dugnad_url"] = DUGNADURL .$new_flyer["dugnad_url"];
 						$new_flyer["dugnad_dugnad"] = $undone_dugnads .$new_flyer["dugnad_dugnad"];
 						$new_flyer["passord"] = $row["beboer_passord"] .$new_flyer["passord"];
@@ -6985,7 +6986,10 @@ function get_dugnadsledere()
 	{
 		while($row = @mysql_fetch_array($result) )
 		{
-			$names .= "<i>". $row["beboer_for"] ." ". $row["beboer_etter"] ."</i> (". $row["rom_nr"] . $row["rom_type"] ." #". $row["rom_tlf"] .")<br />";
+			$tlf = "";
+			if ($row['beboer_for'] == "Ingve" && $row['beboer_etter'] == "Tjessem") $tlf = " - 413 54 381";
+			if ($row['beboer_for'] == "Tormod" && $row['beboer_etter'] == "Tvare") $tlf = " - 988 81 108";
+			$names .= "<i>". $row["beboer_for"] ." ". $row["beboer_etter"] ."</i> (". $row["rom_nr"] . $row["rom_type"] ." #". $row["rom_tlf"] .$tlf.")<br />";
 		}
 	}
 	else
