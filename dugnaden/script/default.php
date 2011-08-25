@@ -2561,7 +2561,7 @@ function store_data($txt_data, $split_char = "/", $split_name = ",")
 			$jumble = md5( ((time() / 10000) + ($c*45))  . getmypid());			
 			$password = substr($jumble, 0, 5);
 			
-			$phone_query = "SELECT rom_id FROM bs_rom WHERE CONCAT(rom_nr, rom_type) = '". trim($splits[1]) ."' LIMIT 1";
+			$phone_query = "SELECT rom_id FROM bs_rom WHERE CONCAT(rom_nr, rom_type) = '". trim($splits[1]) ."' OR rom_nr = '". trim($splits[1]) ."' LIMIT 1";
 			
 			$phone_result = @run_query($phone_query);
 			if(@mysql_num_rows($phone_result))
