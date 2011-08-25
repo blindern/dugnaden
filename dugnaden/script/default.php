@@ -8,7 +8,7 @@ define(VERSION, "v2.90");
 
 /* Setting the url for the dugnad
 ------------------------------------------------------------------------------------------ */
-define(DUGNADURL, "https://hsw.no/dugnaden/");
+define(DUGNADURL, "http://blindern-studenterhjem.no/dugnaden/");
 
 /* This is only used when the database does not include any valid passwords
 ------------------------------------------------------------------------------------------ */
@@ -49,7 +49,7 @@ if(strpos(__FILE__, "C:") !== false)
 	@include_once "./txt/dbinfo_local.txt";
 	@include_once "../txt/dbinfo_local.txt";
 	
-	$append_myphpadmin_link = "<p class=\"footer_info\"><a href=\"https://hsw.no/dugnaden/\">Dugnaden</a><br /><a href=\"http://phpmyadmin.webdeal.no/\">Dugnaden MyPHP Admin</a></p>";
+	$append_myphpadmin_link = "<p class=\"footer_info\"><a href=\"http://blindern-studenterhjem.no/dugnaden/\">Dugnaden</a><br /><a href=\"http://phpmyadmin.webdeal.no/\">Dugnaden MyPHP Admin</a></p>";
 	$running_locally = true;
 }
 else
