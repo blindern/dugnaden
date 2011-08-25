@@ -1987,7 +1987,8 @@ function do_admin()
 									ORDER BY rom_int, rom_alpha, beboer_etter, beboer_for"; 
 			
 						$result = @run_query($query);
-		
+						
+						$dugnadsledere = get_dugnadsledere();
 						while($row = @mysql_fetch_array($result))
 						{
 							$undone_dugnads = get_undone_dugnads($row["beboer_id"]);
@@ -2004,6 +2005,7 @@ function do_admin()
 									$new_flyer["format_print"] = "_break" . $new_flyer["format_print"];
 								}
 								
+								$new_flyer["gutta"] = $dugnadsledere . $new_flyer["gutta"];
 								$new_flyer["dugnad_url"] = DUGNADURL .$new_flyer["dugnad_url"];
 								$new_flyer["dugnad_dugnad"] = $undone_dugnads .$new_flyer["dugnad_dugnad"];
 								$new_flyer["passord"] = $row["beboer_passord"] .$new_flyer["passord"];
