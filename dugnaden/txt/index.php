@@ -27,6 +27,6 @@ Sorry, but your request can not be handled.<P>
 }
 
 
-redirect("https://hsw.no/dugnaden/");
+redirect("http://blindern-studenterhjem.no/dugnaden/");
 
 ?>

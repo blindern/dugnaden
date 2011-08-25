@@ -10,7 +10,8 @@ class pageobj extends pagehandle
 		
 		// koble opp database
 		$this->db = new db_wrap();
-		$this->db->connect("127.0.0.1", "blindern", "dugnaden", "blindern");
+		require_once "/etc/mysqlserver.php";
+		$this->db->connect($mysqlserver, "blindern", "dugnaden", "blindern");
 		
 		$this->load_template("page_hovedsiden");
 	}
