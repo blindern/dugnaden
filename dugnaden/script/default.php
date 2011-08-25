@@ -2509,10 +2509,10 @@ function make_unixtime($dugnad_id)
 
 function clean_txt($str)
 {
-	$str = ereg_replace (' +', ' ', trim($str));
-	$str = ereg_replace (', +', ',', $str);
-	$str = ereg_replace("[\r\n]+","\r\n",$str);
-	$str = ereg_replace("\r\n","**",$str);		
+	$str = preg_replace ('/ +/', ' ', trim($str));
+	//$str = ereg_replace (', +', ',', $str);
+	$str = preg_replace("/[\r\n]+/","\r\n",$str);
+	$str = preg_replace("/\r\n/","**",$str);		
 	return $str;
 }
 
@@ -2561,7 +2561,7 @@ function store_data($txt_data, $split_char = "/", $split_name = ",")
 			$jumble = md5( ((time() / 10000) + ($c*45))  . getmypid());			
 			$password = substr($jumble, 0, 5);
 			
-			$phone_query = "SELECT rom_id FROM bs_rom WHERE rom_tlf = '". trim($splits[1]) ."' LIMIT 1";
+			$phone_query = "SELECT rom_id FROM bs_rom WHERE CONCAT(rom_nr, rom_type) = '". trim($splits[1]) ."' LIMIT 1";
 			
 			$phone_result = @run_query($phone_query);
 			if(@mysql_num_rows($phone_result))
