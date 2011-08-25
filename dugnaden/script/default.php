@@ -1199,7 +1199,7 @@ function do_admin()
 				$row = @mysql_fetch_array($result);
 				
 				$fullname = false;
-				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . get_beboerid_name($formdata["dugnadsleder"], $fullname) : "sinnkalling") ."</h1>
+				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . ($name = get_beboerid_name($formdata["dugnadsleder"], $fullname)) . ($name == "Ingve" ? " - 413 54 381" : ($name == "Tormod" ? " - 988 81 108" : "")) : "sinnkalling") ."</h1>
 				
 				<p>
 					Vi minner om at dugnaden varer fra klokken 10:00 - 12:00 og 12:30 - 14:00. Under pausen f&aring;r
