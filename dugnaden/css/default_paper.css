@@ -82,3 +82,9 @@ div.note
 {
 	float: right;
 }
+
+@media print {
+	.navBar, .footer_info {
+		display: none;
+	}
+}
