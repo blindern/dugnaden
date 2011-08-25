@@ -46,8 +46,8 @@ $running_locally = false;
 if(strpos(__FILE__, "C:") !== false)
 {
 	// LOCAL MAC
-	@include_once "./txt/dbinfo_local.txt";
-	@include_once "../txt/dbinfo_local.txt";
+	@include_once "./txt/dbinfo_local.php";
+	@include_once "../txt/dbinfo_local.php";
 	
 	$append_myphpadmin_link = "<p class=\"footer_info\"><a href=\"http://blindern-studenterhjem.no/dugnaden/\">Dugnaden</a><br /><a href=\"http://phpmyadmin.webdeal.no/\">Dugnaden MyPHP Admin</a></p>";
 	$running_locally = true;
@@ -55,8 +55,8 @@ if(strpos(__FILE__, "C:") !== false)
 else
 {
 	// REMOTE SERVER
-	@include_once "./txt/dbinfo.txt";
-	@include_once "../txt/dbinfo.txt";
+	@include_once "./txt/dbinfo.php";
+	@include_once "../txt/dbinfo.php";
 }
 
 // --------------------------------------------------------------------------------------- */
