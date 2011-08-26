@@ -93,3 +93,10 @@ div.spacer
 {
 	
 }
+
+
+@media print {
+	.navBar, .footer_info {
+		display: none;
+	}
+}
