@@ -4,7 +4,7 @@ error_reporting(E_ALL & ~E_NOTICE);
 
 /* Version number
 ------------------------------------------------------------------------------------------ */
-define(VERSION, "v2.90");
+define(VERSION, "v2.91-henrist");
 
 /* Setting the url for the dugnad
 ------------------------------------------------------------------------------------------ */
@@ -17,7 +17,7 @@ define(SUPERUSER, "bsa_(S)");
 /* Set the maximum count for a dugnad before it is closed. A closed dugnad can not
 be selected by the kids when they are changing their dugnad date.
 ------------------------------------------------------------------------------------------ */
-define(MAX_KIDS, 27);
+define(MAX_KIDS, 32);
 
 /* Set the minimum count for a dugnad before a kid no longer can leave that dugnad by
 selectig another date. This is to prevent a dugnad to go empty of kids.
@@ -46,8 +46,8 @@ $running_locally = false;
 if(strpos(__FILE__, "C:") !== false)
 {
 	// LOCAL MAC
-	@include_once "./txt/dbinfo_local.txt";
-	@include_once "../txt/dbinfo_local.txt";
+	@include_once "./txt/dbinfo_local.php";
+	@include_once "../txt/dbinfo_local.php";
 	
 	$append_myphpadmin_link = "<p class=\"footer_info\"><a href=\"http://blindern-studenterhjem.no/dugnaden/\">Dugnaden</a><br /><a href=\"http://phpmyadmin.webdeal.no/\">Dugnaden MyPHP Admin</a></p>";
 	$running_locally = true;
@@ -55,8 +55,8 @@ if(strpos(__FILE__, "C:") !== false)
 else
 {
 	// REMOTE SERVER
-	@include_once "./txt/dbinfo.txt";
-	@include_once "../txt/dbinfo.txt";
+	@include_once "./txt/dbinfo.php";
+	@include_once "../txt/dbinfo.php";
 }
 
 // --------------------------------------------------------------------------------------- */
@@ -921,7 +921,8 @@ function do_admin()
 							ORDER BY rom_int, rom_alpha, beboer_etter, beboer_for"; 
 	
 				$result = @run_query($query);
-
+				
+				$dugnadsledere = get_dugnadsledere();
 				while($row = @mysql_fetch_array($result))
 				{
 					$undone_dugnads = get_undone_dugnads($row["beboer_id"]);
@@ -938,7 +939,7 @@ function do_admin()
 							$new_flyer["format_print"] = "_break" . $new_flyer["format_print"];
 						}
 						
-						$new_flyer["gutta"] = get_dugnadsledere() . $new_flyer["gutta"];
+						$new_flyer["gutta"] = $dugnadsledere . $new_flyer["gutta"];
 						$new_flyer["dugnad_url"] = DUGNADURL .$new_flyer["dugnad_url"];
 						$new_flyer["dugnad_dugnad"] = $undone_dugnads .$new_flyer["dugnad_dugnad"];
 						$new_flyer["passord"] = $row["beboer_passord"] .$new_flyer["passord"];
@@ -1198,7 +1199,7 @@ function do_admin()
 				$row = @mysql_fetch_array($result);
 				
 				$fullname = false;
-				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . get_beboerid_name($formdata["dugnadsleder"], $fullname) : "sinnkalling") ."</h1>
+				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . ($name = get_beboerid_name($formdata["dugnadsleder"], $fullname)) . ($name == "Ingve" ? " - 413 54 381" : ($name == "Tormod" ? " - 988 81 108" : "")) : "sinnkalling") ."</h1>
 				
 				<p>
 					Vi minner om at dugnaden varer fra klokken 10:00 - 12:00 og 12:30 - 14:00. Under pausen f&aring;r
@@ -1986,7 +1987,8 @@ function do_admin()
 									ORDER BY rom_int, rom_alpha, beboer_etter, beboer_for"; 
 			
 						$result = @run_query($query);
-		
+						
+						$dugnadsledere = get_dugnadsledere();
 						while($row = @mysql_fetch_array($result))
 						{
 							$undone_dugnads = get_undone_dugnads($row["beboer_id"]);
@@ -2003,6 +2005,7 @@ function do_admin()
 									$new_flyer["format_print"] = "_break" . $new_flyer["format_print"];
 								}
 								
+								$new_flyer["gutta"] = $dugnadsledere . $new_flyer["gutta"];
 								$new_flyer["dugnad_url"] = DUGNADURL .$new_flyer["dugnad_url"];
 								$new_flyer["dugnad_dugnad"] = $undone_dugnads .$new_flyer["dugnad_dugnad"];
 								$new_flyer["passord"] = $row["beboer_passord"] .$new_flyer["passord"];
@@ -2509,10 +2512,10 @@ function make_unixtime($dugnad_id)
 
 function clean_txt($str)
 {
-	$str = ereg_replace (' +', ' ', trim($str));
-	$str = ereg_replace (', +', ',', $str);
-	$str = ereg_replace("[\r\n]+","\r\n",$str);
-	$str = ereg_replace("\r\n","**",$str);		
+	$str = preg_replace ('/ +/', ' ', trim($str));
+	//$str = ereg_replace (', +', ',', $str);
+	$str = preg_replace("/[\r\n]+/","\r\n",$str);
+	$str = preg_replace("/\r\n/","**",$str);		
 	return $str;
 }
 
@@ -2561,7 +2564,7 @@ function store_data($txt_data, $split_char = "/", $split_name = ",")
 			$jumble = md5( ((time() / 10000) + ($c*45))  . getmypid());			
 			$password = substr($jumble, 0, 5);
 			
-			$phone_query = "SELECT rom_id FROM bs_rom WHERE rom_tlf = '". trim($splits[1]) ."' LIMIT 1";
+			$phone_query = "SELECT rom_id FROM bs_rom WHERE CONCAT(rom_nr, rom_type) = '". trim($splits[1]) ."' LIMIT 1";
 			
 			$phone_result = @run_query($phone_query);
 			if(@mysql_num_rows($phone_result))

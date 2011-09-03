@@ -33,8 +33,8 @@ div.flyer_info_break
 {
 	font: normal 10pt/12pt Verdana, Arial, sans-serif;
 	border: 0px;
-	margin: 0px 0px 10px 0px;
-	padding: 0px 0px 10px 0px;
+	margin: 0;
+	padding: 0;
 	page-break-after: always;	
 }
 
@@ -81,4 +81,10 @@ div.spacer
 div.note
 {
 	float: right;
+}
+
+@media print {
+	.navBar, .footer_info {
+		display: none;
+	}
 }
