@@ -62,6 +62,7 @@ else
 // --------------------------------------------------------------------------------------- */
 
 $link     = mysql_connect($srv, $usr, $pas);
+mysql_set_charset("utf8", $link);
 $database = mysql_select_db($db, $link);
 
 function get_formdata()
