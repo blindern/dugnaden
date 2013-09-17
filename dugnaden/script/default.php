@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 
 /* Version number
 ------------------------------------------------------------------------------------------ */
@@ -12,7 +12,7 @@ define(DUGNADURL, "http://blindern-studenterhjem.no/dugnaden/");
 
 /* This is only used when the database does not include any valid passwords
 ------------------------------------------------------------------------------------------ */
-define(SUPERUSER, "bsa_(S)");
+define(SUPERUSER, "DL_HL_BS");
 
 /* Set the maximum count for a dugnad before it is closed. A closed dugnad can not
 be selected by the kids when they are changing their dugnad date.
@@ -1199,23 +1199,19 @@ function do_admin()
 				$row = @mysql_fetch_array($result);
 				
 				$fullname = false;
-				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . ($name = get_beboerid_name($formdata["dugnadsleder"], $fullname)) . ($name == "Ingve" ? " - 413 54 381" : ($name == "Tormod" ? " - 988 81 108" : "")) : "sinnkalling") ."</h1>
+				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . ($name = get_beboerid_name($formdata["dugnadsleder"], $fullname)) . ($name == "Amund Emil" ? " - 986 68 081" : ($name == "Filip" ? " - 466 11 817" : "")) : "sinnkalling") ."</h1>
 				
 				<p>
-					Vi minner om at dugnaden varer fra klokken 10:00 - 12:00 og 12:30 - 14:00. Under pausen f&aring;r
-					dere leskedrikk og et pust i bakken. M&oslash;t opp i peisestuen if&oslash;rt antrekk som passer til b&aring;de innend&oslash;rs-
-					og utend&oslash;rsarbeid. M&oslash;ter du opp for sent s&aring; blir det bot. Enkelt og greit.
-				</p>
-				
-				<p>
-					Mvh Dugnadslederne
+					M&oslash;t i peisestuen if&oslash;rt antrekk som passer til b&aring;de innend&oslash;rs-
+					og utend&oslash;rsarbeid. Møt tidsnok for å unngå bot.
 				</p>\n\n";
 				
 				$show_expired_days = false;
 				$editable = false;
 				$dugnadsliste_full_name = true;
 
-				$content .= show_day($row["dugnad_id"], $show_expired_days, $editable, $dugnadsliste_full_name);
+				$content .= show_day($row["dugnad_id"], $show_expired_days, $editable, $dugnadsliste_full_name).'
+				<p>Ta kontakt med dugnadsleder ved spørsmål.</p>';
 			}
 			else
 			{
@@ -3120,7 +3116,8 @@ function get_day_header($day)
 		
 		$complex = explode("-", substr($row["dugnad_dato"], 0, 10));
 	
-		$day_string = date("j. F", mktime(0, 0, 0, $complex[1], $complex[2], $complex[0]) ) ." - uke ". date("W", mktime(0, 0, 0, $complex[1], $complex[2], $complex[0]) );;
+		#$day_string = date("j. F", mktime(0, 0, 0, $complex[1], $complex[2], $complex[0]) ) ." - uke ". date("W", mktime(0, 0, 0, $complex[1], $complex[2], $complex[0]) );;
+		$day_string = strtolower(date("j. F", mktime(0, 0, 0, $complex[1], $complex[2], $complex[0]) ) ." &nbsp;&nbsp; 10:00-14:00");
 		
 		return $day_string;
 	}
@@ -6990,8 +6987,8 @@ function get_dugnadsledere()
 		while($row = @mysql_fetch_array($result) )
 		{
 			$tlf = "";
-			if ($row['beboer_for'] == "Ingve" && $row['beboer_etter'] == "Tjessem") $tlf = " - 413 54 381";
-			if ($row['beboer_for'] == "Tormod" && $row['beboer_etter'] == "Tvare") $tlf = " - 988 81 108";
+			if ($row['beboer_for'] == "Amund Emil" && $row['beboer_etter'] == "Haukeland") $tlf = " - 986 68 081";
+			if ($row['beboer_for'] == "Filip" && $row['beboer_etter'] == "Landrø") $tlf = " - 466 11 817";
 			$names .= "<i>". $row["beboer_for"] ." ". $row["beboer_etter"] ."</i> (". $row["rom_nr"] . $row["rom_type"] ." #". $row["rom_tlf"] .$tlf.")<br />";
 		}
 	}
