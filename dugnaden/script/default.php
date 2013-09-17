@@ -4257,6 +4257,9 @@ function get_dugnad_range()
 {
 	$year	= date("Y", time());
 	$month	= date("m", time());
+
+	// ignorer begrensning, vis alt!
+	return "TRUE";
 	
 	if($month > 7)
 	{
@@ -5010,6 +5013,8 @@ function show_all_saturdays()
 		-------------------------------------------------------- */
 		$months = array("1", "2", "3", "4", "5", "6");
 	}
+
+	$months = array(1,2,3,4,5,6,7,8,9,10,11,12);
 	
 	$content = "<img src='./images/update.gif' class='hoyre' /><h1>Merk alle dugnadsfrie l&oslash;rdager:</h1>\n\n";
 	
