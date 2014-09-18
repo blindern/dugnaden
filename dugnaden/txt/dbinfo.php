@@ -2,10 +2,10 @@
 
 /* SQL Database init
 ------------------------------------------------------------------------------------------ */
-$srv = "10.8.0.1";
-$usr = "blindern_dugnad";
-$pas = "7YbByOAe";
-$db  = "blindern_dugnad";
+$srv = "localhost";
+$usr = "dugnaden";
+$pas = require "pass.php";
+$db  = "dugnaden";
 
 // Set this to true to be allowed to delete the DB at any time.
 // If set to false, the database can not be deleted if
