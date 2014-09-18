@@ -1200,7 +1200,7 @@ function do_admin()
 				$row = @mysql_fetch_array($result);
 				
 				$fullname = false;
-				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . ($name = get_beboerid_name($formdata["dugnadsleder"], $fullname)) . ($name == "Amund Emil" ? " - 986 68 081" : ($name == "Filip" ? " - 466 11 817" : "")) : "sinnkalling") ."</h1>
+				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . ($name = get_beboerid_name($formdata["dugnadsleder"], $fullname)) . ($name == "Andreas" ? " - 984 78 840" : ($name == "Simen" ? " - 932 28 966" : "")) : "sinnkalling") ."</h1>
 				
 				<p>
 					M&oslash;t i peisestuen if&oslash;rt antrekk som passer til b&aring;de innend&oslash;rs-
