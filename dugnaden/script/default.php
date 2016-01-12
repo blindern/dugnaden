@@ -17,7 +17,7 @@ define(SUPERUSER, "DLWHBS");
 /* Set the maximum count for a dugnad before it is closed. A closed dugnad can not
 be selected by the kids when they are changing their dugnad date.
 ------------------------------------------------------------------------------------------ */
-define(MAX_KIDS, 32);
+define(MAX_KIDS, 20);
 
 /* Set the minimum count for a dugnad before a kid no longer can leave that dugnad by
 selectig another date. This is to prevent a dugnad to go empty of kids.
