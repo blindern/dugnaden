@@ -1200,7 +1200,7 @@ function do_admin()
 				$row = @mysql_fetch_array($result);
 				
 				$fullname = false;
-				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . ($name = get_beboerid_name($formdata["dugnadsleder"], $fullname)) . ($name == "Amund Emil" ? " - 986 68 081" : ($name == "Harald" ? " - 995 00 464" : "")) : "sinnkalling") ."</h1>
+				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . ($name = get_beboerid_name($formdata["dugnadsleder"], $fullname)) . ($name == "Karl-Martin" ? " - 971 59 266" : ($name == "Theodor Tinius" ? " - 400 41 458" : "")) : "sinnkalling") ."</h1>
 				
 				<p>
 					M&oslash;t i peisestuen if&oslash;rt antrekk som passer til b&aring;de innend&oslash;rs-
@@ -6993,8 +6993,8 @@ function get_dugnadsledere()
 		while($row = @mysql_fetch_array($result) )
 		{
 			$tlf = "";
-			if ($row['beboer_for'] == "Amund Emil" && $row['beboer_etter'] == "Haukeland") $tlf = " - 986 68 081";
-			if ($row['beboer_for'] == "Harald" && $row['beboer_etter'] == "Woldsund") $tlf = " - 995 00 464";
+			if ($row['beboer_for'] == "Karl-Martin" && $row['beboer_etter'] == "Svastuen") $tlf = " - 971 5 9 266";
+			if ($row['beboer_for'] == "Theodor Tinius" && $row['beboer_etter'] == "Tronerud") $tlf = " - 400 41 458";
 			$names .= "<i>". $row["beboer_for"] ." ". $row["beboer_etter"] ."</i> (". $row["rom_nr"] . $row["rom_type"] ." #". $row["rom_tlf"] .$tlf.")<br />";
 		}
 	}
