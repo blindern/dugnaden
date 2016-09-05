@@ -3413,7 +3413,6 @@ function get_notes($id, $admin = false)
 		$admin_starta = "<a href='index.php?do=admin". $show . $navigate ."&admin=". $formdata["admin"] ."&pw=". $formdata["pw"] ."&sorts=". $sort_by ."&deln=". $row["notat_id"] ."'>";
 		$passord =  "\nPassord: ". $row["beboer_passord"];
 		$room	 =  "\nRom: ". $row["rom_nr"] . $row["romtype"];
-		$phone   =  " Tlf.: ". $row["rom_tlf"];
 		
 		if(!empty($row["the_note"]) )
 		{
@@ -3423,11 +3422,11 @@ function get_notes($id, $admin = false)
 	
 	if($admin == 1 || $admin == 2)
 	{
-		$content .= "<a href='index.php?do=admin". $show . $navigate ."&admin=". $formdata["admin"] ."&pw=". $formdata["pw"] ."&sorts=". $sort_by ."&newn=". $id ."' ><img src='./images/postitadd.gif' alt='[note]' title='Legg inn nytt notat.". $passord . $room . $phone ."' class='postit_note' /></a>";
+		$content .= "<a href='index.php?do=admin". $show . $navigate ."&admin=". $formdata["admin"] ."&pw=". $formdata["pw"] ."&sorts=". $sort_by ."&newn=". $id ."' ><img src='./images/postitadd.gif' alt='[note]' title='Legg inn nytt notat.". $passord . $room ."' class='postit_note' /></a>";
 	}
 	else
 	{
-		$content .= $room ." ". $phone;
+		$content .= $room;
 	}
 	
 	return $content;
