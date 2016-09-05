@@ -3226,7 +3226,7 @@ function show_day($day, $show_expired_days = false, $editable = false, $dugnadsl
 		if(!$supress_header)
 		{
 			$entries .= "<div class='row_header'><h1>". get_day_header($day) ."</h1></div>\n\n";
-			$entries .= "<div class='row_explained_day'><div class='name_narrow'>Beboer (". @mysql_num_rows($result) ." deltagere)</div><div class='when_narrow'>Tildelte dugnader</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
+			$entries .= "<div class='row_explained_day'><div class='name_narrow'>Beboer (". @mysql_num_rows($result) ." deltagere)</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
 		}
 		
 		while(list($id, $first, $last, $rom, $type, $tlf, $when, $done, $kind, $note) = @mysql_fetch_row($result) )
@@ -3238,21 +3238,7 @@ function show_day($day, $show_expired_days = false, $editable = false, $dugnadsl
 		
 			$full_name = get_public_lastname($last, $first, !strcmp($formdata["sorts"], "last"), $dugnadsliste_full_name);
 			
-			
-			if($supress_header)
-			{
-				$dugnads =  "Rom: ". $rom . $type;
-			}
-			elseif(!$editable)
-			{
-				$dugnads = get_dugnads($id, !$show_expired_days);
-			}
-			else
-			{
-				$dugnads = admin_get_dugnads($id, $editable);
-			}
-			
-			$entries .= "<div class='row". ($line_count++ % 2 ? "_odd" : null) ."'>". $check_box ."<div class='name_narrow'>". $full_name ."</div>\n<div class='when_narrow'>". $dugnads ."</div><div class='note'>". get_notes($id) ."&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
+			$entries .= "<div class='row". ($line_count++ % 2 ? "_odd" : null) ."'>". $check_box ."<div class='name_narrow'>". $full_name ."</div>\n<div class='note'>". get_notes($id) ."&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
 		}
 		
 		$entries .= "<div class='day_spacer'>&nbsp;</div>";
