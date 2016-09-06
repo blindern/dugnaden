@@ -1427,7 +1427,7 @@ function do_admin()
 
 				$flyer_template = file_to_array("./layout/flyer_bot.html");
 
-				$query = "SELECT dugnad_id AS id, dugnad_dato AS dato FROM bs_dugnad WHERE dugnad_dato > DATE_SUB(CURDATE(),INTERVAL ". $formdata["show"] ." DAY) AND dugnad_slettet ='0' ORDER BY dugnad_dato LIMIT 1";
+				$query = "SELECT dugnad_id AS id, dugnad_dato AS dato FROM bs_dugnad WHERE dugnad_dato >= (SELECT dugnad_dato FROM bs_dugnad WHERE dugnad_id = ${formdata['show']}) AND dugnad_slettet ='0' ORDER BY dugnad_dato LIMIT 1";
 
 				$result	= @run_query($query);
 				$denne_dugnaden	= @mysql_fetch_array($result);
