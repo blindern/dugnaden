@@ -1170,7 +1170,7 @@ function do_admin()
 				$query = "SELECT dugnad_id
 							FROM bs_dugnad
 							WHERE dugnad_dato > CURDATE()
-							AND dugnad_slettet ='0' ORDER BY dugnad_dato  LIMIT 1 ";
+							AND dugnad_slettet ='0' AND dugnad_type = 'lordag' ORDER BY dugnad_dato  LIMIT 1 ";
 
 				$result = @run_query($query);
 				$row = @mysql_fetch_array($result);
@@ -1312,57 +1312,67 @@ function do_admin()
 						}
 					}
 
-					if(empty($formdata["show"]) )
-					{
-						$day = 7;
+					$result = @run_query("
+						SELECT dugnad_id, dugnad_dato, dugnad_type
+						FROM bs_dugnad
+						WHERE dugnad_slettet = '0'
+						ORDER BY dugnad_dato");
+					$all_dugnads = [];
+					while ($row = mysql_fetch_assoc($result)) {
+						$all_dugnads[$row['dugnad_id']] = $row;
 					}
-					else
-					{
-						if(isset($formdata["prev"]) )
-						{
-							$day = $formdata["show"] + 7;
-							$nav_status = "Viser forrige dugnad... ";
-						}
-						elseif(isset($formdata["next"]) )
-						{
-							$day = $formdata["show"] - 7;
-							$nav_status = "Viser neste dugnad... ";
 
-							if($day < 7)
-							{
-								$day = 7;
-								$nav_status = "Dette er siste dugnad. ";
+					$dugnad_id = null;
+					if (empty($formdata["show"]) || !isset($all_dugnads[$formdata['show']])) {
+						foreach ($all_dugnads as $dugnad) {
+							if ($dugnad_id === null || strtotime($dugnad['dugnad_dato']) < time()) {
+								$dugnad_id = $dugnad['dugnad_id'];
 							}
 						}
-						else
-						{
-							$day = $formdata["show"];
+					} else {
+						$dugnad_id = $formdata['show'];
+
+						if (isset($formdata["prev"])) {
+							$prev = null;
+							foreach ($all_dugnads as $dugnad) {
+								if ($dugnad['dugnad_id'] == $dugnad_id) {
+									if ($prev) {
+										$dugnad_id = $prev;
+									}
+									break;
+								}
+								$prev = $dugnad['dugnad_id'];
+							}
+						} elseif (isset($formdata["next"])) {
+							$next = null;
+							foreach ($all_dugnads as $dugnad) {
+								if ($next) {
+									$dugnad_id = $dugnad['dugnad_id'];
+									break;
+								}
+								if ($dugnad['dugnad_id'] == $dugnad_id) {
+									$next = true;
+								}
+							}
 						}
 					}
 
-					$query = "SELECT dugnad_id AS id FROM bs_dugnad WHERE dugnad_dato > DATE_SUB(CURDATE(),INTERVAL ". $day ." DAY) AND dugnad_slettet ='0' ORDER BY dugnad_dato  LIMIT 1 ";
-					$result = @run_query($query);
-
-
-					if(@mysql_num_rows($result) == 1)
-					{
-						$row = @mysql_fetch_array($result);
-
+					if ($dugnad_id) {
 						if(isset($formdata["done"]) && !strcmp($formdata["done"], "Merke dagen som ferdigbehandlet") )
 						{
-							$query = "UPDATE bs_dugnad SET dugnad_checked = '1' WHERE dugnad_id = '". $row["id"] ."'";
+							$query = "UPDATE bs_dugnad SET dugnad_checked = '1' WHERE dugnad_id = '". $dugnad_id ."'";
 							@run_query($query);
 						}
 						elseif(isset($formdata["done"]) && !strcmp($formdata["done"], "Angre ferdigbehandling") )
 						{
-							$query = "UPDATE bs_dugnad SET dugnad_checked = '0' WHERE dugnad_id = '". $row["id"] ."'";
+							$query = "UPDATE bs_dugnad SET dugnad_checked = '0' WHERE dugnad_id = '". $dugnad_id ."'";
 							@run_query($query);
 						}
 
-						$show_status = update_status_on_all($row["id"]);
+						$show_status = update_status_on_all($dugnad_id);
 
 
-						if(get_straff_count($row["id"]) > 0)
+						if(get_straff_count($dugnad_id) > 0)
 						{
 							$straff = "<input type='submit' name='view' value='Straffedugnadslapper'> ";
 						}
@@ -1372,7 +1382,7 @@ function do_admin()
 						$content  = "<form action='index.php' method='post'>
 										<input type='hidden' name='do' value='admin'>
 										<input type='hidden' name='admin' value='Oppdatere siste'>
-										<input type='hidden' name='show' value='". $day ."'>
+										<input type='hidden' name='show' value='". $dugnad_id ."'>
 										<input type='submit' name='prev' value='&larr;'><input type='submit' name='next' value='&rarr;'> ". $straff . $nav_status ."</form>";
 
 
@@ -1382,13 +1392,13 @@ function do_admin()
 						$content  .= "<form action='index.php' method='post'>
 										<input type='hidden' name='do' value='admin'>
 										<input type='hidden' name='admin' value='Oppdatere siste'>
-										<input type='hidden' name='show' value='". $day ."'>";
+										<input type='hidden' name='show' value='". $dugnad_id ."'>";
 
 
 
-						$content .= admin_show_day($row["id"], false);
+						$content .= admin_show_day($dugnad_id, false);
 
-						if((int)status_of_dugnad($row["id"]) == 0 )
+						if((int)status_of_dugnad($dugnad_id) == 0 )
 						{
 							$done_caption = "Merke dagen som ferdigbehandlet";
 						}
@@ -3045,7 +3055,7 @@ function find_person($last, $first)
 
 function get_day_header($day)
 {
-	$query = "SELECT dugnad_dato
+	$query = "SELECT dugnad_dato, dugnad_type
 				FROM bs_dugnad
 				WHERE dugnad_id = '". $day ."'
 				LIMIT 1";
@@ -3058,8 +3068,12 @@ function get_day_header($day)
 
 		$complex = explode("-", substr($row["dugnad_dato"], 0, 10));
 
-		#$day_string = date("j. F", mktime(0, 0, 0, $complex[1], $complex[2], $complex[0]) ) ." - uke ". date("W", mktime(0, 0, 0, $complex[1], $complex[2], $complex[0]) );;
-		$day_string = strtolower(date("j. F", mktime(0, 0, 0, $complex[1], $complex[2], $complex[0]) ) ." &nbsp;&nbsp; 10:00-14:00");
+		$day_string = strtolower(date("j. F", mktime(0, 0, 0, $complex[1], $complex[2], $complex[0])));
+		if ($row['dugnad_type'] == 'lordag') {
+			$day_string .= " &nbsp;&nbsp; 10:00-14:00";
+		} elseif ($row['dugnad_type'] == 'anretning') {
+			$day_string .= ' (anretningsdugnad)';
+		}
 
 		return $day_string;
 	}
@@ -3408,25 +3422,27 @@ function get_beboer_password($beboer_id)
 
 function get_dugnad_status($max_kids = MAX_KIDS)
 {
-	$query = "SELECT COUNT(deltager_id) AS antall, deltager_dugnad AS id
+	$query = "SELECT COUNT(deltager_id) AS antall, deltager_dugnad AS id,
+					dugnad_min_kids, dugnad_max_kids
 				FROM bs_deltager, bs_dugnad
 				WHERE dugnad_id = deltager_dugnad
 					AND dugnad_slettet = '0'
 					AND dugnad_dato > NOW() + 7
+					AND dugnad_type = 'lordag'
 				GROUP BY deltager_dugnad";
 
 	$result = @run_query($query);
 
 	while($row = @mysql_fetch_array($result) )
 	{
-		if((int) $row["antall"] <= MIN_KIDS)
+		if((int) $row["antall"] <= $row['dugnad_min_kids'])
 		{
 			$empty_dugnads[$row["id"]] = "1";
 		}
 
 		if((int) $row["antall"] >= $max_kids)
 		{
-			$full_dugnads[$row["id"]] = "1";
+			$full_dugnads[$row["id"]] = $row['dugnad_max_kids'];
 		}
 	}
 
@@ -3920,8 +3936,6 @@ function double_booked_dugnad($new_dugnad, $beboer_id, $deltager_id)
 
 function admin_make_select($user_id, $select_count, $date_id, $deltager_id = false)
 {
-	global $dugnad_is_empty, $dugnad_is_full;
-
 	if(!$deltager_id)
 	{
 		$deltager_id = get_deltager_id($user_id, $date_id);
@@ -3957,44 +3971,38 @@ function admin_make_select($user_id, $select_count, $date_id, $deltager_id = fal
 	$content .= "<option value='-3' ". $petter_done_selected .">Utf&oslash;rt</option>\n<option value='-2' ". $petter_selected .">Dagdugnad</option>\n<option value='-1'>Slett</option>\n";
 
 	{
-		/* Not too few...
-		------------------------------------------------------------------------------------------ */
-
-		if(!empty($dugnad_is_empty[$date_id]) )
-		{
-			$too_few = " -";
-		}
-
 		$query = "SELECT
 					dugnad_dato		AS da_date,
-					dugnad_id		AS id
+					dugnad_id		AS id,
+					dugnad_type,
+					dugnad_min_kids,
+					dugnad_max_kids
 				FROM bs_dugnad
 				WHERE dugnad_slettet ='0' AND ". get_dugnad_range() ."
 				ORDER BY dugnad_dato";
 
 		$result = @run_query($query);
 
-		while($row = @mysql_fetch_array($result) )
+		while ($row = @mysql_fetch_array($result))
 		{
-			if(!empty($dugnad_is_full[$row["id"]]) )
-			{
-				$too_many = " +";
-			}
-			else
-			{
-				$too_many = null;
+			$count_all = get_dugnad_count();
+			$count = isset($count_all[$row['id']]) ? $count_all[$row['id']] : 0;
+
+			$note = '';
+			if ($row['dugnad_type'] == 'anretning') {
+				$note .= ' (anretning)';
 			}
 
+			$note .= " ($count stk)";
 
-			if(!strcmp($row["id"], $date_id) )
-			{
-				$content .= "<option value='". $row["id"] ."' selected='selected' >". get_simple_date($row["da_date"], true) . $too_few . $too_many ."</option>\n";
+			if ($count < $row['dugnad_min_kids']) {
+				$note .= ' (-)';
+			} else if ($count > $row['dugnad_max_kids']) {
+				$note .= ' (+)';
 			}
-			else
-			{
-				$checked = null;
-				$content .= "<option value='". $row["id"] ."' ". $checked .">". get_simple_date($row["da_date"], true) . $too_many ."</option>\n";
-			}
+
+			$selected = $row['id'] == $date_id ? ' selected="selected"' : '';
+			$content .= "<option value='". $row["id"] . "'" . $selected . ">". get_simple_date($row["da_date"], true) . $note ."</option>\n";
 		}
 	}
 
@@ -4224,6 +4232,7 @@ function get_dugnads($id, $hide_outdated_dugnads = false)
 
 						dugnad_dato		AS dugnad_dato,
 						dugnad_checked	AS checked,
+						dugnad_type,
 
 						deltager_gjort	AS status,
 						deltager_type	AS kind,
@@ -4245,6 +4254,8 @@ function get_dugnads($id, $hide_outdated_dugnads = false)
 
 	while($row = @mysql_fetch_array($result) )
 	{
+		$type = get_dugnad_type_prefix($row);
+
 		/* ADDING NOTES
 		------------------------------------------------------------ */
 
@@ -4275,7 +4286,7 @@ function get_dugnads($id, $hide_outdated_dugnads = false)
 			{
 				$use_class = "valid_dugnad";
 			}
-			$content .= "<span class='". $use_class ."'>". get_simple_date($row["dugnad_dato"], true) . $more_info ."</span>\n";
+			$content .= "<span class='". $use_class ."'>". $type .  get_simple_date($row["dugnad_dato"], true) . $more_info ."</span>\n";
 		}
 		else
 		{
@@ -4313,7 +4324,7 @@ function get_dugnads($id, $hide_outdated_dugnads = false)
 			{
 				// Damn dugnads; those they did not do..
 
-				$content .= "<span class='damn_dugnad'>". get_simple_date($row["dugnad_dato"], true) . $more_info ."</span>\n";
+				$content .= "<span class='damn_dugnad'>" . $type . get_simple_date($row["dugnad_dato"], true) . $more_info ."</span>\n";
 			}
 		}
 	}
@@ -4575,7 +4586,7 @@ function beboer_get_dugnads($id)
 				{
 					$use_class = "valid_dugnad";
 				}
-				$static_content .= "<span class='". $use_class ."'>". get_simple_date($row["dugnad_dato"], true) ."</span>\n";
+				$static_content .= "<span class='". $use_class ."'>" . get_simple_date($row["dugnad_dato"], true) ."</span>\n";
 			}
 			else
 			{
@@ -4613,6 +4624,7 @@ function get_undone_dugnads($id)
 	$query = "SELECT	dugnad_id		AS id,
 						dugnad_dato		AS dugnad_dato,
 						dugnad_checked	AS checked,
+						dugnad_type,
 
 						deltager_gjort	AS completed,
 						deltager_type	AS kind,
@@ -4632,7 +4644,7 @@ function get_undone_dugnads($id)
 	while($row = @mysql_fetch_array($result) )
 	{
 		$count++;
-		$content .= $comma . get_simple_date($row["dugnad_dato"], true);
+		$content .= $comma . get_dugnad_type_prefix($row) . get_simple_date($row["dugnad_dato"], true);
 
 		if(($count + 1) < $total_count)
 		{
@@ -5941,7 +5953,7 @@ function get_next_dugnad_id($offset = 0)
 	$query = "SELECT dugnad_id AS id
 				FROM bs_dugnad
 				WHERE dugnad_dato > DATE_ADD(CURDATE(),INTERVAL ". (12 + $offset) ." DAY)
-					AND dugnad_slettet = '0'
+					AND dugnad_slettet = '0' AND dugnad_type = 'lordag'
 				ORDER BY dugnad_dato
 				LIMIT 1";
 
@@ -7340,6 +7352,37 @@ function run_query($query)
 
 	$GLOBALS['queries'][] = $query;
 	return $result;
+}
+
+
+function get_dugnad_count()
+{
+	static $list = null;
+
+	if (!$list) {
+		$list = [];
+		$query = "SELECT COUNT(deltager_id) AS antall, deltager_dugnad AS id
+					FROM bs_deltager, bs_dugnad
+					WHERE dugnad_id = deltager_dugnad
+						AND dugnad_slettet = '0'
+					GROUP BY deltager_dugnad";
+
+		$result = @run_query($query);
+		while ($row = @mysql_fetch_array($result)) {
+			$list[$row['id']] = $row['antall'];
+		}
+	}
+
+	return $list;
+}
+
+function get_dugnad_type_prefix($dugnad) {
+	switch ($dugnad['dugnad_type']) {
+	case 'anretning':
+		return 'Anretning: ';
+	}
+
+	return '';
 }
 
 function require_admin() {
