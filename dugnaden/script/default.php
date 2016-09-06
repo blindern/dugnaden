@@ -118,6 +118,7 @@ function get_file_content($filename)
 function do_admin()
 {
 	global $formdata;
+	require_admin();
 
 	switch($formdata["admin"])
 	{
@@ -471,7 +472,6 @@ function do_admin()
 					$feedback .= "<div class='success'>Vellykket oppdatering, n&aring; heter beboeren ". get_beboerid_name($formdata["beboer"]) .".</div>";
 
 					$formdata["beboer"] = "-1";
-					$formdata["pw"] = null;
 					$formdata["beboer"] = null;
 					$valid_login = false;
 				}
@@ -485,9 +485,9 @@ function do_admin()
 			{
 				/* Either wrong password, no password, no beboer selected og the button "Tilbake" has been clicked: */
 
-				if(isset($formdata["pw"]) && $valid_login != 1)
+				if($valid_login != 1)
 				{
-					$feedback .= "<div class='failure'>Du tastet inn feil passord, pr&oslash;v igjen...</div>";
+					$feedback .= "<div class='failure'>Du har ikke rettigheter til denne funksjonen.</div>";
 				}
 
 				if(!strcmp($formdata["beboer"], "-1") )
@@ -500,13 +500,13 @@ function do_admin()
 				}
 
 				$dugnadsleder = false;
-				$page["beboer_bytte"] = "1. ". get_beboer_select($dugnadsleder) ."&nbsp;&nbsp;&nbsp;&nbsp;Passord: <input type='password' name='pw' value='' size='15' maxlength='15'> <input type='submit' value='OK'><br />".
+				$page["beboer_bytte"] = "1. ". get_beboer_select($dugnadsleder) ."&nbsp;&nbsp;&nbsp;&nbsp; <input type='submit' value='OK'><br />".
 									"<div class='hint'>2. Fyll inn nytt etternavn og fornavn...</div>". $page["beboer_bytte"] .$page["beboer_bytte"];
 
 			}
 			else
 			{
-				$page["hidden"] = "<input type='hidden' name='pw' value='". $formdata["pw"] ."'><input type='hidden' name='beboer' value='". $formdata["beboer"] ."'>". $page["hidden"];
+				$page["hidden"] = "<input type='hidden' name='beboer' value='". $formdata["beboer"] ."'>". $page["hidden"];
 
 				$page["beboer_bytte"] = "<div class='hint'>1. Fyll inn nytt fornavn og etternavn</div><br />
 										2. <input type='input' name='last' value='". get_beboerid_name($formdata["beboer"], false, true) ."'>,
@@ -634,7 +634,6 @@ function do_admin()
 			else
 			{
 				$page["pw_line"] = "<p>
-										Passord: <input type='password' name='pw' value='' size='15' maxlength='15'>
 										<input type='submit' name='admin' value='Tildele dugnad'>
 										<input type='submit' name='admin' value='Semesterstart'>
 									</p>" . $page["pw_line"];
@@ -738,9 +737,8 @@ function do_admin()
 					}
 				}
 			}
-			elseif(isset($formdata["pw"]) )
-			{
-				$content .= "<div class='failure'>Du tastet inn feil passord, pr&oslash;v igjen...</div>";
+			else {
+				$content .= "<div class='failure'>Du har ikke rettigeter til denne funksjonen.</div>";
 			}
 
 			$page["hidden"] = " <input type='hidden' name='admin'	value='Dugnadslederstyring'>
@@ -810,7 +808,7 @@ function do_admin()
 				}
 				else
 				{
-					$page["feedback"] = "<p class='failure'>Beklager, du brukte ikke et gyldig passord (det f&oslash;rste feltet)...</p>". $page["feedback"];
+					$page["feedback"] = "<p class='failure'>Du har ikke rettigheter til denne funksjonen.</p>". $page["feedback"];
 				}
 			}
 
@@ -836,7 +834,7 @@ function do_admin()
 
 			$page = file_to_array("./layout/admin_buatelefon.html");
 
-			if(!empty($formdata["pw"]) && !empty($formdata["buatelefon"]) )
+			if (!empty($formdata["buatelefon"]) )
 			{
 				if(valid_admin_login() == 1)
 				{
@@ -854,19 +852,12 @@ function do_admin()
 				}
 				else
 				{
-					$page["hidden"] = "<p class='failure'>Galt passord, vennligst pr&oslash;v igjen..</p>". $page["hidden"];
+					$page["hidden"] = "<p class='failure'>Du har ikke rettighet til denne funksjonen.</p>". $page["hidden"];
 				}
 			}
-			elseif(empty($formdata["buatelefon"]) && !empty($formdata["pw"]))
-			{
+			else {
 					$page["hidden"] = "<p class='failure'>Vennligst tast inn et nytt telefonnummer f&oslash;r du oppdaterer.</p>". $page["hidden"];
 			}
-			elseif(!empty($formdata["buatelefon"]) && empty($formdata["pw"]))
-			{
-					$page["hidden"] = "<p class='failure'>Vennligst tast inn et gyldig passord.</p>". $page["hidden"];
-			}
-
-
 
 			$page["hidden"] = "<input type='hidden' name='do' value='admin'><input type='hidden' name='admin' value='Endre Buatelefon'>". $page["hidden"];
 
@@ -952,22 +943,7 @@ function do_admin()
 			}
 			else
 			{
-				if($valid_login && !empty($formdata["pw"]))
-				{
-					$feedback = "<div class='failure'>Beklager, du har ikke rettigheter til denne operasjonen.</div>";
-				}
-				elseif(!$valid_login && !empty($formdata["pw"]))
-				{
-					$feedback = "<div class='failure'>Du har ikke brukt riktig passord, pr&oslash;v igjen.</div>";
-				}
-
-				$title = $formdata["admin"];
-				$navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; <a href='index.php?do=admin&admin=Innstillinger'>Innstillinger</a> &gt; <a href='index.php?do=admin&admin=Semesterstart'>Semesterstart</a> &gt; $title";
-
-				$admin_login = file_to_array("./layout/admin_login_infoliste.html");
-
-				$content =  $admin_login["head"] ."<input type='hidden' name='admin' value='Infoliste'>". $feedback . $admin_login["hidden"] .  get_innstilling("pw") . $admin_login["passord"];
-
+				$feedback = "<div class='failure'>Beklager, du har ikke rettigheter til denne operasjonen.</div>";
 			}
 
 			break;
@@ -1184,7 +1160,7 @@ function do_admin()
 
 			$valid_login = valid_admin_login();
 
-			if($valid_login == 1)
+			if($valid_login == 1 && isset($_POST['dugnadsleder']))
 			{
 				global $paper;
 				$paper = "_dugnadsliste";
@@ -1214,13 +1190,9 @@ function do_admin()
 				$content .= show_day($row["dugnad_id"], $show_expired_days, $editable, $dugnadsliste_full_name).'
 				<p>Ta kontakt med dugnadsleder ved spørsmål.</p>';
 			}
-			else
-			{
-				if(!empty($formdata["pw"])) //!empty($formdata["prepare"]) || !empty($formdata["printok"]) )
-				{
-					$feedback .= "<div class='failure'>Du har ikke brukt riktig passord, pr&oslash;v igjen.</div>";
-				}
-
+			elseif (isset($_POST['dugnadsleder'])) {
+				$feedback .= "<div class='failure'>Du har ikke rettigheter til denne funksjonen.</div>";
+			} else {
 				$title = "Neste dugnadsliste";
 				$navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Botliste";
 
@@ -1246,7 +1218,6 @@ function do_admin()
 
 				$content = $feedback . implode($admin_login);
 			}
-
 
 			break;
 
@@ -1297,7 +1268,6 @@ function do_admin()
 					$sort_by = (!empty($formdata["sorts"]) ? $formdata["sorts"] : "last");
 
 					$admin_login["hidden"] = "<input type='hidden' name='do' value='admin'>\n".
-												"<input type='hidden' name='pw' value='". $formdata["pw"] ."'>\n".
 												"<input type='hidden' name='sorts' value='". $sort_by ."'>\n".
 												"<input type='hidden' name='admin' value='". $formdata["admin"] ."'>\n".
 												"<input type='hidden' name='beboer' value='". $formdata["newn"] ."'>\n". $show .
@@ -1402,7 +1372,6 @@ function do_admin()
 						$content  = "<form action='index.php' method='post'>
 										<input type='hidden' name='do' value='admin'>
 										<input type='hidden' name='admin' value='Oppdatere siste'>
-										<input type='hidden' name='pw' value='". $formdata["pw"] ."'>
 										<input type='hidden' name='show' value='". $day ."'>
 										<input type='submit' name='prev' value='&larr;'><input type='submit' name='next' value='&rarr;'> ". $straff . $nav_status ."</form>";
 
@@ -1413,7 +1382,6 @@ function do_admin()
 						$content  .= "<form action='index.php' method='post'>
 										<input type='hidden' name='do' value='admin'>
 										<input type='hidden' name='admin' value='Oppdatere siste'>
-										<input type='hidden' name='pw' value='". $formdata["pw"] ."'>
 										<input type='hidden' name='show' value='". $day ."'>";
 
 
@@ -1440,13 +1408,7 @@ function do_admin()
 				}
 				else
 				{
-					if(!empty($formdata["pw"]) )
-					{
-						$feedback .= "<p class='failure'>Galt passord, pr&oslash;v igjen...</p>";
-					}
-
-					$admin_login = file_to_array("./layout/admin_login.html");
-					$content = $feedback . $admin_login["head"] ."<input type='hidden' name='admin' value='Oppdatere siste'>". $admin_login["hidden"];
+					$feedback .= "<p class='failure'>Du har ikke rettigheter til denne funksjonen.</p>";
 				}
 			}
 			else
@@ -1608,7 +1570,6 @@ function do_admin()
 				$sort_by = (!empty($formdata["sorts"]) ? $formdata["sorts"] : "last");
 
 				$admin_login["hidden"] = "<input type='hidden' name='do' value='admin'>\n".
-											"<input type='hidden' name='pw' value='". $formdata["pw"] ."'>\n".
 											"<input type='hidden' name='sorts' value='". $sort_by ."'>\n".
 											"<input type='hidden' name='admin' value='". $formdata["admin"] ."'>\n".
 											"<input type='hidden' name='beboer' value='". $formdata["newn"] ."'>\n". $show .
@@ -1678,17 +1639,7 @@ function do_admin()
 			}
 			else
 			{
-				if(!empty($formdata["pw"]) && $valid_login === 0)
-				{
-					$feedback .= "<p class='failure'>Beklager, men det er n&aring; for sent &aring; endre dugnadsstatus med dette passordet...</p>";
-				}
-				elseif(!empty($formdata["pw"]) )
-				{
-					$feedback .= "<p class='failure'>Galt passord, pr&oslash;v igjen...</p>";
-				}
-
-				$admin_login = file_to_array("./layout/admin_login.html");
-				$content = $feedback . $admin_login["head"] ."<input type='hidden' name='admin' value='Dugnadsliste'>". $admin_login["hidden"];
+				$feedback .= "<p class='failure'>Du har ikke rettigheter til denne funksjonen.</p>";
 			}
 
 			break;
@@ -1738,7 +1689,6 @@ function do_admin()
 				$sort_by = (!empty($formdata["sorts"]) ? $formdata["sorts"] : "last");
 
 				$admin_login["hidden"] = "<input type='hidden' name='do' value='admin'>\n".
-											"<input type='hidden' name='pw' value='". $formdata["pw"] ."'>\n".
 											"<input type='hidden' name='sorts' value='". $sort_by ."'>\n".
 											"<input type='hidden' name='admin' value='". $formdata["admin"] ."'>\n".
 											"<input type='hidden' name='beboer' value='". $formdata["newn"] ."'>\n". $show .
@@ -1793,13 +1743,7 @@ function do_admin()
 			}
 			else
 			{
-				if(!empty($formdata["pw"]) )
-				{
-					$feedback .= "<p class='failure'>Galt passord, pr&oslash;v igjen...</p>";
-				}
-
-				$admin_login = file_to_array("./layout/admin_login.html");
-				$content = $feedback . $admin_login["head"] ."<input type='hidden' name='admin' value='Dagdugnad'>". $admin_login["hidden"];
+				$feedback .= "<p class='failure'>Du har ikke rettigheter til denne funksjonen.</p>";
 			}
 
 			break;
@@ -2024,8 +1968,6 @@ function do_admin()
 			{
 				$page = file_to_array("./layout/form_innkallingnyeste.html");
 
-				// $page["pw"] = $formdata["pw"] . $page["pw"];
-
 				$page["importeringsliste"] = make_last_beboere_select() . $page["importeringsliste"];
 
 				$content .= implode($page);
@@ -2074,7 +2016,7 @@ function do_admin()
 
 			if(@mysql_num_rows($result) == 0)
 			{
-				$feedback .= "<div class='failure'>Det er ikke generert noen dugnadsdager, dette gj&oslash;res fra <a href='?do=admin&pw=". $formdata["pw"] ."&admin=Dugnadskalender'>Dugnadskalenderen</a>.</div>";
+				$feedback .= "<div class='failure'>Det er ikke generert noen dugnadsdager, dette gj&oslash;res fra <a href='?do=admin&admin=Dugnadskalender'>Dugnadskalenderen</a>.</div>";
 			}
 
 			$content = $feedback;
@@ -2264,7 +2206,6 @@ function do_admin()
 							$content .= "<form method='post' action='index.php'>
 											<input type='hidden' name='do' value='admin'>
 											<input type='hidden' name='print' value='lastimport'>
-											<input type='hidden' name='pw' value='". $formdata['pw'] ."'>
 											<input type='hidden' name='nyinnkalling' value='". $impValue ."'>
 											<h1>Innkalling til disse nye beboerne</h1>
 											<p class='txt'>
@@ -3410,7 +3351,7 @@ function get_notes($id, $admin = false)
 
 	while($row = @mysql_fetch_array($result) )
 	{
-		$admin_starta = "<a href='index.php?do=admin". $show . $navigate ."&admin=". $formdata["admin"] ."&pw=". $formdata["pw"] ."&sorts=". $sort_by ."&deln=". $row["notat_id"] ."'>";
+		$admin_starta = "<a href='index.php?do=admin". $show . $navigate ."&admin=". $formdata["admin"] ."&sorts=". $sort_by ."&deln=". $row["notat_id"] ."'>";
 		$passord =  "\nPassord: ". $row["beboer_passord"];
 		$room	 =  "\nRom: ". $row["rom_nr"] . $row["romtype"];
 
@@ -3422,7 +3363,7 @@ function get_notes($id, $admin = false)
 
 	if($admin == 1 || $admin == 2)
 	{
-		$content .= "<a href='index.php?do=admin". $show . $navigate ."&admin=". $formdata["admin"] ."&pw=". $formdata["pw"] ."&sorts=". $sort_by ."&newn=". $id ."' ><img src='./images/postitadd.gif' alt='[note]' title='Legg inn nytt notat.". $passord . $room ."' class='postit_note' /></a>";
+		$content .= "<a href='index.php?do=admin". $show . $navigate ."&admin=". $formdata["admin"] ."&sorts=". $sort_by ."&newn=". $id ."' ><img src='./images/postitadd.gif' alt='[note]' title='Legg inn nytt notat.". $passord . $room ."' class='postit_note' /></a>";
 	}
 	else
 	{
@@ -5184,8 +5125,7 @@ function output_full_list($admin = false)
 		---------------------------------------------------- */
 
 		$hidden = "<input type='hidden' name='do' value='admin' />
-							<input type='hidden' name='admin' value='Dugnadsliste' />
-							<input type='hidden' name='pw' value='". $formdata["pw"] ."' />";
+							<input type='hidden' name='admin' value='Dugnadsliste' />";
 
 		$list_title = "Administrering av dugnadsliste";
 
@@ -5293,8 +5233,7 @@ function output_vedlikehold_list()
 	}
 
 	$hidden = "<input type='hidden' name='do' value='admin' />
-						<input type='hidden' name='admin' value='Dagdugnad' />
-						<input type='hidden' name='pw' value='". $formdata["pw"] ."' />";
+						<input type='hidden' name='admin' value='Dagdugnad' />";
 
 	$list_title = "Dagdugnad";
 
@@ -5347,7 +5286,7 @@ function output_vedlikehold_list()
 
 	return $content . $admin_buttons . "</form>
 	<h1>Ordin&aelig;r helgedugnad</h1>
-	<p>F&oslash;rstkommende helg har ". $antall ." beboere ordin&aelig;r dugnad (". $dato .")". (isset($formdata["showkids"]) ? ".<br /><a href='index.php?do=admin&admin=Dagdugnad&pw=". get_innstilling("pw_administrasjon") ."'>Skjul dugnadsdeltagerne.</a></p>". get_all_barn() : ".<br /><a href='index.php?do=admin&admin=Dagdugnad&showkids=true&pw=". get_innstilling("pw_administrasjon") ."'>Vis alle dugnadsdeltagerne.</a></p>");
+	<p>F&oslash;rstkommende helg har ". $antall ." beboere ordin&aelig;r dugnad (". $dato .")". (isset($formdata["showkids"]) ? ".<br /><a href='index.php?do=admin&admin=Dagdugnad'>Skjul dugnadsdeltagerne.</a></p>". get_all_barn() : ".<br /><a href='index.php?do=admin&admin=Dagdugnad&showkids=true'>Vis alle dugnadsdeltagerne.</a></p>");
 }
 
 /* ******************************************************************************************** *
@@ -5385,8 +5324,7 @@ function output_ryddevakt_list()
 	}
 
 	$hidden = "<input type='hidden' name='do' value='admin' />
-						<input type='hidden' name='admin' value='Dagdugnad' />
-						<input type='hidden' name='pw' value='". $formdata["pw"] ."' />";
+						<input type='hidden' name='admin' value='Dagdugnad' />";
 
 	$list_title = "Dagdugnad";
 
@@ -5684,6 +5622,9 @@ function valid_login()
 
 function valid_admin_login()
 {
+	return check_is_admin() ? 1 : false;
+
+	/*
 	global $formdata;
 
 	$visitor_ip = getenv("REMOTE_ADDR");
@@ -5699,21 +5640,21 @@ function valid_admin_login()
 					VALUES ('". $visitor_ip ."', NOW(), '1')";
 
 		@run_query($query);
-		*/
+		*-/
 
 		return 1;
 	}
 
 	/* THIS PASSWORD IS WHAT THE BS ADMINISTRATION IS USING ALL THE TIME TO LOGIN
 	 * TO CHANGE LOCATE THE DEFINE AT THE TOP OF THIS PAGE
-	 * ---------------------------------------------------------------------- */
+	 * ---------------------------------------------------------------------- *-/
 
 	elseif(!strcmp($formdata["pw"], get_innstilling("pw_administrasjon")) )
 	{
 		/* Return true to prevent login / Useful for when I am editing code
 		 * Defined at the top of this page
 		--------------------------------------------------------------------------------
-		return false; */
+		return false; *-/
 
 		$query = "INSERT INTO bs_admin_access  (admin_access_ip, admin_access_date, admin_access_success)
 					VALUES ('". $visitor_ip ."', NOW(), '2')";
@@ -5725,13 +5666,13 @@ function valid_admin_login()
 
 	/* THIS METHOD WILL GET THE POTENTIALLY AVAILABLE PASSWORD FROM THE DB
 	 * THIS IS USED BY THE Ryddevaktsjef, Vaktgruppa AND Festforeningen
-	 * ---------------------------------------------------------------------- */
+	 * ---------------------------------------------------------------------- *-/
 
 	elseif(!strcmp($formdata["pw"], get_innstilling("pw_undergruppe")))
 	{
 		/* Return true to prevent login / Useful for when I am editing code
 		--------------------------------------------------------------------------------
-		return false; */
+		return false; *-/
 
 		$query = "INSERT INTO bs_admin_access  (admin_access_ip, admin_access_date, admin_access_success)
 					VALUES ('". $visitor_ip ."', NOW(), '3')";
@@ -5768,6 +5709,7 @@ function valid_admin_login()
 
 	// Reaching this means login was invalid
 	return false;
+	 */
 }
 
 
@@ -7398,4 +7340,30 @@ function run_query($query)
 
 	$GLOBALS['queries'][] = $query;
 	return $result;
+}
+
+function require_admin() {
+
+	require_once "/var/www/aliases/simplesamlphp/lib/_autoload.php";
+	$as = new SimpleSAML_Auth_Simple('fbs-api');
+	if (!$as->isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'POST') {
+		die("Du ville normalt nå blitt sendt til logg inn siden, men siden du har forsøkt å fullføre et skjema har vi avbrutt pålogging. Det anbefales at du åpner en ny fane og logger inn med den, for så å gå tilbake til denne og oppdatere siden og sende inn skjemaet på nytt.");
+	}
+	$as->requireAuth();
+
+	$attributes = $as->getAttributes();
+	if (!in_array('dugnaden', $attributes['groups'])) {
+		die('Du må være i gruppen "dugnaden" for å administrere dugnadsystemet!');
+	}
+}
+
+function check_is_admin() {
+	require_once "/var/www/aliases/simplesamlphp/lib/_autoload.php";
+	$as = new SimpleSAML_Auth_Simple('fbs-api');
+	if ($as->isAuthenticated()) {
+		$attributes = $as->getAttributes();
+		return in_array('dugnaden', $attributes['groups']);
+	}
+
+	return false;
 }
