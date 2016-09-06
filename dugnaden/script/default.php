@@ -4074,6 +4074,16 @@ function beboer_make_select($user_id, $select_count, $date_id)
 
 	$deltager_id = get_deltager_id($user_id, $date_id);
 
+	// get details about this dugnad
+	$prefix = '';
+	$result = @run_query("
+		SELECT dugnad_id, dugnad_dato, dugnad_type
+		FROM bs_dugnad
+		WHERE dugnad_id = '".$date_id."'");
+	if ($dugnad = mysql_fetch_assoc($result)) {
+		$prefix = get_dugnad_type_prefix($row);
+	}
+
 	if(isset($dugnad_is_empty[$date_id]) )
 	{
 
@@ -4095,7 +4105,7 @@ function beboer_make_select($user_id, $select_count, $date_id)
 		if(@mysql_num_rows($result) == 1)
 		{
 			$row = @mysql_fetch_array($result);
-			$content .= "<option value='". $row["id"] ."' selected='selected' >". get_simple_date($row["da_date"], true) ."</option>\n";
+			$content .= "<option value='". $row["id"] ."' selected='selected' >" . $prefix . get_simple_date($row["da_date"], true) ."</option>\n";
 		}
 		else
 		{
@@ -4133,6 +4143,9 @@ function beboer_make_select($user_id, $select_count, $date_id)
 				$content .=	"<option value='-12' selected='selected' >Billavakt</option>\n";
 			}
 		}
+		elseif ($dugnad && $dugnad['dugnad_type'] == 'anretning') {
+			$content .=	"<option value='".$dugnad['dugnad_id']."' selected='selected'>Anretningsdugnad: ".get_simple_date($dugnad['dugnad_dato'], true)."</option>\n";
+		}
 		else
 		{
 				$content .=	"<option value='-10' >Hyttedugnad</option>\n";
@@ -4153,7 +4166,7 @@ function beboer_make_select($user_id, $select_count, $date_id)
 			{
 				if(!strcmp($row["id"], $date_id) )
 				{
-					$content .= "<option value='". $row["id"] ."' selected='selected' >". get_simple_date($row["da_date"], true) ."</option>\n";
+					$content .= "<option value='". $row["id"] ."' selected='selected' >". $prefix . get_simple_date($row["da_date"], true) ."</option>\n";
 				}
 				else
 				{
@@ -4161,7 +4174,7 @@ function beboer_make_select($user_id, $select_count, $date_id)
 
 					if(empty($dugnad_is_full[$row["id"]]) )
 					{
-						$content .= "<option value='". $row["id"] ."' ". $checked .">". get_simple_date($row["da_date"], true) ."</option>\n";
+						$content .= "<option value='". $row["id"] ."' ". $checked .">". $prefix . get_simple_date($row["da_date"], true) ."</option>\n";
 					}
 				}
 			}
