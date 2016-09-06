@@ -155,9 +155,9 @@ function do_admin()
 
 			$valid_login = valid_admin_login();
 
-			if($valid_login == 1 ||$valid_login == 2)
+			if (($valid_login == 1 ||$valid_login == 2))
 			{
-				if((int) $formdata["beboer"] != -1)
+				if((int) $formdata["beboer"] > 0)
 				{
 					/* A BEBOER IS CHOSEN TO RECEIVE AN ANNULERING
 					------------------------------------------------------------------ */
@@ -274,10 +274,6 @@ function do_admin()
 											($negated_bots ? "Det ble annulert ". $negated_bots ." ". $ord_negert ."." : null) ."</div>" . $page["feedback"];
 					}
 				}
-			}
-			elseif(isset($formdata["pw"]) )
-			{
-				$page["feedback"] = "<div class='failure'>Du tastet inn feil passord, pr&oslash;v igjen...</div>". $page["feedback"];
 			}
 
 			/* Generate first month of the semester, so bots from the previous semester is not shown...
@@ -608,7 +604,7 @@ function do_admin()
 			{
 				$content .= "<p class='failure'>Denne operasjonenen er ikke tillatt etter at dugnadsperioden har startet.</p>";
 			}
-			elseif($valid_login == 1)
+			elseif(isset($_POST['performit']))
 			{
 				$beboerGiven = 0;
 				$dugnadGiven = 0;
@@ -634,6 +630,7 @@ function do_admin()
 			else
 			{
 				$page["pw_line"] = "<p>
+										<input type='hidden' name='performit' value='1' />
 										<input type='submit' name='admin' value='Tildele dugnad'>
 										<input type='submit' name='admin' value='Semesterstart'>
 									</p>" . $page["pw_line"];
@@ -962,8 +959,9 @@ function do_admin()
 			-------------------------------------------------------------------------------- */
 
 			$valid_login = valid_admin_login();
+			$doit = !empty($formdata["prepare"]) || !empty($formdata["printok"]);
 
-			if($valid_login == 2 && !empty($formdata["printok"]))
+			if($valid_login == 2 && $doit)
 			{
 
 				$query = "SELECT bot_id
@@ -1002,7 +1000,7 @@ function do_admin()
 
 				$content = $feedback . get_file_content("./layout/menu_admin.html");
 			}
-			elseif($valid_login == 1 || $valid_login == 2)
+			elseif (($valid_login == 1 || $valid_login == 2) && $doit)
 			{
 				global $paper;
 				$paper = "_paper";
@@ -1118,11 +1116,6 @@ function do_admin()
 			}
 			else
 			{
-				if(!empty($formdata["prepare"]) || !empty($formdata["printok"]) )
-				{
-					$feedback .= "<div class='failure'>Du har ikke brukt riktig passord, pr&oslash;v igjen.</div>";
-				}
-
 				$title = "Vise botlisten";
 				$navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Botliste";
 
