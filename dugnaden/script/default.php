@@ -6007,6 +6007,7 @@ function new_smart_dugnad($beboer_id, $dugnad_id, $deltager_gjort)
 					WHERE dugnad_dato > DATE_ADD(CURDATE(),INTERVAL 12 DAY)
 						AND deltager_dugnad = dugnad_id
 						AND dugnad_slettet = '0'
+						AND dugnad_type = 'lordag'
 					ORDER BY dugnad_dato";
 
 		$result = @run_query($query);
