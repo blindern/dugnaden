@@ -16,7 +16,7 @@ $request = isset($_GET['method']) ? $_GET['method'] : null;
 if ($request == "list")
 {
 	$result = run_query("
-		SELECT dugnad_id, dugnad_dato, dugnad_slettet, dugnad_checked,
+		SELECT dugnad_id, dugnad_dato, dugnad_slettet, dugnad_checked, dugnad_type,
 		       deltager_id, deltager_gjort, deltager_type,
 		       beboer_for, beboer_etter,
 		       CONCAT(rom_nr, rom_type) rom
@@ -44,6 +44,7 @@ if ($request == "list")
 				'date' => $row['dugnad_dato'],
 				'deleted' => $row['dugnad_slettet'],
 				'checked' => $row['dugnad_checked'],
+				'type' => $row['dugnad_type'],
 				'people' => array()
 			);
 		}
@@ -59,6 +60,7 @@ if ($request == "list")
 		}
 	}
 
+	header("Content-Type: text/json");
 	echo json_encode(array_values($dugnader));
 	die;
 }
