@@ -45,3 +45,19 @@ FROM
 WHERE dugnad_type = 'anretning'
 ORDER BY dugnad_dato
 ```
+
+
+### Hente liste over antall per lørdagsdugnad
+
+```sql
+SELECT
+  DATE(dugnad_dato),
+  COUNT(deltager_beboer)
+FROM
+  bs_dugnad
+  LEFT JOIN bs_deltager ON deltager_dugnad = dugnad_id
+  LEFT JOIN bs_beboer ON deltager_beboer = beboer_id
+WHERE dugnad_type = 'lordag' AND dugnad_slettet = 0
+GROUP BY dugnad_dato
+ORDER BY dugnad_dato
+```
