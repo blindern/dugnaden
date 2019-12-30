@@ -2,11 +2,7 @@
 
 // begrens tilgang
 $allow = array(
-	"83.143.83.35",   // blindern-studenterhjem.no
-	"217.170.200.58", // blindern-studenterhjem.no
-	#"37.191.203.140", // webdev.hsw.no (midlertidig adresse)
-	#"37.191.201.59",  // darask-1301 (midlertidig adresse)
-	gethostbyname("foreningenbs.no"),
+	gethostbyname("web-1.zt.foreningenbs.no"),
 );
 if (!in_array($_SERVER['REMOTE_ADDR'], $allow)) die("Not authorized.");
 

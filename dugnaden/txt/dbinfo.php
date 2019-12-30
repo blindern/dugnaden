@@ -2,7 +2,7 @@
 
 /* SQL Database init
 ------------------------------------------------------------------------------------------ */
-$srv = "localhost";
+$srv = "mysql-1.zt.foreningenbs.no";
 $usr = "dugnaden";
 $pas = require "pass.php";
 $db  = "dugnaden";
