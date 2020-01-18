@@ -6,7 +6,7 @@ $allow = array(
 );
 if (!in_array($_SERVER['REMOTE_ADDR'], $allow)) die("Not authorized.");
 
-require "script/default.php";
+require "../lib/default.php";
 $request = isset($_GET['method']) ? $_GET['method'] : null;
 
 if ($request == "list") {

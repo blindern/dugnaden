@@ -71,7 +71,7 @@ function do_admin(Page $page)
             $title = $formdata["admin"];
             $navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; $title";
 
-            $page = file_to_array("./layout/admin_annulerebot.html");
+            $page = get_layout_parts("admin_annulerebot");
 
             $page["hidden"] = " <input type='hidden' name='admin'    value='" . $formdata["admin"] . "' />
                                 <input type='hidden' name='do'        value='admin' />" . $page["hidden"];
@@ -325,7 +325,7 @@ function do_admin(Page $page)
             $title = $formdata["admin"];
             $navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; <a href='index.php?do=admin&admin=Innstillinger'>Innstillinger</a> &gt; $title";
 
-            $page = file_to_array("./layout/menu_name.html");
+            $page = get_layout_parts("menu_name");
 
             $page["hidden"] = "<input type='hidden' name='admin' value='" . $formdata["admin"] . "'><input type='hidden' name='do' value='admin'>" . $page["hidden"];
 
@@ -403,7 +403,7 @@ function do_admin(Page $page)
             $title = $formdata["admin"];
             $navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; $title";
 
-            $page = file_to_array("./layout/admin_mainmenu.html");
+            $page = get_layout_parts("admin_mainmenu");
             $content .= implode($page);
 
             break;
@@ -418,7 +418,7 @@ function do_admin(Page $page)
 
         case "Tildele dugnad":
 
-            $page = file_to_array("./layout/admin_tildeledugnad.html");
+            $page = get_layout_parts("admin_tildeledugnad");
             $valid_login = valid_admin_login();
             $c = 0;
 
@@ -495,7 +495,7 @@ function do_admin(Page $page)
             $title = $formdata["admin"];
             $navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; <a href='index.php?do=admin&admin=Innstillinger'>Innstillinger</a> &gt; $title";
 
-            $page = file_to_array("./layout/menu_semesterstart.html");
+            $page = get_layout_parts("menu_semesterstart");
 
             if (truncateAllowed() == false) {
                 // $page["disable_kalender"] = "disabled='disabled'" . $page["disable_kalender"];
@@ -531,7 +531,7 @@ function do_admin(Page $page)
             $title = $formdata["admin"];
             $navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; <a href='index.php?do=admin&admin=Innstillinger'>Innstillinger</a> &gt; $title";
 
-            $page = file_to_array("./layout/admin_dugnadsledere.html");
+            $page = get_layout_parts("admin_dugnadsledere");
 
             /* If user is admin and logged in correctly, update the dugnadsledere... */
 
@@ -601,7 +601,7 @@ function do_admin(Page $page)
 
                 $element_count = 0;
 
-                $flyer = file_to_array("./layout/flyer_passord.html");
+                $flyer = get_layout_parts("flyer_passord");
 
                 $query = "SELECT
 
@@ -700,7 +700,7 @@ function do_admin(Page $page)
                 $title = "Admin";
                 $navigation = "<a href='index.php'>Hovedmeny</a> &gt; Admin";
 
-                $content = $feedback . file_get_contents("./layout/menu_admin.html");
+                $content = $feedback . get_layout_content("menu_admin");
             } elseif (($valid_login == 1 || $valid_login == 2) && $doit) {
                 $page->setPrintView();
 
@@ -711,7 +711,7 @@ function do_admin(Page $page)
                 $max_time = 0;
                 $min_time = time();
 
-                $flyer = file_to_array("./layout/flyer_botlist.html");
+                $flyer = get_layout_parts("flyer_botlist");
 
                 /* ADDING ALL BOTS AND ANNULERINGER THAT ARE
                    FROM DUGNADS/DELTAGELSE THAT STILL EXSITS.
@@ -798,7 +798,7 @@ function do_admin(Page $page)
                 $title = "Vise botlisten";
                 $navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Botliste";
 
-                $admin_login = file_to_array("./layout/admin_login_botlist.html");
+                $admin_login = get_layout_parts("admin_login_botlist");
 
                 $bot_count = get_bot_count();
 
@@ -862,7 +862,7 @@ function do_admin(Page $page)
                 $title = "Neste dugnadsliste";
                 $navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Botliste";
 
-                $admin_login = file_to_array("./layout/admin_login_dugnadlist.html");
+                $admin_login = get_layout_parts("admin_login_dugnadlist");
 
 
                 /* Making the select drop-down box with all dugnadsledere .. */
@@ -915,7 +915,7 @@ function do_admin(Page $page)
                 if ($valid_login == 1 && !empty($formdata["newn"]) && get_beboer_name($formdata["newn"]) && empty($formdata["notat"])) {
                     /* Valid beboer - showing notat form ..
                     ------------------------------------------------ */
-                    $admin_login = file_to_array("./layout/admin_notat.html");
+                    $admin_login = get_layout_parts("admin_notat");
 
                     $show = (!empty($formdata["show"]) ? "<input type='hidden' name='show' value='" . $formdata["show"] . "'>\n" : null);
 
@@ -1068,7 +1068,7 @@ function do_admin(Page $page)
 
                 $item_count = 0;
 
-                $flyer_template = file_to_array("./layout/flyer_bot.html");
+                $flyer_template = get_layout_parts("flyer_bot");
 
                 $query = "SELECT dugnad_id AS id, dugnad_dato AS dato FROM bs_dugnad WHERE dugnad_dato >= (SELECT dugnad_dato FROM bs_dugnad WHERE dugnad_id = ${formdata['show']}) AND dugnad_slettet ='0' ORDER BY dugnad_dato LIMIT 1";
 
@@ -1190,7 +1190,7 @@ function do_admin(Page $page)
             if ($valid_login && !empty($formdata["newn"]) && get_beboer_name($formdata["newn"]) && empty($formdata["notat"])) {
                 /* Valid beboer - adding note..
                 ------------------------------------------------ */
-                $admin_login = file_to_array("./layout/admin_notat.html");
+                $admin_login = get_layout_parts("admin_notat");
 
                 $show = (!empty($formdata["show"]) ? "<input type='hidden' name='show' value='" . $formdata["show"] . "'>\n" : null);
 
@@ -1284,7 +1284,7 @@ function do_admin(Page $page)
             } elseif (($valid_login == 1 || $valid_login == 2) && !empty($formdata["newn"]) && get_beboer_name($formdata["newn"]) && empty($formdata["notat"])) {
                 /* Valid beboer - adding note..
                 ------------------------------------------------ */
-                $admin_login = file_to_array("./layout/admin_notat.html");
+                $admin_login = get_layout_parts("admin_notat");
 
                 $show = (!empty($formdata["show"]) ? "<input type='hidden' name='show' value='" . $formdata["show"] . "'>\n" : null);
 
@@ -1333,7 +1333,7 @@ function do_admin(Page $page)
                 list($dugnad_is_empty, $dugnad_is_full) = get_dugnad_status();
 
                 /*
-                $box = file_to_array("./layout/box_green.html");
+                $box = get_layout_parts("box_green");
                 $box["content"] = "<h2>37 beboere har dugnad 28. januar.</h2>". $box["content"];
                 */
 
@@ -1418,7 +1418,7 @@ function do_admin(Page $page)
             }
 
             $content .= "<form action='index.php' method='post'>" . show_all_saturdays();
-            $content .= file_get_contents("./layout/form_update.html") . "</form>" . $msg;
+            $content .= get_layout_content("form_update") . "</form>" . $msg;
 
             if (truncateAllowed($future_check) == false) {
 
@@ -1467,7 +1467,7 @@ function do_admin(Page $page)
 
                     $element_count = 0;
 
-                    $flyer = file_to_array("./layout/flyer_passord.html");
+                    $flyer = get_layout_parts("flyer_passord");
 
                     while (list($beboer_id) = mysql_fetch_row($result_deltager)) {
                         $query = "SELECT
@@ -1522,7 +1522,7 @@ function do_admin(Page $page)
 
 
             if ($valid_login != 1 || $ops) {
-                $page = file_to_array("./layout/form_innkallingnyeste.html");
+                $page = get_layout_parts("form_innkallingnyeste");
 
                 $page["importeringsliste"] = make_last_beboere_select() . $page["importeringsliste"];
 
@@ -1576,7 +1576,7 @@ function do_admin(Page $page)
 
             $content = $feedback;
 
-            $page = file_to_array("./layout/form_import.html");
+            $page = get_layout_parts("form_import");
 
             if (truncateAllowed() == false) {
                 $page["disable_slett"] = "disabled='disabled'" . $page["disable_slett"];
@@ -1755,24 +1755,24 @@ function do_admin(Page $page)
 
 
 
-                            $content .= file_get_contents("./layout/admin_mainmenu.html");
+                            $content .= get_layout_content("admin_mainmenu");
 
                             /* -------------------------------------------------
                                 Done adding dugnads                           */
                         } else {
-                            $content .= file_get_contents("./layout/menu_semesterstart.html");
+                            $content .= get_layout_content("menu_semesterstart");
                         }
                     } else {
                         if ($do_it) {
                             $content .= "Det skjedde en feil under lagring av dugnadsliste, vennligst pr&oslash;v igjen...";
-                            $content .= file_get_contents("./layout/form_import.html");
+                            $content .= get_layout_content("form_import");
                         } else {
-                            $content .= file_get_contents("./layout/menu_semesterstart.html");
+                            $content .= get_layout_content("menu_semesterstart");
                         }
                     }
                 } else {
                     $content = "Det oppstod en feil under oppdatering av databasen, vennligst <a href='index.php?do=admin&admin=Importere nye dugnadsbarn'>pr&oslash;v igjen</a>...";
-                    $content = file_get_contents("./layout/form_import.html");
+                    $content = get_layout_content("form_import");
                 }
             } else {
                 $content = "Passordet er ikke riktig, vennligst <a href='index.php?do=admin&admin=Importer%20beboere'>pr&oslash;v igjen</a>...";
@@ -1797,7 +1797,7 @@ function do_admin(Page $page)
             $title = "Admin";
             $navigation = "<a href='index.php'>Hovedmeny</a> &gt; Admin";
 
-            $content = file_to_array("./layout/menu_admin.html");
+            $content = get_layout_parts("menu_admin");
 
             $content["db_error"] = database_health() . $content["db_error"];
 
@@ -4573,12 +4573,15 @@ function utf8_substr($str, $start)
 }
 
 
-function file_to_array($filename)
+function get_layout_content($name)
 {
-    global $path_final, $using_layout;
+    return file_get_contents(__DIR__ . "/layout/$name.html");
+}
 
-    $using_layout = $filename;
-    $buffer = file_get_contents($path_final . $filename);
+
+function get_layout_parts($name)
+{
+    $buffer = get_layout_content($name);
 
     // Returns an array with content and the entire tag
     // in the order they were found in $filename.
@@ -5674,7 +5677,7 @@ function get_dugnadsledere()
 
 function output_default_frontpage()
 {
-    $page_array = file_to_array("./layout/menu_main.html");
+    $page_array = get_layout_parts("menu_main");
 
     $page_array["gutta"] = get_dugnadsledere() . $page_array["gutta"];
     $page_array["beboer"] = get_beboer_select() . $page_array["beboer"];

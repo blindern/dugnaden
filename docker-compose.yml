@@ -9,7 +9,7 @@ services:
     ports:
       - 127.0.0.1:8080:80
     volumes:
-      - ./dugnaden:/var/www/dugnaden
+      - ./:/var/dugnaden
       # We mount the certificate so that this can all use the same
       # certificate file in production, instead of having to rebuild.
       - ./dev/idp.foreningenbs.no.crt:/var/simplesamlphp/cert/idp.foreningenbs.no.crt
@@ -21,6 +21,8 @@ services:
       - database-password
       - simplesamlphp-admin-password
       - simplesamlphp-secretsalt
+    working_dir: /var/dugnaden
+    command: bash -c "composer dump-autoload && exec apache2-foreground"
 
   database:
     image: mysql:8

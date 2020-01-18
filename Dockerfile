@@ -38,12 +38,12 @@ RUN set -eux; \
 COPY simplesamlphp/config.override.php /var/simplesamlphp/config/
 COPY simplesamlphp/authsources.php /var/simplesamlphp/config/
 COPY simplesamlphp/saml20-idp-remote.php /var/simplesamlphp/metadata/
-COPY dugnaden /var/www/dugnaden/
-COPY composer.json /var/www
+COPY dugnaden /var/dugnaden/dugnaden/
+COPY composer.json /var/dugnaden/
 COPY apache-site.conf /etc/apache2/sites-enabled/000-default.conf
 
 RUN set -eux; \
-    cd /var/www; \
+    cd /var/dugnaden; \
     composer dump-autoload
 
 EXPOSE 80

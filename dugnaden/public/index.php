@@ -2,7 +2,7 @@
 
 header("Content-type: text/html; charset=utf-8");
 
-include "./script/default.php";
+include "../lib/default.php";
 
 $formdata = get_formdata();
 // print_r($formdata);
@@ -60,7 +60,7 @@ if (!empty($formdata["do"])) {
                     $page->addContentHtml("<p class='failure'>Du har ikke valgt navnet ditt fra nedtrekksmenyen.</a>");
                 }
 
-                $page_array = file_to_array("./layout/menu_main.html");
+                $page_array = get_layout_parts("menu_main");
                 $page->addContentHtml(output_default_frontpage());
             } else {
                 /* VALID LOGIN - showing screen to allow user to change dugnadsdates
@@ -75,7 +75,7 @@ if (!empty($formdata["do"])) {
                 $page->setTitleHtml("Bytte dugnadsdatoer");
                 $page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; Profilen til " . get_beboer_name($formdata["beboer"], true));
 
-                $file = file_to_array("./layout/menu_beboerctrl.html");
+                $file = get_layout_parts("menu_beboerctrl");
                 $file["gutta"] = get_dugnadsledere() . $file["gutta"];
                 $page->addContentHtml(implode($file));
 
@@ -112,7 +112,7 @@ if (!empty($formdata["do"])) {
                     $page->addContentHtml("<p class='failure'>Du har ikke valgt navnet ditt fra nedtrekksmenyen.</a>");
                 }
 
-                $page_array = file_to_array("./layout/menu_main.html");
+                $page_array = get_layout_parts("menu_main");
                 $page->addContentHtml(output_default_frontpage());
             } else {
 
@@ -142,7 +142,7 @@ if (!empty($formdata["do"])) {
                     $page->setTitleHtml("Endre passord til " . $beboer_navn);
                     $page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; Passord");
 
-                    $page_array = file_to_array("./layout/form_pw.html");
+                    $page_array = get_layout_parts("form_pw");
 
                     $page->addContentHtml($feedback . $page_array["head"] . "<input type='hidden' name='beboer' value='" . $formdata["beboer"] . "' /><input type='hidden' name='pw' value='" . $formdata["pw"] . "' />" .  $page_array["hidden"] . $beboer_navn . $page_array["beboer_navn"]);
                 } else {
@@ -152,7 +152,7 @@ if (!empty($formdata["do"])) {
                     $page->setTitleHtml("Bytte passord");
                     $page->setNavigationHtml("<a href='index.php?beboer=" . $formdata["beboer"] . "'>Hovedmeny</a> &gt; Passord");
 
-                    $page_array = file_to_array("./layout/menu_main.html");
+                    $page_array = get_layout_parts("menu_main");
                     $page->addContentHtml($feedback . output_default_frontpage());
                 }
             }
