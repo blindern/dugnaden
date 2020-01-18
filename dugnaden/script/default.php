@@ -2672,7 +2672,6 @@ function show_day($day, $show_expired_days = false, $editable = false, $dugnadsl
 
                         rom_nr            AS rom,
                         rom_type        AS rtype,
-                        rom_tlf            AS tlf,
 
                         dugnad_dato        AS done_when,
 
@@ -2703,7 +2702,7 @@ function show_day($day, $show_expired_days = false, $editable = false, $dugnadsl
             $entries .= "<div class='row_explained_day'><div class='name_narrow'>Beboer (" . @mysql_num_rows($result) . " deltagere)</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
         }
 
-        while (list($id, $first, $last, $rom, $type, $tlf, $when, $done, $kind, $note) = @mysql_fetch_row($result)) {
+        while (list($id, $first, $last, $rom, $type, $when, $done, $kind, $note) = @mysql_fetch_row($result)) {
             if ($show_expired_days) {
                 $check_box = get_beboer_selectbox($id, $day);
             }
@@ -2837,7 +2836,7 @@ function get_notes($id, $admin = false)
         }
     }
 
-    $query = "SELECT notat_txt AS the_note, notat_id, notat_mottaker, beboer_passord, rom_tlf, rom_nr, rom_type, beboer_for
+    $query = "SELECT notat_txt AS the_note, notat_id, notat_mottaker, beboer_passord, rom_nr, rom_type, beboer_for
                 FROM bs_beboer
 
                     LEFT JOIN bs_notat
@@ -4018,7 +4017,6 @@ function show_vedlikehold_person($id, $line_count)
 
     $query = "SELECT    beboer_for        AS first,
                         beboer_etter    AS last,
-                        rom_tlf,
                         rom_nr
 
                 FROM bs_beboer
@@ -4034,7 +4032,7 @@ function show_vedlikehold_person($id, $line_count)
     $result = @run_query($query);
 
     if (@mysql_num_rows($result) == 1) {
-        list($first, $last, $tlf, $rom) = @mysql_fetch_row($result);
+        list($first, $last, $rom) = @mysql_fetch_row($result);
 
         if ($admin) {
             $check_box = "<input type='checkbox' name='delete_person[]' value='" . $id . "'> ";
@@ -4045,8 +4043,6 @@ function show_vedlikehold_person($id, $line_count)
         } else {
             $full_name = $first . " " . $last;
         }
-
-        $full_name .= " (tlf " . $tlf . ")";
 
         /* Normal business ... */
 
@@ -4068,7 +4064,6 @@ function show_person($id, $line_count, $admin = false)
                         beboer_etter    AS last,
                         beboer_spesial    AS spesial,
 
-                        rom_tlf,
                         rom_nr
 
                 FROM bs_beboer
@@ -4083,7 +4078,7 @@ function show_person($id, $line_count, $admin = false)
     $result = @run_query($query);
 
     if (@mysql_num_rows($result) == 1) {
-        list($first, $last, $spesial, $tlf, $rom) = @mysql_fetch_row($result);
+        list($first, $last, $spesial, $rom) = @mysql_fetch_row($result);
 
         if ($admin) {
             $check_box = "<input type='checkbox' name='delete_person[]' value='" . $id . "'> ";
@@ -5862,7 +5857,7 @@ function update_blivende_elephants()
 
 function get_dugnadsledere()
 {
-    $query = "SELECT beboer_for, beboer_etter, rom_nr, rom_type, rom_tlf
+    $query = "SELECT beboer_for, beboer_etter, rom_nr, rom_type
                 FROM bs_beboer, bs_rom, bs_innstillinger
                 WHERE innstillinger_felt = 'dugnadsleder' AND
                     beboer_id = innstillinger_verdi AND
@@ -5875,7 +5870,7 @@ function get_dugnadsledere()
             $tlf = "";
             if ($row['beboer_for'] == "Karl-Martin" && $row['beboer_etter'] == "Svastuen") $tlf = " - 971 5 9 266";
             if ($row['beboer_for'] == "Theodor Tinius" && $row['beboer_etter'] == "Tronerud") $tlf = " - 400 41 458";
-            $names .= "<i>" . $row["beboer_for"] . " " . $row["beboer_etter"] . "</i> (" . $row["rom_nr"] . $row["rom_type"] . " #" . $row["rom_tlf"] . $tlf . ")<br />";
+            $names .= "<i>" . $row["beboer_for"] . " " . $row["beboer_etter"] . "</i> (" . $row["rom_nr"] . $row["rom_type"] . $tlf . ")<br />";
         }
     } else {
         $names = "Dugnadslederne";
