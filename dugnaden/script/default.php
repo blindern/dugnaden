@@ -644,49 +644,6 @@ function do_admin()
             break;
 
             /* -------------------------------------------------------------------------------------------------------------------------------------------- *
-         * Endre Buatelefon / Skifte telefon / Oppdatere buatelefon / Festforening buatelefon / mobil til bua
-         * -------------------------------------------------------------------------------------------------------------------------------------------- *
-         *
-         * Lets the admin change the number used to dial Festforeningen
-         *
-         * -------------------------------------------------------------------------------------------------------------------------------------------- */
-
-        case "Endre Buatelefon":
-
-            /* User has not chosen a valid action
-            ------------------------------------------------------------ */
-
-            $title = $formdata["admin"];
-            $navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; <a href='index.php?do=admin&admin=Innstillinger'>Innstillinger</a> &gt; $title";
-
-            $page = file_to_array("./layout/admin_buatelefon.html");
-
-            if (!empty($formdata["buatelefon"])) {
-                if (valid_admin_login() == 1) {
-                    if (update_buatelefon($formdata["buatelefon"]) == 1) {
-                        /* Password was successfully changed .. */
-                        $page["hidden"] = "<p class='success'>Buatelefonene ble oppdatert til " . get_buatelefon() . ".</p>" . $page["hidden"];
-                    } else {
-                        /* Password was NOT changed .. */
-                        $page["hidden"] = "<p class='failure'>Beklager, det oppstod en feil under oppdatering. Buatelefonen forble uendret.</p>" . $page["hidden"];
-                    }
-                } else {
-                    $page["hidden"] = "<p class='failure'>Du har ikke rettighet til denne funksjonen.</p>" . $page["hidden"];
-                }
-            } else {
-                $page["hidden"] = "<p class='failure'>Vennligst tast inn et nytt telefonnummer f&oslash;r du oppdaterer.</p>" . $page["hidden"];
-            }
-
-            $page["hidden"] = "<input type='hidden' name='do' value='admin'><input type='hidden' name='admin' value='Endre Buatelefon'>" . $page["hidden"];
-
-            $page["telefon"] = "<span class='success'>" . get_buatelefon() . "</span>" . $page["telefon"];
-
-            $content = implode($page);
-
-            break;
-
-
-            /* -------------------------------------------------------------------------------------------------------------------------------------------- *
          * Infoliste
          * -------------------------------------------------------------------------------------------------------------------------------------------- *
          *
@@ -6008,55 +5965,11 @@ function forceNewDugnads($beboer_id, $forceCount, $perDugnad, $note = null)
 }
 
 
-
-/* ******************************************************************************************** *
- * get_buatelefon ( void )
- * --------------------------------------------------------------------------------------------
- *
- * Returns   : Queries the bs_innstillinger for "buatelefon" and returns the phone number
- *
- * Used by: show_person($id, $line_count, $admin = false)
- *
- * ============================================================================================ */
-
-function get_buatelefon()
-{
-    $query = "SELECT innstillinger_verdi FROM bs_innstillinger WHERE innstillinger_felt = 'buatelefon' LIMIT 1";
-    $result = @run_query($query);
-
-    list($buatelefon) = @mysql_fetch_row($result);
-    return $buatelefon;
-}
-
-/* ******************************************************************************************** *
- * update_buatelefon ( String )
- * --------------------------------------------------------------------------------------------
- *
- * Returns: Updates the buatelefon with a new number
- *
- * Params : $new_buatelefon The new number formatted as a string
- *
- * Used by: show_person($id, $line_count, $admin = false)
- *
- * ============================================================================================ */
-
-function update_buatelefon($new_buatelefon)
-{
-    $query = "UPDATE bs_innstillinger SET innstillinger_verdi = '" . $new_buatelefon . "' WHERE innstillinger_felt = 'buatelefon'";
-    @run_query($query);
-
-    print @mysql_error();
-    return @mysql_affected_rows();
-}
-
-
 /* ******************************************************************************************** *
  * get_all_barn ( String )
  * --------------------------------------------------------------------------------------------
  *
  * Returns: A html-formattes list of all kids having dugnad
- *
- * Params : $new_buatelefon The new number formatted as a string
  *
  * Used by: output_vedlikehold_list()
  *
