@@ -207,21 +207,6 @@ function do_admin()
             $month    = date("m", time());
             $day    = date("d", time());
 
-            if ($month > 7) {
-                /* We now know we are in the autumn semester
-                -------------------------------------------------------- */
-                $month_start = "08";
-            } else {
-                /* .. Spring
-                -------------------------------------------------------- */
-                $month_start = "01";
-            }
-
-            $start_date = $year . "." . $month_start . ".01 00:00:00";
-
-            /* If admin uses SUPERUSER password, show all bots ever given to beboers:
-            ---------------------------------------------------------------------------------------------------------------- */
-
             $query = "SELECT bot_id, bot_annulert, bot_registrert, beboer_id, dugnad_dato
                         FROM bs_dugnad, bs_bot, bs_deltager, bs_beboer
                         WHERE bot_deltager = deltager_id AND
@@ -847,13 +832,6 @@ function do_admin()
                 global $paper;
                 $paper = "_paper";
 
-
-                if ($valid_login == 2) {
-                    /* Use this filter only if the user is not logging in with the SUPERUSER password. */
-
-                    $not_SUPERUSER = "AND bot_registrert <= '0'";
-                }
-
                 $formdata["view"] = "Botliste";
 
                 $line_count = 0;
@@ -884,8 +862,6 @@ function do_admin()
                                     deltager_beboer = beboer_id
                                 AND deltager_dugnad = dugnad_id
                                 AND    bot_deltager = deltager_id
-
-                                " . $not_SUPERUSER . "
                                 AND deltager_gjort <> '0'
                                 AND dugnad_checked = '1'
 
@@ -925,9 +901,6 @@ function do_admin()
                             FROM bs_bot, bs_beboer
 
                             WHERE    bot_beboer = beboer_id
-
-                                " . $not_SUPERUSER . "
-
                             ORDER BY beboer_etter, beboer_for";
 
                 $result = @run_query($query);
@@ -2870,11 +2843,9 @@ function get_beboer_selectbox($beboer_id, $dugnad_id)
 function get_notes($id, $admin = false)
 {
     global $formdata;
-
     $admin_enda = "</a>";
 
-    // SHOWING NOTES ONLY TO ADMIN OR SUPERUSER (not undergruppe or beboer)
-    if ($admin == 1 || $admin == 2) {
+    if ($admin) {
         $show = (!empty($formdata["show"]) ? "&show=" . $formdata["show"] : null);
 
         if (isset($formdata["next"])) {
@@ -4107,20 +4078,6 @@ function show_vedlikehold_person($id, $line_count)
     }
 }
 
-/* ******************************************************************************************** *
- * show_person (int, int, boolean/int)
- * --------------------------------------------------------------------------------------------
- *
- * Returns: Shows the beboer with $id
- *
- * Used by: output_full_list ( boolean )
- *
- * Params : $admin = false for normal beboere
- *          $admin = 1 for SuperUsers (allowed to delete, change date and status)
- *            $admin = 2 for Administrasjon (allowed to change status and date)
- *            $admin = 3 for Undergrupper (only allowed to change status)
- * ============================================================================================ */
-
 function show_person($id, $line_count, $admin = false)
 {
     global $formdata;
@@ -4146,9 +4103,7 @@ function show_person($id, $line_count, $admin = false)
     if (@mysql_num_rows($result) == 1) {
         list($first, $last, $spesial, $tlf, $rom) = @mysql_fetch_row($result);
 
-
-        // ONLY SUPER USER ARE ALLOWED TO DELETE BEBOERE
-        if ($admin == 1) {
+        if ($admin) {
             $check_box = "<input type='checkbox' name='delete_person[]' value='" . $id . "'> ";
         }
 
@@ -4158,22 +4113,15 @@ function show_person($id, $line_count, $admin = false)
             $full_name = get_public_lastname($last, $first, false, $admin);
         }
 
-
         /* Outputting a static list of dugnads and status
         --------------------------------------------------------------------- */
 
-        if ($admin === false) {
-            // BEBOERE ARE SHOWN ONLY STATIC ELEMENTS
+        if (!$admin) {
             $show_ff_details = true;
             $dugnads = get_special_status_image($id, $line_count, $show_ff_details) . get_dugnads($id);
-        } elseif ($admin == 3) {
-            // SHOWING SPECIAL IMAGE AND STATIC DUGNADS
-            $dugnads = get_special_status_image($id, $line_count) . get_dugnads($id) . change_status($id, $line_count);
-        } elseif ($admin == 1 || $admin == 2) {
-            // SHOWING SPECIAL IMAGE AND DYNAMIC DUGNADS
+        } else {
             $dugnads = get_special_status_image($id, $line_count) . admin_get_dugnads($id, $admin) . admin_addremove_dugnad($id, $line_count);
         }
-
 
         $entries .= "<div class='row" . ($line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $check_box . $full_name . (empty($rom) ? " (<b>rom ukjent</b>)" : null) . "</div>\n<div class='when'>" . $dugnads . "</div><div class='note'>" . get_notes($id, $admin) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
 
@@ -4808,36 +4756,36 @@ function valid_login()
 {
     global $formdata;
 
-    $valid_login = valid_admin_login();
-
-    if ($valid_login == 1 || $valid_login == 2) {
-        // This is admin overrun
-        // Added so that admin can login using Admin or Superuser password
+    if (check_is_admin()) {
         return 1;
-    } elseif (!strcmp($formdata["beboer"], "-1")) {
+    }
+
+    if (!strcmp($formdata["beboer"], "-1")) {
         // User has not selected a valid beboer from the drop down list
         return -2;
-    } elseif (empty($formdata["pw"])) {
+    }
+
+    if (empty($formdata["pw"])) {
         // Password is missing
         return -1;
+    }
+
+    // Password has been entered and a use selected from the drop down box
+    $query = "SELECT beboer_id, beboer_passord
+                FROM bs_beboer
+                WHERE beboer_id = '" . $formdata["beboer"] . "'
+                LIMIT 1";
+    $result = @run_query($query);
+
+    $row = @mysql_fetch_array($result);
+
+    if (isset($formdata["pw"]) && !strcmp($row["beboer_passord"], $formdata["pw"])) {
+        // VALID LOGIN
+        increase_normal_login();
+        return 1;
     } else {
-        // Password has been entered and a use selected from the drop down box
-        $query = "SELECT beboer_id, beboer_passord
-                    FROM bs_beboer
-                    WHERE beboer_id = '" . $formdata["beboer"] . "'
-                    LIMIT 1";
-        $result = @run_query($query);
-
-        $row = @mysql_fetch_array($result);
-
-        if (isset($formdata["pw"]) && !strcmp($row["beboer_passord"], $formdata["pw"])) {
-            // VALID LOGIN
-            increase_normal_login();
-            return 1;
-        } else {
-            // INVALID LOGIN
-            return 0;
-        }
+        // INVALID LOGIN
+        return 0;
     }
 }
 
@@ -4850,94 +4798,13 @@ function valid_login()
 
 function valid_admin_login()
 {
+    // Previously this method returned:
+    //   1 for dugnadsleder
+    //   2 for administrasjon
+    //   3 for ryddevaktsjef, vaktgruppa, festforeningen (only when open_season == 1)
+    // But only dugnadsleder have been using this for the last years, so
+    // support for the others are removed when the SAML auth was set up.
     return check_is_admin() ? 1 : false;
-
-    /*
-    global $formdata;
-
-    $visitor_ip = getenv("REMOTE_ADDR");
-
-    if(!strcmp($formdata["pw"], get_innstilling("pw_dugnadsleder")) )
-    {
-        /* SUPERUSER login - This is used by the dugnadsledere
-         * Defined at the top of this page
-        --------------------------------------------------------------------- */
-
-    /* REMOVED: No need for this info any more
-        $query = "INSERT INTO bs_admin_access  (admin_access_ip, admin_access_date, admin_access_success)
-                    VALUES ('". $visitor_ip ."', NOW(), '1')";
-
-        @run_query($query);
-        *-/
-
-        return 1;
-    }
-
-    /* THIS PASSWORD IS WHAT THE BS ADMINISTRATION IS USING ALL THE TIME TO LOGIN
-     * TO CHANGE LOCATE THE DEFINE AT THE TOP OF THIS PAGE
-     * ---------------------------------------------------------------------- *-/
-
-    elseif(!strcmp($formdata["pw"], get_innstilling("pw_administrasjon")) )
-    {
-        /* Return true to prevent login / Useful for when I am editing code
-         * Defined at the top of this page
-        --------------------------------------------------------------------------------
-        return false; *-/
-
-        $query = "INSERT INTO bs_admin_access  (admin_access_ip, admin_access_date, admin_access_success)
-                    VALUES ('". $visitor_ip ."', NOW(), '2')";
-
-        @run_query($query);
-
-        return 2;
-    }
-
-    /* THIS METHOD WILL GET THE POTENTIALLY AVAILABLE PASSWORD FROM THE DB
-     * THIS IS USED BY THE Ryddevaktsjef, Vaktgruppa AND Festforeningen
-     * ---------------------------------------------------------------------- *-/
-
-    elseif(!strcmp($formdata["pw"], get_innstilling("pw_undergruppe")))
-    {
-        /* Return true to prevent login / Useful for when I am editing code
-        --------------------------------------------------------------------------------
-        return false; *-/
-
-        $query = "INSERT INTO bs_admin_access  (admin_access_ip, admin_access_date, admin_access_success)
-                    VALUES ('". $visitor_ip ."', NOW(), '3')";
-
-        @run_query($query);
-
-        if(get_innstilling("open_season", "1"))
-        {
-            return 3;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    else
-    {
-        $query = "SELECT 1 FROM bs_innstillinger WHERE innstillinger_felt LIKE 'pw_dugnadsleder' LIMIT 1";
-        $result = run_query($query);
-
-        if(mysql_num_rows($result))
-        {
-            return false;
-        }
-        else
-        {
-            if(!strcmp($formdata["pw"], SUPERUSER) )
-            {
-                return 1;
-            }
-        }
-    }
-
-    // Reaching this means login was invalid
-    return false;
-     */
 }
 
 

@@ -17,10 +17,6 @@ define("DEVELOPER_MODE", false);
 ------------------------------------------------------------------------------------------ */
 define("DUGNADURL", "https://foreningenbs.no/dugnaden/");
 
-/* This is only used when the database does not include any valid passwords
------------------------------------------------------------------------------------------- */
-define("SUPERUSER", "DLWHBS");
-
 /* Set the maximum count for a dugnad before it is closed. A closed dugnad can not
 be selected by the kids when they are changing their dugnad date.
 ------------------------------------------------------------------------------------------ */
