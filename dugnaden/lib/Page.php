@@ -8,7 +8,6 @@ namespace Blindern\Dugnaden;
  */
 class Page
 {
-
     private $cssName = "default";
     private $navigation = "";
     private $title = "";

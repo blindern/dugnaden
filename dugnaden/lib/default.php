@@ -8,13 +8,12 @@ require_once("config.php");
 
 require_once __DIR__ . "/../../vendor/autoload.php";
 
+use \Blindern\Dugnaden\Dugnaden;
 use \Blindern\Dugnaden\Page;
 
-// --------------------------------------------------------------------------------------- */
-
-$link     = mysql_connect($srv, $usr, $pas);
+$link     = mysql_connect($config_database["host"], $config_database["username"], $config_database["password"]);
 mysql_set_charset("utf8", $link);
-$database = mysql_select_db($db, $link);
+$database = mysql_select_db($config_database["dbname"], $link);
 
 function get_formdata()
 {
@@ -84,6 +83,8 @@ function do_admin(Page $page)
                 if ((int) $formdata["beboer"] > 0) {
                     /* A BEBOER IS CHOSEN TO RECEIVE AN ANNULERING
                     ------------------------------------------------------------------ */
+
+
 
                     $query = "INSERT INTO bs_bot (bot_beboer, bot_annulert) VALUES ('" . $formdata["beboer"] . "', '-1')";
                     @run_query($query);
@@ -939,13 +940,13 @@ function do_admin(Page $page)
                     ---------------------------------------------------------- */
 
                     global $dugnad_is_empty, $dugnad_is_full;
-                    list($dugnad_is_empty, $dugnad_is_full) = get_dugnad_status();
+                    list($dugnad_is_empty, $dugnad_is_full) = Dugnaden::get()->dugnad->getDugnadStatus();
 
                     $feedback .= update_dugnads();
 
                     /* Updating reference list
                     ------------------------------------------------ */
-                    list($dugnad_is_empty, $dugnad_is_full) = get_dugnad_status();
+                    list($dugnad_is_empty, $dugnad_is_full) = Dugnaden::get()->dugnad->getDugnadStatus();
 
 
                     if (!empty($formdata["deln"])) {
@@ -1243,7 +1244,7 @@ function do_admin(Page $page)
                 }
 
                 global $dugnad_is_empty, $dugnad_is_full;
-                list($dugnad_is_empty, $dugnad_is_full) = get_dugnad_status();
+                list($dugnad_is_empty, $dugnad_is_full) = Dugnaden::get()->dugnad->getDugnadStatus();
 
                 $content = $feedback . output_full_list($valid_login); // true for admin
             } else {
@@ -1321,7 +1322,7 @@ function do_admin(Page $page)
                 }
 
                 global $dugnad_is_empty, $dugnad_is_full;
-                list($dugnad_is_empty, $dugnad_is_full) = get_dugnad_status();
+                list($dugnad_is_empty, $dugnad_is_full) = Dugnaden::get()->dugnad->getDugnadStatus();
 
                 /*
                 $box = get_layout_parts("box_green");
@@ -2752,38 +2753,6 @@ function get_beboer_password($beboer_id)
     }
 }
 
-
-/* ******************************************************************************************** *
- *  get_dugnad_status($max_kids = MAX_KIDS)
- * --------------------------------------------------------------------------------------------
- *
- * ============================================================================================ */
-
-function get_dugnad_status($max_kids = MAX_KIDS)
-{
-    $query = "SELECT COUNT(deltager_id) AS antall, deltager_dugnad AS id,
-                    dugnad_min_kids, dugnad_max_kids
-                FROM bs_deltager, bs_dugnad
-                WHERE dugnad_id = deltager_dugnad
-                    AND dugnad_slettet = '0'
-                    AND dugnad_dato > NOW() + 7
-                    AND dugnad_type = 'lordag'
-                GROUP BY deltager_dugnad";
-
-    $result = @run_query($query);
-
-    while ($row = @mysql_fetch_array($result)) {
-        if ((int) $row["antall"] <= $row['dugnad_min_kids']) {
-            $empty_dugnads[$row["id"]] = "1";
-        }
-
-        if ((int) $row["antall"] >= $max_kids) {
-            $full_dugnads[$row["id"]] = $row['dugnad_max_kids'];
-        }
-    }
-
-    return array($empty_dugnads, $full_dugnads);
-}
 
 
 /* ******************************************************************************************** *
@@ -4463,50 +4432,6 @@ function get_layout_parts($name)
     }
 
     return $final;
-}
-
-
-/* ******************************************************************************************** *
- *  valid_login()
- * --------------------------------------------------------------------------------------------
- *
- * ============================================================================================ */
-
-function valid_login()
-{
-    global $formdata;
-
-    if (check_is_admin()) {
-        return 1;
-    }
-
-    if (!strcmp($formdata["beboer"], "-1")) {
-        // User has not selected a valid beboer from the drop down list
-        return -2;
-    }
-
-    if (empty($formdata["pw"])) {
-        // Password is missing
-        return -1;
-    }
-
-    // Password has been entered and a use selected from the drop down box
-    $query = "SELECT beboer_id, beboer_passord
-                FROM bs_beboer
-                WHERE beboer_id = '" . $formdata["beboer"] . "'
-                LIMIT 1";
-    $result = @run_query($query);
-
-    $row = @mysql_fetch_array($result);
-
-    if (isset($formdata["pw"]) && !strcmp($row["beboer_passord"], $formdata["pw"])) {
-        // VALID LOGIN
-        increase_normal_login();
-        return 1;
-    } else {
-        // INVALID LOGIN
-        return 0;
-    }
 }
 
 
