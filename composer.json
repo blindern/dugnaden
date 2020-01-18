@@ -1,0 +1,7 @@
+{
+  "name": "blindern/dugnaden",
+  "description": "Dugnadssystemet",
+  "autoload": {
+      "psr-4": {"Blindern\\Dugnaden\\": "dugnaden/script/dugnaden"}
+  }
+}

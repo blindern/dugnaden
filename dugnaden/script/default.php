@@ -6,6 +6,10 @@ date_default_timezone_set("Europe/Oslo");
 require_once("auth.php");
 require_once("config.php");
 
+require_once __DIR__ . "/../../vendor/autoload.php";
+
+use \Blindern\Dugnaden\Page;
+
 // --------------------------------------------------------------------------------------- */
 
 $link     = mysql_connect($srv, $usr, $pas);
@@ -37,7 +41,7 @@ function get_formdata()
  *
  * ============================================================================================ */
 
-function do_admin()
+function do_admin(Page $page)
 {
     global $formdata;
     require_admin();
@@ -591,8 +595,7 @@ function do_admin()
             $valid_login = valid_admin_login();
 
             if ($valid_login == 1) {
-                global $paper;
-                $paper = "_paper";
+                $page->setPrintView();
 
                 $formdata["view"] = "Infoliste";
 
@@ -699,8 +702,7 @@ function do_admin()
 
                 $content = $feedback . file_get_contents("./layout/menu_admin.html");
             } elseif (($valid_login == 1 || $valid_login == 2) && $doit) {
-                global $paper;
-                $paper = "_paper";
+                $page->setPrintView();
 
                 $formdata["view"] = "Botliste";
 
@@ -828,8 +830,7 @@ function do_admin()
             $valid_login = valid_admin_login();
 
             if ($valid_login == 1 && isset($_POST['dugnadsleder'])) {
-                global $paper;
-                $paper = "_dugnadsliste";
+                $page->setDugnadlisteView();
 
                 $formdata['view'] = "Dugnadsliste";
 
@@ -1063,8 +1064,7 @@ function do_admin()
                 /* SHOWING THE PAPER LAYOUT - OF ALL STRAFFEDUGNADS
                 -------------------------------------------------------------------------------- */
 
-                global $paper;
-                $paper = "_paper";
+                $page->setPrintView();
 
                 $item_count = 0;
 
@@ -1461,8 +1461,7 @@ function do_admin()
                 $result_deltager = run_query($query);
 
                 if (mysql_num_rows($result_deltager)) {
-                    global $paper;
-                    $paper = "_paper";
+                    $page->setPrintView();
 
                     $formdata["view"] = "Infoliste";
 
