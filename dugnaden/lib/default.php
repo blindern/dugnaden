@@ -925,10 +925,7 @@ function do_admin(Page $page)
                         $show .= "<input type='hidden' name='prev' value='go'>\n";
                     }
 
-                    $sort_by = (!empty($formdata["sorts"]) ? $formdata["sorts"] : "last");
-
                     $admin_login["hidden"] = "<input type='hidden' name='do' value='admin'>\n" .
-                        "<input type='hidden' name='sorts' value='" . $sort_by . "'>\n" .
                         "<input type='hidden' name='admin' value='" . $formdata["admin"] . "'>\n" .
                         "<input type='hidden' name='beboer' value='" . $formdata["newn"] . "'>\n" . $show .
                         $admin_login["hidden"];
@@ -1200,10 +1197,7 @@ function do_admin(Page $page)
                     $show .= "<input type='hidden' name='prev' value='go'>\n";
                 }
 
-                $sort_by = (!empty($formdata["sorts"]) ? $formdata["sorts"] : "last");
-
                 $admin_login["hidden"] = "<input type='hidden' name='do' value='admin'>\n" .
-                    "<input type='hidden' name='sorts' value='" . $sort_by . "'>\n" .
                     "<input type='hidden' name='admin' value='" . $formdata["admin"] . "'>\n" .
                     "<input type='hidden' name='beboer' value='" . $formdata["newn"] . "'>\n" . $show .
                     $admin_login["hidden"];
@@ -1294,10 +1288,7 @@ function do_admin(Page $page)
                     $show .= "<input type='hidden' name='prev' value='go'>\n";
                 }
 
-                $sort_by = (!empty($formdata["sorts"]) ? $formdata["sorts"] : "last");
-
                 $admin_login["hidden"] = "<input type='hidden' name='do' value='admin'>\n" .
-                    "<input type='hidden' name='sorts' value='" . $sort_by . "'>\n" .
                     "<input type='hidden' name='admin' value='" . $formdata["admin"] . "'>\n" .
                     "<input type='hidden' name='beboer' value='" . $formdata["newn"] . "'>\n" . $show .
                     $admin_login["hidden"];
@@ -2581,7 +2572,7 @@ function show_day($day, $show_expired_days = false, $editable = false, $dugnadsl
                 $check_box = get_beboer_selectbox($id, $day);
             }
 
-            $full_name = get_public_lastname($last, $first, !strcmp($formdata["sorts"], "last"), $dugnadsliste_full_name);
+            $full_name = get_public_lastname($last, $first, true, $dugnadsliste_full_name);
 
             $entries .= "<div class='row" . ($line_count++ % 2 ? "_odd" : null) . "'>" . $check_box . "<div class='name_narrow'>" . $full_name . "</div>\n<div class='note'>" . get_notes($id) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
         }
@@ -2634,11 +2625,7 @@ function admin_show_day($day, $use_dayspacer = true)
         $entries .= "<div class='row_explained_day'><div class='" . (strcmp($formdata["admin"], "Dugnadsliste") ? "select_narrow" : "checkbox_narrow") . "'>" . (strcmp($formdata["admin"], "Dugnadsliste") ? "Frav&aelig;r" : "Slett") . "</div><div class='name_narrow'>Beboer</div><div class='when_narrow'>Tildelte dugnader</div><div class='note'>Admin</div><div class='spacer'>&nbsp;</div></div>";
 
         while (list($id, $first, $last, $when, $done, $kind, $note) = @mysql_fetch_row($result)) {
-            if (!strcmp($formdata["sorts"], "last")) {
-                $full_name = $last . ", " . $first;
-            } else {
-                $full_name = $first . " " . $last;
-            }
+            $full_name = $last . ", " . $first;
 
             if (strcmp($formdata["admin"], "Dugnadsliste")) {
                 /* Showing checkbox only when this is not admin mode..
@@ -2723,15 +2710,8 @@ function get_notes($id, $admin = false)
 
     $result = @run_query($query);
 
-    if (!empty($formdata["sorts"])) {
-        $sort_by = $formdata["sorts"];
-    } else {
-        $sort_by = "last";
-    }
-
-
     while ($row = @mysql_fetch_array($result)) {
-        $admin_starta = "<a href='index.php?do=admin" . $show . $navigate . "&admin=" . $formdata["admin"] . "&sorts=" . $sort_by . "&deln=" . $row["notat_id"] . "'>";
+        $admin_starta = "<a href='index.php?do=admin" . $show . $navigate . "&admin=" . $formdata["admin"] . "&deln=" . $row["notat_id"] . "'>";
         $passord =  "\nPassord: " . $row["beboer_passord"];
         $room     =  "\nRom: " . $row["rom_nr"] . $row["romtype"];
 
@@ -2741,7 +2721,7 @@ function get_notes($id, $admin = false)
     }
 
     if ($admin == 1 || $admin == 2) {
-        $content .= "<a href='index.php?do=admin" . $show . $navigate . "&admin=" . $formdata["admin"] . "&sorts=" . $sort_by . "&newn=" . $id . "' ><img src='./images/postitadd.gif' alt='[note]' title='Legg inn nytt notat." . $passord . $room . "' class='postit_note' /></a>";
+        $content .= "<a href='index.php?do=admin" . $show . $navigate . "&admin=" . $formdata["admin"] . "&&newn=" . $id . "' ><img src='./images/postitadd.gif' alt='[note]' title='Legg inn nytt notat." . $passord . $room . "' class='postit_note' /></a>";
     } else {
         $content .= $room;
     }
@@ -3912,11 +3892,7 @@ function show_vedlikehold_person($id, $line_count)
             $check_box = "<input type='checkbox' name='delete_person[]' value='" . $id . "'> ";
         }
 
-        if (empty($formdata["sorts"]) || !strcmp($formdata["sorts"], "last")) {
-            $full_name = $last . ", " . $first;
-        } else {
-            $full_name = $first . " " . $last;
-        }
+        $full_name = $last . ", " . $first;
 
         /* Normal business ... */
 
@@ -3958,11 +3934,7 @@ function show_person($id, $line_count, $admin = false)
             $check_box = "<input type='checkbox' name='delete_person[]' value='" . $id . "'> ";
         }
 
-        if (empty($formdata["sorts"]) || !strcmp($formdata["sorts"], "last")) {
-            $full_name = get_public_lastname($last, $first, true, $admin);
-        } else {
-            $full_name = get_public_lastname($last, $first, false, $admin);
-        }
+        $full_name = get_public_lastname($last, $first, true, $admin);
 
         /* Outputting a static list of dugnads and status
         --------------------------------------------------------------------- */
@@ -4192,40 +4164,11 @@ function update_saturdays_status()
 
 function output_full_list($admin = false)
 {
-    global $formdata;
-
     $query = "SELECT beboer_for, beboer_etter, beboer_id AS id
-                FROM bs_beboer ";
-
-    if (empty($formdata["sorts"])) {
-        /* Default is alphabetical by surname
-        ------------------------------------------------------ */
-        $sort_last = "checked='checked' ";
-        $sort_query = "ORDER BY beboer_etter, beboer_for";
-    } else {
-        if (!strcmp($formdata["sorts"], "last")) {
-            /* SORT BY LAST NAME */
-
-            $sort_last = "checked='checked' ";
-            $query .= "ORDER BY beboer_etter, beboer_for";
-        } elseif (!strcmp($formdata["sorts"], "first")) {
-            /* SORT BY FIRST NAME */
-
-            $sort_first = "checked='checked' ";
-            $query .= "ORDER BY beboer_for, beboer_etter";
-        } else {
-            /* SORT BY DATE */
-
-            $sort_date = "checked='checked' ";
-
-            $query = "SELECT DISTINCT dugnad_id AS id
-                            FROM bs_dugnad
-                            ORDER BY dugnad_dato";
-        }
-    }
+                FROM bs_beboer
+                ORDER BY beboer_etter, beboer_for";
 
     if ($admin) {
-
         /* ADDING HEADER FOR ADMIN OF DUGNADSLISTE
         ---------------------------------------------------- */
 
@@ -4244,47 +4187,19 @@ function output_full_list($admin = false)
     }
 
     $content  = "<h1>" . $list_title . "</h1>";
-    $content .= "<form method='post' action='index.php'>
-
-    " . $hidden . "
-
-    <p>
-        <input type='radio' name='sorts' value='last'  " . $sort_last . "/> Sorter etter etternavn
-        <input type='radio' class='check_space' name='sorts' value='first' " . $sort_first . "/> Sorter etter fornavn
-        <input type='radio' class='check_space' name='sorts' value='date'  " . $sort_date . "/> Sorter listen etter dato
-        <input type='submit' class='check_space' value='Oppdater visning' /></form>
-    </p>
-
-        <form method='post' action='index.php'>" . $hidden . "
+    $content .= "<form method='post' action='index.php'>" . $hidden . "
         \n";
-
 
     /* CREATING THE ITEM LINES
     ---------------------------------------------------------------------- */
 
-    if (empty($sort_date)) {
-        /* Sort by name, do not group items:
-        -------------------------------------------------------- */
-        $c = 0;
-        $result = @run_query($query . $sort_query);
+    $c = 0;
+    $result = @run_query($query);
 
-        $content .= "<div class='row_explained'><div class='name'>" . ($admin == 1 ? "Slett " : null) . "Beboer</div><div class='when_narrow'>Tildelte dugnader</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
+    $content .= "<div class='row_explained'><div class='name'>" . ($admin == 1 ? "Slett " : null) . "Beboer</div><div class='when_narrow'>Tildelte dugnader</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
 
-        while ($row = @mysql_fetch_array($result)) {
-            $content .= "\n\n" . show_person($row["id"], $c++, $admin) . "\n";
-        }
-    } else {
-        /* GROUPING ITEMS by date
-        -------------------------------------------------------- */
-        $result = @run_query($query);
-
-        while ($row = @mysql_fetch_array($result)) {
-            if (!$admin) {
-                $content .= show_day($row["id"], $admin);
-            } else {
-                $content .= admin_show_day($row["id"]);
-            }
-        }
+    while ($row = @mysql_fetch_array($result)) {
+        $content .= "\n\n" . show_person($row["id"], $c++, $admin) . "\n";
     }
 
     return $content . $admin_buttons . "</form>";
@@ -4310,19 +4225,8 @@ function output_vedlikehold_list()
     $query = "SELECT DISTINCT beboer_id AS id, beboer_for, beboer_etter
                 FROM bs_beboer, bs_deltager
                 WHERE deltager_beboer = beboer_id
-                    AND deltager_dugnad = '-2'";
-
-    if (empty($formdata["sorts"]) || !strcmp($formdata["sorts"], "last")) {
-        /* SORT BY LAST NAME */
-
-        $sort_last = "checked='checked' ";
-        $query .= "ORDER BY beboer_etter, beboer_for";
-    } else {
-        /* SORT BY FIRST NAME */
-
-        $sort_first = "checked='checked' ";
-        $query .= "ORDER BY beboer_for, beboer_etter";
-    }
+                    AND deltager_dugnad = '-2'
+                ORDER BY beboer_etter, beboer_for";
 
     $hidden = "<input type='hidden' name='do' value='admin' />
                         <input type='hidden' name='admin' value='Dagdugnad' />";
@@ -4339,15 +4243,8 @@ function output_vedlikehold_list()
                     dagdugnaden som utf&oslash;rt.
                 </p>
                 ";
-    $content .= "<form method='post' action='index.php'>
-
-    " . $hidden . "
-
-    <p>
-        <input type='radio' name='sorts' value='last'  " . $sort_last . "/> Sorter etter etternavn
-        <input type='radio' class='check_space' name='sorts' value='first' " . $sort_first . "/> Sorter etter fornavn
-        <input type='submit' class='check_space' name='update' value='Oppdater visning' />
-        <input type='submit' class='check_space' name='act' value='Vis dugnadskalenderen' /></form>
+    $content .= "<p>
+        <a href='index.php?do=admin&admin=Dugnadskalender'>Vis dugnadskalenderen</a>
     </p>
 
         <form method='post' action='index.php'>" . $hidden . "
@@ -4358,7 +4255,7 @@ function output_vedlikehold_list()
     ---------------------------------------------------------------------- */
 
     $c = 0;
-    $result = @run_query($query . $sort_query);
+    $result = @run_query($query);
 
     $content .= "<div class='row_explained'><div class='name_narrow'>Beboerens navn</div><div class='when_narrow'>Dugnadstatus</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
 
@@ -4394,19 +4291,8 @@ function output_ryddevakt_list()
     $query = "SELECT DISTINCT beboer_id AS id, beboer_for, beboer_etter
                 FROM bs_beboer, bs_deltager
                 WHERE deltager_beboer = beboer_id
-                    AND deltager_dugnad = '-2'";
-
-    if (empty($formdata["sorts"]) || !strcmp($formdata["sorts"], "last")) {
-        /* SORT BY LAST NAME */
-
-        $sort_last = "checked='checked' ";
-        $query .= "ORDER BY beboer_etter, beboer_for";
-    } else {
-        /* SORT BY FIRST NAME */
-
-        $sort_first = "checked='checked' ";
-        $query .= "ORDER BY beboer_for, beboer_etter";
-    }
+                    AND deltager_dugnad = '-2'
+                ORDER BY beboer_etter, beboer_for";
 
     $hidden = "<input type='hidden' name='do' value='admin' />
                         <input type='hidden' name='admin' value='Dagdugnad' />";
@@ -4423,15 +4309,8 @@ function output_ryddevakt_list()
                     dagdugnaden som utf&oslash;rt.
                 </p>
                 ";
-    $content .= "<form method='post' action='index.php'>
-
-    " . $hidden . "
-
-    <p>
-        <input type='radio' name='sorts' value='last'  " . $sort_last . "/> Sorter etter etternavn
-        <input type='radio' class='check_space' name='sorts' value='first' " . $sort_first . "/> Sorter etter fornavn
-        <input type='submit' class='check_space' name='update' value='Oppdater visning' />
-        <input type='submit' class='check_space' name='act' value='Vis dugnadskalenderen' /></form>
+    $content .= "<p>
+        <a href='index.php?do=admin&admin=Dugnadskalender'>Vis dugnadskalenderen</a>
     </p>
 
         <form method='post' action='index.php'>" . $hidden . "
@@ -4442,7 +4321,7 @@ function output_ryddevakt_list()
     ---------------------------------------------------------------------- */
 
     $c = 0;
-    $result = @run_query($query . $sort_query);
+    $result = @run_query($query);
 
     $content .= "<div class='row_explained'><div class='name_narrow'>Beboerens navn</div><div class='when_narrow'>Dugnadstatus</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
 
@@ -4469,12 +4348,7 @@ function update_full_list()
     global $formdata;
 
     if (valid_admin_login()) {
-        $content  = "<h1>Fullstendig dugnadsliste</h1>";
-        $content .= "<p><input type='radiobox' name='sort' value='last' " . (!empty($formdata["sort"]) && !strcmp($formdata["sort"], "last") ? "checked='checked' " : null) . "/> Sorter etter etternavn<br />\n";
-        $content .= "<input type='radiobox' name='sort' value='first' " . (!empty($formdata["sort"]) && !strcmp($formdata["sort"], "first") ? "checked='checked' " : null) . "/> Sorter etter fornavn<br />\n";
-        $content .= "<input type='radiobox' name='sort' value='date' " . (!empty($formdata["sort"]) && !strcmp($formdata["sort"], "date") ? "checked='checked' " : null) . "/> Sorter listen etter dato</p>\n";
-
-        return $content;
+        return "<h1>Fullstendig dugnadsliste</h1>";
     } else {
         return "<p class='failure'>Du har ikke tastet inn korrekt passord.</p>";
     }
@@ -4531,20 +4405,13 @@ function get_vedlikehold_beboer_select()
 
     $query = "SELECT beboer_for, beboer_etter, beboer_id AS id
                 FROM bs_beboer
-                    WHERE beboer_spesial = '0' " .
-        (isset($formdata["sorts"]) && !strcmp($formdata["sorts"], "first") ?
-            "ORDER BY beboer_for, beboer_etter" :
-            "ORDER BY beboer_etter, beboer_for");
+                WHERE beboer_spesial = '0'
+                ORDER BY beboer_etter, beboer_for";
 
     $result = @run_query($query);
 
     while ($row = @mysql_fetch_array($result)) {
-        if (isset($formdata["sorts"]) && !strcmp($formdata["sorts"], "first")) {
-            $beboer_name = $row["beboer_for"] . " " . $row["beboer_etter"];
-        } else {
-            $beboer_name = $row["beboer_etter"] . ", " . $row["beboer_for"];
-        }
-
+        $beboer_name = $row["beboer_etter"] . ", " . $row["beboer_for"];
         $content .= "<option value='" . $row["id"] . "' >" . $beboer_name . "</option>\n";
     }
 
