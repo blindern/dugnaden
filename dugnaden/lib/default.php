@@ -5659,7 +5659,7 @@ function get_dugnadsledere()
         while ($row = @mysql_fetch_array($result)) {
             $tlf = "";
             if ($row['beboer_for'] == "Karl-Martin" && $row['beboer_etter'] == "Svastuen") $tlf = " - 971 5 9 266";
-            if ($row['beboer_for'] == "Theodor Tinius" && $row['beboer_etter'] == "Tronerud") $tlf = " - 400 41 458";
+            if ($row['beboer_for'] == "Mathias Løland" && $row['beboer_etter'] == "Velle") $tlf = " - 412 14 541";
             $names .= "<i>" . $row["beboer_for"] . " " . $row["beboer_etter"] . "</i> (" . $row["rom_nr"] . $row["rom_type"] . $tlf . ")<br />";
         }
     } else {
