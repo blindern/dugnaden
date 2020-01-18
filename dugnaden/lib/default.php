@@ -15,28 +15,9 @@ $link     = mysql_connect($config_database["host"], $config_database["username"]
 mysql_set_charset("utf8", $link);
 $database = mysql_select_db($config_database["dbname"], $link);
 
-function get_formdata()
+
+function do_admin(Page $page, $formdata)
 {
-
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        foreach ($_POST as $key => $value) {
-            $formdata[$key] = $value;
-        }
-    } elseif ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        foreach ($_GET as $key => $value) {
-            $formdata[$key] = $value;
-        }
-    } else {
-        return null;
-    }
-
-    return $formdata;
-}
-
-
-function do_admin(Page $page)
-{
-    global $formdata;
     require_admin();
 
     switch ($formdata["admin"]) {
@@ -849,7 +830,7 @@ function do_admin(Page $page)
                 $editable = false;
                 $dugnadsliste_full_name = true;
 
-                $content .= show_day($row["dugnad_id"], $show_expired_days, $editable, $dugnadsliste_full_name) . '
+                $content .= show_day($formdata, $row["dugnad_id"], $show_expired_days, $editable, $dugnadsliste_full_name) . '
                 <p>Ta kontakt med dugnadsleder ved spørsmål.</p>';
             } elseif (isset($_POST['dugnadsleder'])) {
                 $feedback .= "<div class='failure'>Du har ikke rettigheter til denne funksjonen.</div>";
@@ -936,7 +917,7 @@ function do_admin(Page $page)
                     global $dugnad_is_empty, $dugnad_is_full;
                     list($dugnad_is_empty, $dugnad_is_full) = Dugnaden::get()->dugnad->getDugnadStatus();
 
-                    $feedback .= update_dugnads();
+                    $feedback .= update_dugnads($formdata);
 
                     /* Updating reference list
                     ------------------------------------------------ */
@@ -1036,7 +1017,7 @@ function do_admin(Page $page)
 
 
 
-                        $content .= admin_show_day($dugnad_id, false);
+                        $content .= admin_show_day($formdata, $dugnad_id, false);
 
                         if ((int) status_of_dugnad($dugnad_id) == 0) {
                             $done_caption = "Merke dagen som ferdigbehandlet";
@@ -1201,7 +1182,7 @@ function do_admin(Page $page)
 
                 $content = implode($admin_login);
             } elseif ($valid_login) {
-                $feedback .= update_dugnads();
+                $feedback .= update_dugnads($formdata);
 
                 if (!empty($formdata["deln"])) {
                     delete_note($formdata["deln"]);
@@ -1297,7 +1278,7 @@ function do_admin(Page $page)
                 ------------------------------------------------------------- */
 
 
-                $feedback .= update_dugnads();
+                $feedback .= update_dugnads($formdata);
 
                 if (!empty($formdata["deln"])) {
                     delete_note($formdata["deln"]);
@@ -1916,8 +1897,6 @@ function clean_txt($str)
 
 function store_data($txt_data, $split_char = "/", $split_name = ",")
 {
-    global $formdata;
-
     $c = 0;
     $success = true;
     $txt_lines = split("\*\*", clean_txt($txt_data));
@@ -2331,8 +2310,6 @@ function get_day_header($day)
 
 function count_dugnad_barn()
 {
-    global $formdata;
-
     $query = "SELECT
                         DISTINCT beboer_id AS id,
                         dugnad_id AS done_when
@@ -2356,10 +2333,8 @@ function count_dugnad_barn()
 }
 
 
-function show_day($day, $show_expired_days = false, $editable = false, $dugnadsliste_full_name = false, $supress_header = false)
+function show_day($formdata, $day, $show_expired_days = false, $editable = false, $dugnadsliste_full_name = false, $supress_header = false)
 {
-    global $formdata;
-
     if (!$show_expired_days) {
         /* To limit days shown - as regular users have no need to see old days...
         -------------------------------------------------------------------------------- */
@@ -2410,7 +2385,7 @@ function show_day($day, $show_expired_days = false, $editable = false, $dugnadsl
 
             $full_name = get_public_lastname($last, $first, true, $dugnadsliste_full_name);
 
-            $entries .= "<div class='row" . ($line_count++ % 2 ? "_odd" : null) . "'>" . $check_box . "<div class='name_narrow'>" . $full_name . "</div>\n<div class='note'>" . get_notes($id) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
+            $entries .= "<div class='row" . ($line_count++ % 2 ? "_odd" : null) . "'>" . $check_box . "<div class='name_narrow'>" . $full_name . "</div>\n<div class='note'>" . get_notes($formdata, $id) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
         }
 
         $entries .= "<div class='day_spacer'>&nbsp;</div>";
@@ -2422,10 +2397,8 @@ function show_day($day, $show_expired_days = false, $editable = false, $dugnadsl
 }
 
 
-function admin_show_day($day, $use_dayspacer = true)
+function admin_show_day($formdata, $day, $use_dayspacer = true)
 {
-    global $formdata;
-
     $query = "SELECT
                         beboer_id        AS id,
                         beboer_for        AS first,
@@ -2467,7 +2440,7 @@ function admin_show_day($day, $use_dayspacer = true)
 
             $dugnads = admin_get_dugnads($id, $editable) . admin_addremove_dugnad($id, $line_count);
 
-            $entries .= "<div class='row" . ($line_count++ % 2 ? "_odd" : null) . "'>" . $select_box . "<div class='name_narrow'>" . $line_count . ". " . $full_name . "</div>\n<div class='when_narrow'>" . $dugnads . "</div><div class='note'>" . get_notes($id, true) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
+            $entries .= "<div class='row" . ($line_count++ % 2 ? "_odd" : null) . "'>" . $select_box . "<div class='name_narrow'>" . $line_count . ". " . $full_name . "</div>\n<div class='when_narrow'>" . $dugnads . "</div><div class='note'>" . get_notes($formdata, $id, true) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
         }
 
         if ($use_dayspacer) {
@@ -2500,9 +2473,8 @@ function get_beboer_selectbox($beboer_id, $dugnad_id)
 }
 
 
-function get_notes($id, $admin = false)
+function get_notes($formdata, $id, $admin = false)
 {
-    global $formdata;
     $admin_enda = "</a>";
 
     if ($admin) {
@@ -2690,10 +2662,8 @@ function smart_create_dugnad($beboer_id)
 }
 
 
-function update_dugnads()
+function update_dugnads($formdata)
 {
-    global $formdata;
-
     foreach ($formdata as $beboer_combo => $new_dugnad) {
         $splits = explode("_", $beboer_combo);
 
@@ -3514,7 +3484,7 @@ function get_simple_date($complex, $very_simple = false)
     return $simple;
 }
 
-function show_vedlikehold_person($id, $line_count)
+function show_vedlikehold_person($formdata, $id, $line_count)
 {
     global $formdata;
 
@@ -3547,7 +3517,7 @@ function show_vedlikehold_person($id, $line_count)
 
         $dugnads = admin_get_dugnads($id, $admin);
 
-        $entries .= "<div class='row" . ($line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $check_box . $full_name . (empty($rom) ? " (<b>rom ukjent</b>)" : null) . "</div>\n<div class='when'>" . $dugnads . "</div><div class='note'>" . get_notes($id, true) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
+        $entries .= "<div class='row" . ($line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $check_box . $full_name . (empty($rom) ? " (<b>rom ukjent</b>)" : null) . "</div>\n<div class='when'>" . $dugnads . "</div><div class='note'>" . get_notes($formdata, $id, true) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
 
         return $entries;
     } else {
@@ -3594,7 +3564,7 @@ function show_person($id, $line_count, $admin = false)
             $dugnads = get_special_status_image($id, $line_count) . admin_get_dugnads($id, $admin) . admin_addremove_dugnad($id, $line_count);
         }
 
-        $entries .= "<div class='row" . ($line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $check_box . $full_name . (empty($rom) ? " (<b>rom ukjent</b>)" : null) . "</div>\n<div class='when'>" . $dugnads . "</div><div class='note'>" . get_notes($id, $admin) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
+        $entries .= "<div class='row" . ($line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $check_box . $full_name . (empty($rom) ? " (<b>rom ukjent</b>)" : null) . "</div>\n<div class='when'>" . $dugnads . "</div><div class='note'>" . get_notes($formdata, $id, $admin) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
 
         return $entries;
     } else {
@@ -4932,10 +4902,8 @@ function forceNewDugnads($beboer_id, $forceCount, $perDugnad, $note = null)
 }
 
 
-function get_all_barn()
+function get_all_barn($formdata)
 {
-    global $formdata;
-
     $query = "SELECT dugnad_id
                 FROM bs_dugnad
                 WHERE dugnad_dato > CURDATE() AND (TO_DAYS(dugnad_dato) - TO_DAYS(NOW()) <= 7)
@@ -4951,7 +4919,7 @@ function get_all_barn()
         $dugnadsliste_full_name = true;
         $supress_header = true;
 
-        return  show_day($dugnad_id, $show_expired_days, $editable, $dugnadsliste_full_name, $supress_header);
+        return  show_day($formdata, $dugnad_id, $show_expired_days, $editable, $dugnadsliste_full_name, $supress_header);
     } else {
         return "<p>Ingen dugnadsdeltagere er satt opp til helgen.</p>";
     }

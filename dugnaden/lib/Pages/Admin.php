@@ -6,7 +6,7 @@ class Admin extends BasePage
 {
     function show()
     {
-        list($title, $navigation, $content) = do_admin($this->page);
+        list($title, $navigation, $content) = do_admin($this->page, $this->formdata);
         $this->page->setTitleHtml($title);
         $this->page->setNavigationHtml($navigation);
         $this->page->addContentHtml($content);
