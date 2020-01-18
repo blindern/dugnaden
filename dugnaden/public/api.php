@@ -6,12 +6,15 @@ $allow = array(
 );
 if (!in_array($_SERVER['REMOTE_ADDR'], $allow)) die("Not authorized.");
 
-require "../lib/default.php";
+require_once __DIR__ . "/../../vendor/autoload.php";
+
+use \Blindern\Dugnaden\Db;
+
 $request = isset($_GET['method']) ? $_GET['method'] : null;
 
 if ($request == "list") {
-    $result = run_query("
-        SELECT dugnad_id, dugnad_dato, dugnad_slettet, dugnad_checked, dugnad_type,
+    $stmt = Db::get()->pdo->query(
+        "SELECT dugnad_id, dugnad_dato, dugnad_slettet, dugnad_checked, dugnad_type,
                deltager_id, deltager_gjort, deltager_type,
                beboer_for, beboer_etter,
                CONCAT(rom_nr, rom_type) rom
@@ -22,15 +25,8 @@ if ($request == "list") {
           LEFT JOIN bs_rom      ON beboer_rom = rom_id
         ORDER BY dugnad_dato, beboer_for, beboer_etter");
 
-    /*$t = array();
-    while ($row = mysql_fetch_assoc($result))
-    {
-        $t[] = $row;
-    };
-    var_dump($t);*/
-
     $dugnader = array();
-    while ($row = mysql_fetch_assoc($result)) {
+    foreach ($stmt as $row) {
         if (!isset($dugnader[$row['dugnad_id']])) {
             $dugnader[$row['dugnad_id']] = array(
                 'id' => $row['dugnad_id'],
