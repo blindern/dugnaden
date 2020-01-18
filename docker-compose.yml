@@ -10,6 +10,9 @@ services:
       - 127.0.0.1:8080:80
     volumes:
       - ./dugnaden:/var/www/dugnaden
+      # We mount the certificate so that this can all use the same
+      # certificate file in production, instead of having to rebuild.
+      - ./dev/idp.foreningenbs.no.crt:/var/simplesamlphp/cert/idp.foreningenbs.no.crt
     environment:
       DATABASE_HOST: database # mysql-1.zt.foreningenbs.no
       DATABASE_USER: root # dugnaden
