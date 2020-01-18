@@ -173,14 +173,14 @@ if (!empty($formdata["do"])) {
 
             /* Default action
             ------------------------------------------------------------ */
-            $title = "Dugnadsordningen p&aring; nett " . VERSION;
+            $title = "Dugnadsordningen p&aring; nett";
             $navigation = "Hovedmeny";
 
             $content = output_default_frontpage();
             break;
     }
 } else {
-    $title = "Dugnadsordningen p&aring; nett " . VERSION;
+    $title = "Dugnadsordningen p&aring; nett";
     $navigation = "Hovedmeny";
 
     $content = output_default_frontpage();

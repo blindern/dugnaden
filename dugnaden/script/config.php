@@ -13,10 +13,6 @@ $db  = $_ENV["DATABASE_NAME"];
 
 define("DEVELOPER_MODE", false);
 
-/* Version number
------------------------------------------------------------------------------------------- */
-define("VERSION", "v2.91-henrist");
-
 /* Setting the url for the dugnad
 ------------------------------------------------------------------------------------------ */
 define("DUGNADURL", "http://blindern-studenterhjem.no/dugnaden/");

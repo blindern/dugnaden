@@ -1965,7 +1965,7 @@ function do_admin()
             /* User has not chosen a valid action
             ------------------------------------------------------------ */
 
-            $title = "Admin " . VERSION;
+            $title = "Admin";
             $navigation = "<a href='index.php'>Hovedmeny</a> &gt; Admin";
 
             $content = file_to_array("./layout/menu_admin.html");
