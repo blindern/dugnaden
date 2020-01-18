@@ -4117,8 +4117,7 @@ function show_person($id, $line_count, $admin = false)
         --------------------------------------------------------------------- */
 
         if (!$admin) {
-            $show_ff_details = true;
-            $dugnads = get_special_status_image($id, $line_count, $show_ff_details) . get_dugnads($id);
+            $dugnads = get_special_status_image($id, $line_count) . get_dugnads($id);
         } else {
             $dugnads = get_special_status_image($id, $line_count) . admin_get_dugnads($id, $admin) . admin_addremove_dugnad($id, $line_count);
         }
@@ -5748,20 +5747,19 @@ function get_beboerid_name($id, $fullname = true, $lastname = false)
 
 
 /* ******************************************************************************************** *
- * get_special_status_image ( int, int, boolean)
+ * get_special_status_image ( int, int)
  * --------------------------------------------------------------------------------------------
  *
  * Returns   : html code for the image used on the dugnadsliste, if the person has a special status
  *
  * Parameters: $id is beboer_id
  *               $line_count is to make sure the correct background color is used (as they vary)
-                $show_ff_details shows all info needed to call beboer to buy things from FF
  *
  * Used by: show_person($id, $line_count, $admin = false)
  *
  * ============================================================================================ */
 
-function get_special_status_image($id, $line_count, $show_ff_details = false)
+function get_special_status_image($id, $line_count)
 {
     global $isSubFolder;
 
@@ -5789,12 +5787,6 @@ function get_special_status_image($id, $line_count, $show_ff_details = false)
 
         if ((int) $row["spesial"] == 4) {
             $dugnads .= "<img src='" . $isSubFolder . "./images/festforeningen" . ($line_count % 2 ? "_odd" : null) . ".gif' title='Festforeningen har dugnadsfri' border='0' align='top'>";
-
-            if ($show_ff_details) {
-                if (SHOW_BUATELEFON) {
-                    $dugnads .= "<b>Buatelefon</b>: " . get_innstilling("buatelefon") . " ";
-                }
-            }
         }
 
         /* Dugnadsfri business ... */ elseif ((int) $row["spesial"] == 6) {
