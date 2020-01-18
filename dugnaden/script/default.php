@@ -389,23 +389,7 @@ function do_admin()
          *
          *       3. Importing students
          *
-         *       4. Setting password on the dugnadsordning
-         *
          * -------------------------------------------------------------------------------------------------------------------------------------------- */
-
-        case "Endre status":
-
-            if (valid_admin_login() == 1) {
-                if (get_innstilling("open_season", "1")) {
-                    set_innstilling("open_season", "0");
-                } else {
-                    set_innstilling("open_season", "1");
-                }
-
-                $show_password = " (" . get_innstilling("pw_undergruppe") . ")";
-            }
-
-            // fall through
 
         case "Innstillinger":
 
@@ -416,14 +400,6 @@ function do_admin()
             $navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; $title";
 
             $page = file_to_array("./layout/admin_mainmenu.html");
-
-            $page["hidden"] =    '<input type="hidden" name="do" value="admin" />' . $page["hidden"];
-            $page["open_season_status"] = (get_innstilling("open_season", "1") ?
-                "<span class='success'>Passordet" . $show_password . " er aktivt.</span>" :
-                "<span class='failure'>Passordet" . $show_password . " er inaktivt.</span>") . $page["open_season_status"];
-
-            $page["fri_url"] =    "<a href='" . DUGNADURL . "fri/'>" . DUGNADURL . "fri/</a>" . $page["fri_url"];
-
             $content .= implode($page);
 
             break;
@@ -603,47 +579,6 @@ function do_admin()
 
 
             /* -------------------------------------------------------------------------------------------------------------------------------------------- *
-         * Skifte passord
-         * -------------------------------------------------------------------------------------------------------------------------------------------- *
-         *
-         * Lets the user change the admin password.
-         *
-         * -------------------------------------------------------------------------------------------------------------------------------------------- */
-
-        case "Skifte passord":
-
-            /* User has not chosen a valid action
-            ------------------------------------------------------------ */
-
-            $title = $formdata["admin"];
-            $navigation = "<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; <a href='index.php?do=admin&admin=Innstillinger'>Innstillinger</a> &gt; $title";
-
-            $page = file_to_array("./layout/admin_pw.html");
-            $page["hidden"] = "<input type='hidden' name='do' value='admin'><input type='hidden' name='admin' value='Skifte passord'>" . $page["hidden"];
-
-            if (!empty($formdata["pw_2"]) && !empty($formdata["pw_b"])) {
-                $valid_login = valid_admin_login();
-
-                if ($valid_login == 1 && !strcmp($formdata["pw_2"], $formdata["pw_b"])) {
-                    if (set_password($formdata["pw_2"], $formdata["bytte"]) == 0) {
-                        /* Password was successfully changed .. */
-                        $page["feedback"] = "<p class='success'>Du har endret passordet som brukes av " . ucfirst($formdata["bytte"]) . ". Gi beskjed!</p>" . $page["feedback"];
-                    } else {
-                        /* Password was NOT changed .. */
-                        $page["feedback"] = "<p class='failure'>Det oppstod en feil under oppdatering av passordet. Passordet er uendret.</p>" . $page["feedback"];
-                    }
-                } elseif ($valid_login) {
-                    $page["feedback"] = "<p class='failure'>Beklager, det nye passordet ble ikke bekreftet. Pr&oslash;v igjen...</p>" . $page["feedback"];
-                } else {
-                    $page["feedback"] = "<p class='failure'>Du har ikke rettigheter til denne funksjonen.</p>" . $page["feedback"];
-                }
-            }
-
-            $content = implode($page);
-
-            break;
-
-            /* -------------------------------------------------------------------------------------------------------------------------------------------- *
          * Infoliste
          * -------------------------------------------------------------------------------------------------------------------------------------------- *
          *
@@ -660,10 +595,6 @@ function do_admin()
                 $paper = "_paper";
 
                 $formdata["view"] = "Infoliste";
-
-                // DISABLING LOGIN FOR VAKTGRUPPESJEFEN, FESTFORENINGEN AND RYDDEVAKTSJEFEN
-                // THIS WILL AUTOMATICALLY BE ENABLED WHEN ALL SATURDAYS AGAIN ARE ADDED!
-                set_innstilling("open_season", "0");
 
                 $element_count = 0;
 
@@ -1440,12 +1371,6 @@ function do_admin()
                             @run_query($query);
 
                             $content .= "<p class='success'>Tilf&oslash;yde " . get_saturdays() . " l&oslash;rdager for dette semesteret.</p>";
-
-                            // ENABLING LOGIN FOR VAKTGRUPPESJEFEN, FESTFORENINGEN AND RYDDEVAKTSJEFEN
-                            // THIS WILL AUTOMATICALLY BE DISABLED WHEN INFOLISTE IS PRINTED!
-
-                            set_innstilling("open_season", "1");
-                            $msg = "<p class='txt_bottom'><span class='failure'>MERK:</span> Passordet (<b>" . get_innstilling("pw") . "</b>) som du gir til Ryddevaktsjefen, Vaktgruppesjefen og Festforeningen er n&aring; operativt helt til <a href='index.php?do=admin&admin=Infoliste'>Infolisten</a> blir skrevet ut. Du kan <a href='index.php?do=admin&admin=Skifte%20passord'>skifte dette passordet</a> fra <a href='index.php?do=admin&admin=Innstillinger'>Innstillinger</a>.</p>";
                         } else {
                             $content .= "<p class='failure'>Denne operasjonenen er ikke tillatt etter at dugnadsperioden har startet.</p>";
                         }
@@ -1465,13 +1390,6 @@ function do_admin()
                             @run_query($query);
 
                             $content .= "<p class='success'>Alle l&oslash;rdager er slettet.</p>";
-
-
-                            // DISABLING LOGIN FOR VAKTGRUPPESJEFEN, FESTFORENINGEN AND RYDDEVAKTSJEFEN
-                            // THIS WILL AUTOMATICALLY BE ENABLED WHEN ALL SATURDAYS AGAIN ARE ADDED!
-
-                            set_innstilling("open_season", "0");
-                            $msg = "<p><span class='failure'>MERK:</span> Ryddevaktsjefen, Vaktgruppesjefen og Festforeningen kan ikke logge inn med passordet (<b>" . get_innstilling("pw") . "</b>) f&oslash;r nye l&oslash;rdager er tilf&oslash;yd kalenderen igjen.</p>";
                         } else {
                             $content .= "<p class='failure'>Beklager, det oppstod en feil under sletting av l&oslash;rdagene.</p>";
                         }
@@ -4734,7 +4652,7 @@ function valid_admin_login()
     // Previously this method returned:
     //   1 for dugnadsleder
     //   2 for administrasjon
-    //   3 for ryddevaktsjef, vaktgruppa, festforeningen (only when open_season == 1)
+    //   3 for ryddevaktsjef, vaktgruppa, festforeningen
     // But only dugnadsleder have been using this for the last years, so
     // support for the others are removed when the SAML auth was set up.
     return check_is_admin() ? 1 : false;
@@ -5480,60 +5398,6 @@ function status_of_dugnad($dugnad_id)
 
 
 /* ******************************************************************************************** *
- *  get_innstilling($felt, $value = null)
- * --------------------------------------------------------------------------------------------
- *
- * ============================================================================================ */
-
-function get_innstilling($felt, $value = null)
-{
-    /* Grabs and returns the $felt values returned by the query .. */
-
-    $query = "SELECT innstillinger_verdi AS value
-                FROM bs_innstillinger
-                WHERE innstillinger_felt = '" . $felt . "'
-                " . (isset($value) ? "AND innstillinger_verdi = '" . $value . "'" : null) . "
-                ORDER BY innstillinger_verdi";
-
-    $result = @run_query($query);
-
-    if (isset($value)) {
-        // Return true/false:
-        if (@mysql_num_rows($result) >= 1) {
-            // One or more innstillings were found, return true
-            return true;
-        } else {
-            // No innstilling was found, return false
-            return false;
-        }
-    } else {
-        // Return value
-        list($value) = @mysql_fetch_row($result);
-        return $value;
-    }
-}
-
-
-/* ******************************************************************************************** *
- *  set_innstilling($felt, $value)
- * --------------------------------------------------------------------------------------------
- *
- * ============================================================================================ */
-
-function set_innstilling($felt, $value)
-{
-    /* Grabs and returns the $felt values returned by the query .. */
-
-    $query = "UPDATE bs_innstillinger
-                    SET innstillinger_verdi = '" . $value . "'
-                    WHERE innstillinger_felt = '" . $felt . "'";
-
-    @run_query($query);
-    return @mysql_errno();
-}
-
-
-/* ******************************************************************************************** *
  *  get_result($felt, $value = null)
  * --------------------------------------------------------------------------------------------
  *
@@ -5551,39 +5415,6 @@ function get_result($felt, $value = null)
 
     $result = @run_query($query);
     return $result;
-}
-
-
-/* ******************************************************************************************** *
- *  set_password($new_pw)
- * --------------------------------------------------------------------------------------------
- *
- * ============================================================================================ */
-
-function set_password($new_pw, $field)
-{
-    /* Inserts or updates the Admin password .. */
-
-    $result = get_result("pw_" . $field);
-
-    if (@mysql_num_rows($result) == 1) {
-        /* Password is set - update value: */
-
-        $query = "UPDATE bs_innstillinger
-                    SET innstillinger_verdi = '" . $new_pw . "'
-                    WHERE innstillinger_felt = 'pw_" . $field . "'";
-
-        @run_query($query);
-        return @mysql_errno();
-    } else {
-        /* Password is not set - insert value: */
-
-        $query = "INSERT INTO bs_innstillinger (innstillinger_felt, innstillinger_verdi)
-                    VALUES ('pw_" . $field . "', '" . $new_pw . "')";
-
-        @run_query($query);
-        return @mysql_errno();
-    }
 }
 
 
