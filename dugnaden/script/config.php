@@ -15,7 +15,7 @@ define("DEVELOPER_MODE", false);
 
 /* Setting the url for the dugnad
 ------------------------------------------------------------------------------------------ */
-define("DUGNADURL", "http://blindern-studenterhjem.no/dugnaden/");
+define("DUGNADURL", "https://foreningenbs.no/dugnaden/");
 
 /* This is only used when the database does not include any valid passwords
 ------------------------------------------------------------------------------------------ */
