@@ -4,60 +4,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
 date_default_timezone_set("Europe/Oslo");
 
 require_once("auth.php");
-
-/* Version number
------------------------------------------------------------------------------------------- */
-define(VERSION, "v2.91-henrist");
-
-/* Setting the url for the dugnad
------------------------------------------------------------------------------------------- */
-define(DUGNADURL, "http://blindern-studenterhjem.no/dugnaden/");
-
-/* This is only used when the database does not include any valid passwords
------------------------------------------------------------------------------------------- */
-define(SUPERUSER, "DLWHBS");
-
-/* Set the maximum count for a dugnad before it is closed. A closed dugnad can not
-be selected by the kids when they are changing their dugnad date.
------------------------------------------------------------------------------------------- */
-define(MAX_KIDS, 20);
-
-/* Set the minimum count for a dugnad before a kid no longer can leave that dugnad by
-selectig another date. This is to prevent a dugnad to go empty of kids.
------------------------------------------------------------------------------------------- */
-define(MIN_KIDS, 10);
-
-/* The size of a bot.
------------------------------------------------------------------------------------------- */
-define(ONE_BOT, 500);
-
-/* Show buatelefon.
------------------------------------------------------------------------------------------- */
-define(SHOW_BUATELEFON, true);
-
-/* The buatelefon number.
------------------------------------------------------------------------------------------- */
-// This is now part of the database:
-// define(BUATELEFON, "944 33 398");
-
-
-/* This is the info about the db; such as the @mysql password etc.
------------------------------------------------------------------------------------------- */
-$append_myphpadmin_link = "";
-$running_locally = false;
-
-if (strpos(__FILE__, "C:") !== false) {
-    // LOCAL MAC
-    @include_once "./txt/dbinfo_local.php";
-    @include_once "../txt/dbinfo_local.php";
-
-    $append_myphpadmin_link = "<p class=\"footer_info\"><a href=\"http://blindern-studenterhjem.no/dugnaden/\">Dugnaden</a><br /><a href=\"http://phpmyadmin.webdeal.no/\">Dugnaden MyPHP Admin</a></p>";
-    $running_locally = true;
-} else {
-    // REMOTE SERVER
-    @include_once "./txt/dbinfo.php";
-    @include_once "../txt/dbinfo.php";
-}
+require_once("config.php");
 
 // --------------------------------------------------------------------------------------- */
 

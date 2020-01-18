@@ -215,13 +215,6 @@ if (!empty($formdata["do"])) {
     </div>
 </div>\n\n";
 
-/*if(!strcmp($formdata["do"], "admin"))
-{
-    print "<div class='footer_info'>Ta kontakt med <a target='top' href='http://www.gatada.com/people/johan/contact.php'>Johan H. W. Basberg</a> hvis du har sp&oslash;rsm&aring;l om denne tjenesten.</div>";
-}*/
-
-    print $append_myphpadmin_link /*."<p class=\"footer_info\">Viser ". $using_layout ."</p>"*/;
-
     if (isset($GLOBALS['queries']) && DEVELOPER_MODE && $_SERVER['REMOTE_ADDR'] == $_SERVER['SERVER_ADDR']) {
         echo '
     <pre id="queries_list">Spørringer:
