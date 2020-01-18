@@ -6,34 +6,41 @@ namespace Blindern\Dugnaden;
  * An object used to collect data that will end up in the template and
  * be rendered to the user.
  */
-class Page {
+class Page
+{
 
     private $cssName = "default";
     private $navigation = "";
     private $title = "";
     private $content = "";
 
-    function setPrintView() {
+    function setPrintView()
+    {
         $this->cssName = "default_paper";
     }
 
-    function setDugnadlisteView() {
+    function setDugnadlisteView()
+    {
         $this->cssName = "default_dugnadsliste";
     }
 
-    function setTitleHtml($value) {
+    function setTitleHtml($value)
+    {
         $this->title = $value;
     }
 
-    function addContentHtml($value) {
+    function addContentHtml($value)
+    {
         $this->content .= $value;
     }
 
-    function setNavigationHtml($value) {
+    function setNavigationHtml($value)
+    {
         $this->navigation = $value;
     }
 
-    function render() {
+    function render()
+    {
         $show_queries = isset($GLOBALS['queries']) && DEVELOPER_MODE;
 
         echo '
