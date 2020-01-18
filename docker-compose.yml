@@ -1,0 +1,39 @@
+# Used only for development.
+
+version: "3.7"
+
+services:
+  dugnaden:
+    image: blindern/dugnaden
+    build: .
+    ports:
+      - 127.0.0.1:8080:80
+    volumes:
+      - ./dugnaden:/var/www/dugnaden
+    environment:
+      DATABASE_HOST: database # mysql-1.zt.foreningenbs.no
+      DATABASE_USER: root # dugnaden
+      DATABASE_NAME: dugnaden
+    secrets:
+      - database-password
+      - simplesamlphp-admin-password
+      - simplesamlphp-secretsalt
+
+  database:
+    image: mysql:8
+    # Support for PHP 5.
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=UTF8MB3
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/database-password
+    volumes:
+      - ./dev/initdb:/docker-entrypoint-initdb.d
+    secrets:
+      - database-password
+
+secrets:
+  database-password:
+    file: ./dev/database-password.txt
+  simplesamlphp-admin-password:
+    file: ./dev/simplesamlphp-admin-password.txt
+  simplesamlphp-secretsalt:
+    file: ./dev/simplesamlphp-secretsalt.txt

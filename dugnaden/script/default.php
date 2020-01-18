@@ -1,6 +1,9 @@
 <?php
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+date_default_timezone_set("Europe/Oslo");
+
+require_once("auth.php");
 
 /* Version number
 ------------------------------------------------------------------------------------------ */
@@ -7390,30 +7393,4 @@ function get_dugnad_type_prefix($dugnad) {
 	}
 
 	return '';
-}
-
-function require_admin() {
-
-	require_once "/var/www/aliases/simplesamlphp/lib/_autoload.php";
-	$as = new SimpleSAML_Auth_Simple('fbs-api');
-	if (!$as->isAuthenticated() && $_SERVER['REQUEST_METHOD'] == 'POST') {
-		die("Du ville normalt nå blitt sendt til logg inn siden, men siden du har forsøkt å fullføre et skjema har vi avbrutt pålogging. Det anbefales at du åpner en ny fane og logger inn med den, for så å gå tilbake til denne og oppdatere siden og sende inn skjemaet på nytt.");
-	}
-	$as->requireAuth();
-
-	$attributes = $as->getAttributes();
-	if (!in_array('dugnaden', $attributes['groups'])) {
-		die('Du må være i gruppen "dugnaden" for å administrere dugnadsystemet!');
-	}
-}
-
-function check_is_admin() {
-	require_once "/var/www/aliases/simplesamlphp/lib/_autoload.php";
-	$as = new SimpleSAML_Auth_Simple('fbs-api');
-	if ($as->isAuthenticated()) {
-		$attributes = $as->getAttributes();
-		return in_array('dugnaden', $attributes['groups']);
-	}
-
-	return false;
 }
