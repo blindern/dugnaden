@@ -1,96 +1,86 @@
 /* FLYER: formatting the flyers
 ------------------------------------------------------ */
 
-body
-{
-	font: normal 10pt Verdana, Arial, sans-serif;
+body {
+  font: normal 10pt Verdana, Arial, sans-serif;
 }
 
-div.flyer_rom_info
-{
-	float: right;
-	width: 200px;
-	border: 2px solid;
-	margin: 0px 0px 5px 5px;
-	font: normal 10pt/13pt Verdana, Arial, sans-serif;
-	text-align: center;
-	min-height: 40px;
+div.flyer_rom_info {
+  float: right;
+  width: 200px;
+  border: 2px solid;
+  margin: 0px 0px 5px 5px;
+  font: normal 10pt/13pt Verdana, Arial, sans-serif;
+  text-align: center;
+  min-height: 40px;
 }
 
-div.flyer_info
-{
-	/*font: normal 10pt/12pt Verdana, Arial, sans-serif;*/
-	margin: 0px;
-	padding: 0px;
+div.flyer_info {
+  /*font: normal 10pt/12pt Verdana, Arial, sans-serif;*/
+  margin: 0px;
+  padding: 0px;
 }
 
-div.flyer_info_break
-{
-	/*font: normal 10pt/12pt Verdana, Arial, sans-serif;*/
-	border: 1px dotted #000;
-	border-width: 1px 0 0 0;
-	margin: 0;
-	padding: 0;
-	padding-top: 30px;
-	page-break-after: always;	
+div.flyer_info_break {
+  /*font: normal 10pt/12pt Verdana, Arial, sans-serif;*/
+  border: 1px dotted #000;
+  border-width: 1px 0 0 0;
+  margin: 0;
+  padding: 0;
+  padding-top: 30px;
+  page-break-after: always;
 }
 
-div.flyer_botlist
-{
-	font: normal 10pt/12pt Verdana, Arial, sans-serif;
-	margin: 0px 0px 20px 0px;
-	padding: 0px 0px 20px 0px;
+div.flyer_botlist {
+  font: normal 10pt/12pt Verdana, Arial, sans-serif;
+  margin: 0px 0px 20px 0px;
+  padding: 0px 0px 20px 0px;
 }
 
-.flyer_info h1, .flyer_info_break  h1
-{
-	font: bold 16pt Verdana, Arial, sans-serif;
-	white-space: nowrap;
+.flyer_info h1,
+.flyer_info_break h1 {
+  font: bold 16pt Verdana, Arial, sans-serif;
+  white-space: nowrap;
 }
-.flyer_info h2, .flyer_info_break h2
-{
-	font-size: 13pt;
-	font-family: Verdana, Arial, sans-serif;
-	padding: 0;
-	margin: 0;
-	margin-bottom: -10px;
-}
-
-div.row_odd
-{
-	background: #cdcdcd;
-	width: 600px;
+.flyer_info h2,
+.flyer_info_break h2 {
+  font-size: 13pt;
+  font-family: Verdana, Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+  margin-bottom: -10px;
 }
 
-div.row
-{
-	width: 600px;
+div.row_odd {
+  background: #cdcdcd;
+  width: 600px;
 }
 
-div.name
-{
-	float: left;
-	width: 300px;
+div.row {
+  width: 600px;
 }
 
-div.when
-{
-	float: left;
-	width: 100px;
+div.name {
+  float: left;
+  width: 300px;
 }
 
-div.spacer
-{
-	clear: all;
+div.when {
+  float: left;
+  width: 100px;
 }
 
-div.note
-{
-	float: right;
+div.spacer {
+  clear: all;
+}
+
+div.note {
+  float: right;
 }
 
 @media print {
-	.navBar, .footer_info {
-		display: none;
-	}
+  .navBar,
+  .footer_info {
+    display: none;
+  }
 }

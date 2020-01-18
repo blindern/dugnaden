@@ -1,100 +1,145 @@
 <form action="index.php" method="post">
-	<input type="hidden" name="do" value="admin" />
-	<input type="hidden" name="admin" value="Semesterstart" />
-	
-<div class="right_column">
+  <input type="hidden" name="do" value="admin" />
+  <input type="hidden" name="admin" value="Semesterstart" />
 
-	<h1><img src="./images/mouse.gif" class="hoyre" />Semesterstart</h1>
-	
-	<p class="txt">
-		Du kan her velge &aring; endre passord, til&oslash;ye og slette dugnadsledere, konfigurere l&oslash;rdagene for et nytt semester,
-		<i>importere</i> beboere (og samtidig tildele dugnader dem dugnader) og generere <i>infolapper</i> til alle dugnadsbarna.
-	</p>
-	
-	<h2>Fremgangsm&aring;te ved semesterstart</h2>
-	
-	<p>
-		F&oslash;r du setter i gang med dette, m&aring; du skaffe <b>Ganglisten</b> eller <b>Postlisten</b> fra administrasjonen. Denne sendes vanligvis ut med
-		jevne mellomrom. Det er gjerne enklest med Ganglisten.
-	</p>
-	
-	<p>
-		Filen du velger &aring;pner du i Word eller Open Office, og konverterer til ren tekst. Enkelt.
-		Se p&aring; <a href="index.php?do=admin&admin=Importer%20beboere">importeringssiden</a> hvilke data som skal
-		inkluderes i tekstlisten og hvilket format de skal ha f&oslash;r du konverterer til tekst og limer inn i tekstfeltet.
-	</p>
-	
-	<p class="txt">
-		<ol>
-			<li>Sjekk <a href="index.php?do=admin&admin=Botliste">Botlisten</a> at det <i>ikke finnes utest&aring;ende</i> dugnadsb&oslash;ter!
-				<br /> Finnes det utest&aring;ende b&oslash;ter kan du enkelt logge inn p&aring; siden og ta en utskrift av botlisten f&oslash;r du fortsetter.
-				Utskriften gir du selvsagt til administrasjonen. For ordens skyld sjekk at du faktisk har en utskrift f&oslash;r du klikker p&aring;
-				<i>Nullstill botliste</i> og fortsetter.
-			</li>
+  <div class="right_column">
+    <h1><img src="./images/mouse.gif" class="hoyre" />Semesterstart</h1>
 
-			<li>
-				G&aring; inn p&aring; <a href="index.php?do=admin&admin=Dugnadskalender">Dugnadskalender</a> og slett <u>alle</u> l&oslash;rdager.
-				Tilf&oslash;y deretter alle l&oslash;rdager for det semesteret. Fjern til slutt alle l&oslash;rdagene der beboerne sannsyngligvis
-				ikke vil v&aelig;re p&aring; bruket (slik som p&aring;skeferier etc).
-			</li>
+    <p class="txt">
+      Du kan her velge &aring; endre passord, til&oslash;ye og slette
+      dugnadsledere, konfigurere l&oslash;rdagene for et nytt semester,
+      <i>importere</i> beboere (og samtidig tildele dugnader dem dugnader) og
+      generere <i>infolapper</i> til alle dugnadsbarna.
+    </p>
 
-			<li>
-				Du skal n&aring; <a href="index.php?do=admin&admin=Importer%20beboere">importere beboerlisten</a>.
-				
-				<p>
-					Det er anbefalt p&aring; det kraftigste at du ogs&aring; sletter alle beboere i samme slengen; for &aring; gj&oslash;re dette huker du
-					av valget under tekstboksen.
-					Av erfaring krever det mindre tid enn &aring;
-					g&aring; gjennom listen etterp&aring; og slette alle som har flyttet ut. Data om dugnadsfri og elefantstatus bevares selvom du sletter all
-					data. Eventuelle personer som ikke blir funnet, skrives til skjerm s&aring; du kan revurdere spesialstatus for disse manuelt.
-				</p>
-					De som har spesialstatus og dermed dugnadsfri er i dag <b>Elefanter</b>, Formann for Foreningsstyret, Skapoppmann, Ryddevaktsjefen, leder for Biblioteksutvalget, samt
-					hele Festforeningen. Endringer av spesialstatus i forhold til forrige semester m&aring; selvsagt gj&oslash;res manuelt enten du sletter eller beholder
-					beboerdata fra forrige semester.
-				</p>
-			</li>
+    <h2>Fremgangsm&aring;te ved semesterstart</h2>
 
-			<li>
-				F&oslash;r du tildeler dugnader, er det anbefalt at du <a href="index.php?do=admin&admin=Justere%20status">justerer statusen</a> til beboerne ved &aring; tildeler elefantstatus til
-				elefantene p&aring; bruket,
-				at du merker alle <b>blivende elefanter</b>, og at du sletter alle &oslash;vrige beboere som if&oslash;lge statuttene har dugnadsfri (en h&aring;ndfull beboere).
-			</li>
-			
-			<li>			
-				For &aring; tildele alle beboere som er dugnadspliktige, klikker du enkelt p&aring; <a href="index.php?do=admin&admin=Tildele%20dugnad">Tildele dugnad</a>.
-				Funksjonen tildeler 2 dugnader til alle som er dugnadspliktige. Du kan etterp&aring; g&aring; gjennom listen og slette de som eventuelt ikke
-				skal ha dugnad.
-				
-				<p>
-					N&aring; du tildeler en beboer spesialstatus som enten Elefant, Festforeningsmedlem eller den noe &aring;pne statusen <i>Dugnadsfri</i>
-					s&aring; slettes ogs&aring; samtlige av beboerens tildelte dugnader automatisk.
-				</p>
-			</li>
-			
-			<li>
-				Til slutt skriver du ut <a href="index.php?do=admin&admin=Infoliste">infolisten</a>, som deretter deles opp og fordeles til beboerne p&aring; Blindern Studenterhjem.
-			</li>
-			
-			<li>
-				<b>Ferdig!</b>
-			</li>
-		</ol>
-	</p>
+    <p>
+      F&oslash;r du setter i gang med dette, m&aring; du skaffe
+      <b>Ganglisten</b> eller <b>Postlisten</b> fra administrasjonen. Denne
+      sendes vanligvis ut med jevne mellomrom. Det er gjerne enklest med
+      Ganglisten.
+    </p>
 
-	<p>
-		Mvh,<br />Dugnadslederne
-	</p>
-	
-	<p>
+    <p>
+      Filen du velger &aring;pner du i Word eller Open Office, og konverterer
+      til ren tekst. Enkelt. Se p&aring;
+      <a href="index.php?do=admin&admin=Importer%20beboere"
+        >importeringssiden</a
+      >
+      hvilke data som skal inkluderes i tekstlisten og hvilket format de skal ha
+      f&oslash;r du konverterer til tekst og limer inn i tekstfeltet.
+    </p>
 
-		<input type="submit" name="admin" value="Botliste">
-		<input type="submit" name="admin" value="Dugnadskalender" [disable_kalender]>
-		<input type="submit" name="admin" value="Importer beboere" [disable_import]>
-		<input type="submit" name="admin" value="Justere status">
-		<input type="submit" name="admin" value="Tildele dugnad" [disable_tildele]>
-		<input type="submit" name="admin" value="Infoliste">
-	</p>
+    <ol>
+      <li>
+        Sjekk <a href="index.php?do=admin&admin=Botliste">Botlisten</a> at det
+        <i>ikke finnes utest&aring;ende</i> dugnadsb&oslash;ter! <br />
+        Finnes det utest&aring;ende b&oslash;ter kan du enkelt logge inn
+        p&aring; siden og ta en utskrift av botlisten f&oslash;r du fortsetter.
+        Utskriften gir du selvsagt til administrasjonen. For ordens skyld sjekk
+        at du faktisk har en utskrift f&oslash;r du klikker p&aring;
+        <i>Nullstill botliste</i> og fortsetter.
+      </li>
 
-</div>
-	
+      <li>
+        G&aring; inn p&aring;
+        <a href="index.php?do=admin&admin=Dugnadskalender">Dugnadskalender</a>
+        og slett <u>alle</u> l&oslash;rdager. Tilf&oslash;y deretter alle
+        l&oslash;rdager for det semesteret. Fjern til slutt alle
+        l&oslash;rdagene der beboerne sannsyngligvis ikke vil v&aelig;re
+        p&aring; bruket (slik som p&aring;skeferier etc).
+      </li>
+
+      <li>
+        Du skal n&aring;
+        <a href="index.php?do=admin&admin=Importer%20beboere"
+          >importere beboerlisten</a
+        >.
+
+        <p>
+          Det er anbefalt p&aring; det kraftigste at du ogs&aring; sletter alle
+          beboere i samme slengen; for &aring; gj&oslash;re dette huker du av
+          valget under tekstboksen. Av erfaring krever det mindre tid enn
+          &aring; g&aring; gjennom listen etterp&aring; og slette alle som har
+          flyttet ut. Data om dugnadsfri og elefantstatus bevares selvom du
+          sletter all data. Eventuelle personer som ikke blir funnet, skrives
+          til skjerm s&aring; du kan revurdere spesialstatus for disse manuelt.
+        </p>
+        <p>
+          De som har spesialstatus og dermed dugnadsfri er i dag
+          <b>Elefanter</b>, Formann for Foreningsstyret, Skapoppmann,
+          Ryddevaktsjefen, leder for Biblioteksutvalget, samt hele
+          Festforeningen. Endringer av spesialstatus i forhold til forrige
+          semester m&aring; selvsagt gj&oslash;res manuelt enten du sletter
+          eller beholder beboerdata fra forrige semester.
+        </p>
+      </li>
+
+      <li>
+        F&oslash;r du tildeler dugnader, er det anbefalt at du
+        <a href="index.php?do=admin&admin=Justere%20status"
+          >justerer statusen</a
+        >
+        til beboerne ved &aring; tildeler elefantstatus til elefantene p&aring;
+        bruket, at du merker alle <b>blivende elefanter</b>, og at du sletter
+        alle &oslash;vrige beboere som if&oslash;lge statuttene har dugnadsfri
+        (en h&aring;ndfull beboere).
+      </li>
+
+      <li>
+        For &aring; tildele alle beboere som er dugnadspliktige, klikker du
+        enkelt p&aring;
+        <a href="index.php?do=admin&admin=Tildele%20dugnad">Tildele dugnad</a>.
+        Funksjonen tildeler 2 dugnader til alle som er dugnadspliktige. Du kan
+        etterp&aring; g&aring; gjennom listen og slette de som eventuelt ikke
+        skal ha dugnad.
+
+        <p>
+          N&aring; du tildeler en beboer spesialstatus som enten Elefant,
+          Festforeningsmedlem eller den noe &aring;pne statusen
+          <i>Dugnadsfri</i>
+          s&aring; slettes ogs&aring; samtlige av beboerens tildelte dugnader
+          automatisk.
+        </p>
+      </li>
+
+      <li>
+        Til slutt skriver du ut
+        <a href="index.php?do=admin&admin=Infoliste">infolisten</a>, som
+        deretter deles opp og fordeles til beboerne p&aring; Blindern
+        Studenterhjem.
+      </li>
+
+      <li>
+        <b>Ferdig!</b>
+      </li>
+    </ol>
+
+    <p>Mvh,<br />Dugnadslederne</p>
+
+    <p>
+      <input type="submit" name="admin" value="Botliste" />
+      <input
+        type="submit"
+        name="admin"
+        value="Dugnadskalender"
+        [disable_kalender]
+      />
+      <input
+        type="submit"
+        name="admin"
+        value="Importer beboere"
+        [disable_import]
+      />
+      <input type="submit" name="admin" value="Justere status" />
+      <input
+        type="submit"
+        name="admin"
+        value="Tildele dugnad"
+        [disable_tildele]
+      />
+      <input type="submit" name="admin" value="Infoliste" />
+    </p>
+  </div>
 </form>

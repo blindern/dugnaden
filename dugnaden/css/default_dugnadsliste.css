@@ -8,95 +8,79 @@
 
 --------------------------------------------------------------------------------- */
 
-body
-{
-	font: normal 10pt/11pt Verdana, Arial, sans-serif;
+body {
+  font: normal 10pt/11pt Verdana, Arial, sans-serif;
 }
 
-div.row_odd
-{
-	width: 95%;
-	background: #efefef;
-	padding: 3px 10px 3px 10px;
+div.row_odd {
+  width: 95%;
+  background: #efefef;
+  padding: 3px 10px 3px 10px;
 }
 
-div.row_explained_day
-{
-	padding: 3px 10px 3px 10px;
-	width: 95%;
-	color: white;
-	font-weight: bold;
-	background: black;
-	
-	border-style: solid;
-	border-width: 1px;
-	border-color: black;
+div.row_explained_day {
+  padding: 3px 10px 3px 10px;
+  width: 95%;
+  color: white;
+  font-weight: bold;
+  background: black;
+
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
 }
 
-div.row, div.row_odd
-{
-	border-style: solid;
-	border-top-width: 0px;
-	border-bottom-width: 1px;
-	border-left-width: 1px;
-	border-right-width: 1px;
+div.row,
+div.row_odd {
+  border-style: solid;
+  border-top-width: 0px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-right-width: 1px;
 }
 
-div.row
-{
-	width: 95%;
-	padding: 3px 10px 3px 10px;
+div.row {
+  width: 95%;
+  padding: 3px 10px 3px 10px;
 }
 
-h1.big
-{
-	font: bold 24pt/26pt Verdana, Arial, sans-serif;
+h1.big {
+  font: bold 24pt/26pt Verdana, Arial, sans-serif;
 }
 
-h1
-{
-	font: bold 18pt/20pt Verdana, Arial, sans-serif;
+h1 {
+  font: bold 18pt/20pt Verdana, Arial, sans-serif;
 }
 
-div.name_narrow
-{
-	float: left;
-	width: 40%;
+div.name_narrow {
+  float: left;
+  width: 40%;
 }
 
-div.when_narrow
-{
-	float: left;
+div.when_narrow {
+  float: left;
 }
 
-div.done_dugnad, div.damn_dugnad
-{
-	float: left;
-	color: #cdcdcd;
-	padding: 0px 20px 0px 0px;
+div.done_dugnad,
+div.damn_dugnad {
+  float: left;
+  color: #cdcdcd;
+  padding: 0px 20px 0px 0px;
 }
 
-div.valid_dugnad
-{
-	float: left;
-	color: black;
-	padding: 0px 20px 0px 0px;
+div.valid_dugnad {
+  float: left;
+  color: black;
+  padding: 0px 20px 0px 0px;
 }
 
-div.note
-{
-	float: right;
-
+div.note {
+  float: right;
 }
-
-div.spacer
-{
-	
-}
-
 
 @media print {
-	.navBar, .footer_info {
-		display: none;
-	}
+  .navBar,
+  .footer_info {
+    display: none;
+  }
 }

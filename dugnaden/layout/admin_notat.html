@@ -1,35 +1,32 @@
 <form action="index.php" method="post">
-[hidden]
-<img src="./images/mouse.gif" class="hoyre" />
+  [hidden]
+  <img src="./images/mouse.gif" class="hoyre" />
 
-<div class="left_column">
+  <div class="left_column">
+    <h1>Legg inn notat for [beboer]</h1>
 
-	<h1>Legg inn notat for [beboer]</h1>
+    [feedback]
 
-	[feedback]
-	
-	<p>
-		Et notat kan leses ved &aring; hold muspekeren over dette symbolet  <img src="./images/postit.gif" title="Hold muspeker over bildet for &aring; lese notatet.">			
-	</p>
-	
-	<p>
-		Mvh,<br />Dugnadslederne
-	</p>
+    <p>
+      Et notat kan leses ved &aring; hold muspekeren over dette symbolet
+      <img
+        src="./images/postit.gif"
+        title="Hold muspeker over bildet for &aring; lese notatet."
+      />
+    </p>
 
-</div>
+    <p>Mvh,<br />Dugnadslederne</p>
+  </div>
 
-<div class="menu">
-		<select name="mottaker" size="1">
-			<option value="0">Til dugnadslederne</option>
-			<option value="1">Til vedlikeholdsjefen</option>
-		</select>
-		
-		Notat: <input type="text" name="notat" value="" size="50" maxlength="255">
-		
-		<input type="reset" value="T&oslash;m tekstfeltet">
-		<input type="submit" value="Lagre notat">
-</div>
+  <div class="menu">
+    <select name="mottaker" size="1">
+      <option value="0">Til dugnadslederne</option>
+      <option value="1">Til vedlikeholdsjefen</option>
+    </select>
 
+    Notat: <input type="text" name="notat" value="" size="50" maxlength="255" />
+
+    <input type="reset" value="T&oslash;m tekstfeltet" />
+    <input type="submit" value="Lagre notat" />
+  </div>
 </form>
-
-

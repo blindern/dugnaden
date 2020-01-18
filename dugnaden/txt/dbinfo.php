@@ -12,5 +12,3 @@ $db  = $_ENV["DATABASE_NAME"];
 // the first week with dugnads has passed.
 
 define(DEVELOPER_MODE, false);
-
-?>

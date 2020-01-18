@@ -1,46 +1,71 @@
-<form enctype="multipart/form-data" action="index.php" method="post" accept-charset="UTF-8">
-	<input type="hidden" name="do" value="admin" />
-	<input type="hidden" name="admin" value="upload" />
-	
-<div class="right_column">
+<form
+  enctype="multipart/form-data"
+  action="index.php"
+  method="post"
+  accept-charset="UTF-8"
+>
+  <input type="hidden" name="do" value="admin" />
+  <input type="hidden" name="admin" value="upload" />
 
-	<h1>Tilf&oslash;ye beboer(e)<img src="./images/upload.gif" class="hoyre" /></h1>
-	
-	<p class="txt">
-		Importering av dugnadsbarna foreg&aring;r enkelt ved &aring; klippe ut alle kolonnene med data bortsett fra den siste, da har du all data som kreves om hver enkelt beboer.
-		Uansett hvordan du g&aring; frem, s&aring; skal listen med navn til sllutt kun inneholde f&oslash;lgende data:
-	</p>
-	
-	<p class="code">
-		&lt;etternavn&gt;, &lt;fornavn&gt;<b>/</b>&lt;interntelefon&gt;
-	</p>
+  <div class="right_column">
+    <h1>
+      Tilf&oslash;ye beboer(e)<img src="./images/upload.gif" class="hoyre" />
+    </h1>
 
-	<p class="txt">
-		Hele feltet &lt;etternavn&gt; erstattes av beboerens etternavn, osv. Bruk stor forbokstav p&aring; alle navn. Som du ser er det komma mellom etternavn og fornavn, og en skr&aring;strek mellom fornavn og telefonnummer.
-		Telefonnummeret er selvsagt nummeret som brukes for &aring; n&aring; personen med interntelefonen.
-	</p>
-	
-	<p class="txt">
-		Hvis du er kjent med Regexp, og klipper ut fra Ganglisten alle kolonnene med unntak av den siste, s&aring; kan du bruke f&oslash;lgende for &aring; filtere bort alt un&oslash;dvendig fra Ganglisten:
-		<div class="code"><span class="regexp">^(.*?)</span>, <span class="regexp">(</span><span class="group">[</span><span class="regexp">^</span><span class="key">\t</span><span class="group">]</span><span class="regexp">+?)</span><span class="key">\t</span><span class="regexp">(.*?)(</span><span class="key">\w</span><span class="regexp">+?)$</span></div>
-	</p>
-	
-	<p>
-		Og denne formaterer resultatet:<div class="code"><span class="key">\1</span>,<span class="key">\2</span>/<span class="key">\4</span></div>
-	</p>
+    <p class="txt">
+      Importering av dugnadsbarna foreg&aring;r enkelt ved &aring; klippe ut
+      alle kolonnene med data bortsett fra den siste, da har du all data som
+      kreves om hver enkelt beboer. Uansett hvordan du g&aring; frem, s&aring;
+      skal listen med navn til sllutt kun inneholde f&oslash;lgende data:
+    </p>
 
-	<p>
-		<textarea name="list" cols="40" rows="15"></textarea><br />
-		
-		<input type="radio" name="delappend" [disable_slett] value="del"> [disable_slett_start]Slett alle f&oslash;rst (kun ved semesterstart)[disable_slett_end]<br />
-		<input type="radio" name="delappend" value="append" checked="checked"> Tildele to dugnader automatisk<br />		
-	</p>
+    <p class="code">
+      &lt;etternavn&gt;, &lt;fornavn&gt;<b>/</b>&lt;interntelefon&gt;
+    </p>
 
-	<p class="txt_bottom">
-		<input type="submit" value="Oppdatere dugnadslisten"><br />
-	</p>
+    <p class="txt">
+      Hele feltet &lt;etternavn&gt; erstattes av beboerens etternavn, osv. Bruk
+      stor forbokstav p&aring; alle navn. Som du ser er det komma mellom
+      etternavn og fornavn, og en skr&aring;strek mellom fornavn og
+      telefonnummer. Telefonnummeret er selvsagt nummeret som brukes for &aring;
+      n&aring; personen med interntelefonen.
+    </p>
 
-</div>
+    <p class="txt">
+      Hvis du er kjent med Regexp, og klipper ut fra Ganglisten alle kolonnene
+      med unntak av den siste, s&aring; kan du bruke f&oslash;lgende for &aring;
+      filtere bort alt un&oslash;dvendig fra Ganglisten:
+      <span class="code"
+        ><span class="regexp">^(.*?)</span>, <span class="regexp">(</span
+        ><span class="group">[</span><span class="regexp">^</span
+        ><span class="key">\t</span><span class="group">]</span
+        ><span class="regexp">+?)</span><span class="key">\t</span
+        ><span class="regexp">(.*?)(</span><span class="key">\w</span
+        ><span class="regexp">+?)$</span></span
+      >
+    </p>
+
+    <p>
+      Og denne formaterer resultatet:<span class="code"
+        ><span class="key">\1</span>,<span class="key">\2</span>/<span
+          class="key"
+          >\4</span
+        ></span
+      >
+    </p>
+
+    <p>
+      <textarea name="list" cols="40" rows="15"></textarea><br />
+
+      <input type="radio" name="delappend" [disable_slett] value="del" />
+      [disable_slett_start]Slett alle f&oslash;rst (kun ved
+      semesterstart)[disable_slett_end]<br />
+      <input type="radio" name="delappend" value="append" checked="checked" />
+      Tildele to dugnader automatisk<br />
+    </p>
+
+    <p class="txt_bottom">
+      <input type="submit" value="Oppdatere dugnadslisten" /><br />
+    </p>
+  </div>
 </form>
-
-
