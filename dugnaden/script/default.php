@@ -32,24 +32,6 @@ function get_formdata()
 
 
 /* ******************************************************************************************** *
- *  get_file_content($filename)
- * --------------------------------------------------------------------------------------------
- *
- * ============================================================================================ */
-
-function get_file_content($filename)
-{
-    $fp = fopen($filename, "r");
-
-    $content = fread($fp, filesize($filename));
-
-    fclose($fp);
-
-    return $content;
-}
-
-
-/* ******************************************************************************************** *
  *  do_admin()
  * --------------------------------------------------------------------------------------------
  *
@@ -827,7 +809,7 @@ function do_admin()
                 $title = "Admin";
                 $navigation = "<a href='index.php'>Hovedmeny</a> &gt; Admin";
 
-                $content = $feedback . get_file_content("./layout/menu_admin.html");
+                $content = $feedback . file_get_contents("./layout/menu_admin.html");
             } elseif (($valid_login == 1 || $valid_login == 2) && $doit) {
                 global $paper;
                 $paper = "_paper";
@@ -1561,7 +1543,7 @@ function do_admin()
             }
 
             $content .= "<form action='index.php' method='post'>" . show_all_saturdays();
-            $content .= get_file_content("./layout/form_update.html") . "</form>" . $msg;
+            $content .= file_get_contents("./layout/form_update.html") . "</form>" . $msg;
 
             if (truncateAllowed($future_check) == false) {
 
@@ -1899,24 +1881,24 @@ function do_admin()
 
 
 
-                            $content .= get_file_content("./layout/admin_mainmenu.html");
+                            $content .= file_get_contents("./layout/admin_mainmenu.html");
 
                             /* -------------------------------------------------
                                 Done adding dugnads                           */
                         } else {
-                            $content .= get_file_content("./layout/menu_semesterstart.html");
+                            $content .= file_get_contents("./layout/menu_semesterstart.html");
                         }
                     } else {
                         if ($do_it) {
                             $content .= "Det skjedde en feil under lagring av dugnadsliste, vennligst pr&oslash;v igjen...";
-                            $content .= get_file_content("./layout/form_import.html");
+                            $content .= file_get_contents("./layout/form_import.html");
                         } else {
-                            $content .= get_file_content("./layout/menu_semesterstart.html");
+                            $content .= file_get_contents("./layout/menu_semesterstart.html");
                         }
                     }
                 } else {
                     $content = "Det oppstod en feil under oppdatering av databasen, vennligst <a href='index.php?do=admin&admin=Importere nye dugnadsbarn'>pr&oslash;v igjen</a>...";
-                    $content = get_file_content("./layout/form_import.html");
+                    $content = file_get_contents("./layout/form_import.html");
                 }
             } else {
                 $content = "Passordet er ikke riktig, vennligst <a href='index.php?do=admin&admin=Importer%20beboere'>pr&oslash;v igjen</a>...";
