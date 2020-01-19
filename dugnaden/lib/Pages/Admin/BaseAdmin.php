@@ -3,13 +3,13 @@
 namespace Blindern\Dugnaden\Pages\Admin;
 
 use Blindern\Dugnaden\Dugnaden;
-use Blindern\Dugnaden\Page;
 use Blindern\Dugnaden\Pages\BasePage;
+use Blindern\Dugnaden\Template;
 
 class BaseAdmin
 {
-    /** @var Page */
-    public $page;
+    /** @var Template */
+    public $template;
 
     /** @var Dugnaden */
     public $dugnaden;
@@ -18,7 +18,7 @@ class BaseAdmin
 
     function __construct(BasePage $basePage)
     {
-        $this->page = $basePage->page;
+        $this->template = $basePage->template;
         $this->dugnaden = $basePage->dugnaden;
         $this->formdata = $basePage->formdata;
     }

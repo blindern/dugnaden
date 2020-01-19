@@ -6,9 +6,9 @@ class ImportBeboer extends BaseAdmin
 {
     function show()
     {
-        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
-        $this->page->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
-        $this->page->addNavigation("Importer beboere");
+        $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->template->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
+        $this->template->addNavigation("Importer beboere");
 
         $query = "SELECT dugnad_id
                         FROM bs_dugnad
@@ -28,14 +28,14 @@ class ImportBeboer extends BaseAdmin
             $page["disable_slett_end"] = "</span>" . $page["disable_slett_end"];
         }
 
-        $this->page->addContentHtml($feedback . implode($page));
+        $this->template->addContentHtml($feedback . implode($page));
     }
 
     function showUpload()
     {
-        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
-        $this->page->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
-        $this->page->addNavigation("Importer beboere");
+        $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->template->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
+        $this->template->addNavigation("Importer beboere");
 
         $content = "";
 
@@ -202,7 +202,7 @@ class ImportBeboer extends BaseAdmin
             $content = get_layout_content("form_import");
         }
 
-        $this->page->addContentHtml($content);
+        $this->template->addContentHtml($content);
     }
 
     function cleanText($str)

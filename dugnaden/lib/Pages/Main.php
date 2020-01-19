@@ -6,6 +6,6 @@ class Main extends BasePage
 {
     function show()
     {
-        $this->page->addContentHtml(output_default_frontpage());
+        $this->template->addContentHtml(output_default_frontpage());
     }
 }

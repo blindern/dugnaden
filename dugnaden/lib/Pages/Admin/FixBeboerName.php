@@ -6,8 +6,8 @@ class FixBeboerName extends BaseAdmin
 {
     function show()
     {
-        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
-        $this->page->addNavigation("Rette beboernavn");
+        $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->template->addNavigation("Rette beboernavn");
 
         $page = get_layout_parts("menu_name");
 
@@ -39,6 +39,6 @@ class FixBeboerName extends BaseAdmin
                                         <a href='index.php?do=admin&admin=Rette%20beboernavn'>Tilbake</a>" . $page["beboer_bytte"];
         }
 
-        $this->page->addContentHtml($feedback . implode($page));
+        $this->template->addContentHtml($feedback . implode($page));
     }
 }

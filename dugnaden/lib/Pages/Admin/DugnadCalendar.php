@@ -6,9 +6,9 @@ class DugnadCalendar extends BaseAdmin
 {
     function show()
     {
-        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
-        $this->page->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
-        $this->page->addNavigation("Dugnadskalender");
+        $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->template->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
+        $this->template->addNavigation("Dugnadskalender");
 
         $content = "";
 
@@ -70,7 +70,7 @@ class DugnadCalendar extends BaseAdmin
             $content .= $warning;
         }
 
-        $this->page->addContentHtml($content);
+        $this->template->addContentHtml($content);
     }
 
     private function updateSaturdaysStatus()

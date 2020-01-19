@@ -9,6 +9,6 @@ class Main extends BaseAdmin
         $content = get_layout_parts("menu_admin");
         $content["db_error"] = database_health() . $content["db_error"];
 
-        $this->page->addContentHtml(implode($content));
+        $this->template->addContentHtml(implode($content));
     }
 }

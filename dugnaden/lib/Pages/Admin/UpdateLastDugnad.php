@@ -16,7 +16,7 @@ class UpdateLastDugnad extends BaseAdmin
             /* SHOWING THE PAPER LAYOUT - OF ALL STRAFFEDUGNADS
                 -------------------------------------------------------------------------------- */
 
-            $this->page->setPrintView();
+            $this->template->setPrintView();
 
             $item_count = 0;
 
@@ -101,14 +101,14 @@ class UpdateLastDugnad extends BaseAdmin
                     $flyer["page_break"] = "_break" . $flyer["page_break"];
                 }
 
-                $this->page->addContentHtml(implode($flyer));
+                $this->template->addContentHtml(implode($flyer));
             }
         }
     }
 
     private function showStraffedugnad()
     {
-        $this->page->addNavigation("Oppdatere siste dugnadsliste");
+        $this->template->addNavigation("Oppdatere siste dugnadsliste");
 
         $newnBeboer = !empty($this->formdata["newn"])
             ? $this->dugnaden->beboer->getById($this->formdata["newn"])
@@ -226,9 +226,9 @@ class UpdateLastDugnad extends BaseAdmin
                 }
 
                 $content .= "<div class='row_explained'><input type='reset' class='check_space' value='Nullstille endringer' />&nbsp;&nbsp;&nbsp;<input type='submit' value='Oppdatere dugnadsbarna'>&nbsp;&nbsp;&nbsp;<input type='submit' name='done' value='" . $done_caption . "'></div></form>";
-                $this->page->addContentHtml($content);
+                $this->template->addContentHtml($content);
             } else {
-                $this->page->addContentHtml("<p class='failure'>Det oppstod en feil, viser derfor hele dugnadslisten.</p>" . output_full_list(1));
+                $this->template->addContentHtml("<p class='failure'>Det oppstod en feil, viser derfor hele dugnadslisten.</p>" . output_full_list(1));
             }
         }
     }
@@ -252,7 +252,7 @@ class UpdateLastDugnad extends BaseAdmin
 
         $admin_login["beboer"] = $beboer->getName() . $admin_login["beboer"];
 
-        $this->page->addContentHtml(implode($admin_login));
+        $this->template->addContentHtml(implode($admin_login));
     }
 
     function adminShowDay($formdata, $day, $use_dayspacer = true)

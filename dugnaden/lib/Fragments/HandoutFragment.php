@@ -9,7 +9,7 @@ class HandoutFragment extends Fragment
     /** @param Beboer[] */
     public function show($beboere)
     {
-        $this->page->setPrintView();
+        $this->template->setPrintView();
 
         $element_count = 0;
         $flyer = get_layout_parts("flyer_passord");
@@ -36,7 +36,7 @@ class HandoutFragment extends Fragment
                 $new_flyer["dugnad_dugnad"] = $undone_dugnads . $new_flyer["dugnad_dugnad"];
                 $new_flyer["passord"] = $beboer->password . $new_flyer["passord"];
 
-                $this->page->addContentHtml(implode($new_flyer));
+                $this->template->addContentHtml(implode($new_flyer));
             }
         }
     }

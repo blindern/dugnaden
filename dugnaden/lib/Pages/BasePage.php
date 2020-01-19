@@ -3,21 +3,21 @@
 namespace Blindern\Dugnaden\Pages;
 
 use Blindern\Dugnaden\Dugnaden;
-use Blindern\Dugnaden\Page;
+use Blindern\Dugnaden\Template;
 
 class BasePage
 {
-    /** @var Page */
-    public $page;
+    /** @var Template */
+    public $template;
 
     /** @var Dugnaden */
     public $dugnaden;
 
     public $formdata;
 
-    function __construct(Page $page)
+    function __construct(Template $template)
     {
-        $this->page = $page;
+        $this->template = $template;
         $this->dugnaden = Dugnaden::get();
         $this->formdata = $this->getFormData();
     }

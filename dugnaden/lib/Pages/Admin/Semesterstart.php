@@ -6,8 +6,8 @@ class Semesterstart extends BaseAdmin
 {
     function show()
     {
-        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
-        $this->page->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
+        $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->template->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
 
         $page = get_layout_parts("menu_semesterstart");
 
@@ -17,6 +17,6 @@ class Semesterstart extends BaseAdmin
             $page["disable_tildele"] = "disabled='disabled'" . $page["disable_tildele"];
         }
 
-        $this->page->addContentHtml(implode($page));
+        $this->template->addContentHtml(implode($page));
     }
 }

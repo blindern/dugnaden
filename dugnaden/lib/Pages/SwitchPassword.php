@@ -11,7 +11,7 @@ class SwitchPassword extends UserPage
             return;
         }
 
-        $this->page->addNavigation("Bytte passord til " . $this->beboer->getName());
+        $this->template->addNavigation("Bytte passord til " . $this->beboer->getName());
 
         if (!empty($this->formdata["pw_2"]) && !empty($this->formdata["pw_b"])) {
             if ($this->formdata["pw_2"] === $this->formdata["pw_b"]) {
@@ -23,7 +23,7 @@ class SwitchPassword extends UserPage
                 $feedback = rounded_feedback_box("green", "Ditt nye passord er lagret.");
 
                 $this->page_array = get_layout_parts("menu_main");
-                $this->page->addContentHtml($feedback . output_default_frontpage());
+                $this->template->addContentHtml($feedback . output_default_frontpage());
                 return;
             }
 
@@ -36,12 +36,12 @@ class SwitchPassword extends UserPage
 
         $this->page_array = get_layout_parts("form_pw");
 
-        $this->page->addContentHtml($feedback . $this->page_array["head"] . "<input type='hidden' name='beboer' value='" . $this->formdata["beboer"] . "' /><input type='hidden' name='pw' value='" . $this->formdata["pw"] . "' />" .  $this->page_array["hidden"] . $this->beboer->getName() . $this->page_array["beboer_navn"]);
+        $this->template->addContentHtml($feedback . $this->page_array["head"] . "<input type='hidden' name='beboer' value='" . $this->formdata["beboer"] . "' /><input type='hidden' name='pw' value='" . $this->formdata["pw"] . "' />" .  $this->page_array["hidden"] . $this->beboer->getName() . $this->page_array["beboer_navn"]);
     }
 
     public function showLogin()
     {
-        $this->page->addNavigation("Bytte passord");
+        $this->template->addNavigation("Bytte passord");
         $this->showLoginFailure();
     }
 }

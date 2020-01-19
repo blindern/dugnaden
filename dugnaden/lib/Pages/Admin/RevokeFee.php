@@ -6,7 +6,7 @@ class RevokeFee extends BaseAdmin
 {
     function show()
     {
-        $this->page->addNavigation("Annulere bot");
+        $this->template->addNavigation("Annulere bot");
 
         $content = "";
 
@@ -228,6 +228,6 @@ class RevokeFee extends BaseAdmin
 
         $content .= implode($page);
 
-        $this->page->addContentHtml($content);
+        $this->template->addContentHtml($content);
     }
 }

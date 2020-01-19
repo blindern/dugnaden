@@ -6,8 +6,8 @@ class ChangeDugnadsleder extends BaseAdmin
 {
     function show()
     {
-        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
-        $this->page->addNavigation("Dugnadslederstyring");
+        $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->template->addNavigation("Dugnadslederstyring");
 
         $page = get_layout_parts("admin_dugnadsledere");
 
@@ -44,6 +44,6 @@ class ChangeDugnadsleder extends BaseAdmin
         $page["andre_beboere"] = get_beboer_select($dugnadsleder) . $page["andre_beboere"];
 
         $content .= implode($page);
-        $this->page->addContentHtml($content);
+        $this->template->addContentHtml($content);
     }
 }

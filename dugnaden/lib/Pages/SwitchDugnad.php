@@ -18,7 +18,7 @@ class SwitchDugnad extends UserPage
 
     function showLogin()
     {
-        $this->page->addNavigation("Bytte dugnad", "index.php?do=Bytte dugnad");
+        $this->template->addNavigation("Bytte dugnad", "index.php?do=Bytte dugnad");
         $this->showLoginFailure();
     }
 
@@ -27,7 +27,7 @@ class SwitchDugnad extends UserPage
         global $dugnad_is_empty, $dugnad_is_full;
         list($dugnad_is_empty, $dugnad_is_full) = $this->dugnaden->dugnad->getDugnadStatus();
 
-        $this->page->addContentHtml(update_dugnads($this->formdata));
+        $this->template->addContentHtml(update_dugnads($this->formdata));
 
         $room = isset($this->formdata["room"])
             ? $this->dugnaden->room->getById($this->formdata["room"])
@@ -37,19 +37,19 @@ class SwitchDugnad extends UserPage
             $this->dugnaden->beboer->updateRoom($this->beboer, $room);
         }
 
-        $this->page->addNavigation("Bytte dugnad");
+        $this->template->addNavigation("Bytte dugnad");
 
         $file = get_layout_parts("menu_beboerctrl");
         $file["gutta"] = get_dugnadsledere() . $file["gutta"];
-        $this->page->addContentHtml(implode($file));
+        $this->template->addContentHtml(implode($file));
 
-        $this->page->addContentHtml("    <div class='bl'><div class='br'><div class='tl'><div class='tr'>
+        $this->template->addContentHtml("    <div class='bl'><div class='br'><div class='tl'><div class='tr'>
                                 <form action='index.php' method='post'>
                                 <input type='hidden' name='do' value='Bytte dugnad' />
                                 <input type='hidden' name='beboer' value='" . $this->formdata['beboer'] . "' />
                                 <input type='hidden' name='pw' value='" . $this->formdata['pw'] . "' />");
 
-        $this->page->addContentHtml($this->showBeboerCtrlPanel() . "</form></div></div></div></div>");
+        $this->template->addContentHtml($this->showBeboerCtrlPanel() . "</form></div></div></div></div>");
     }
 
     function showBeboerCtrlPanel()

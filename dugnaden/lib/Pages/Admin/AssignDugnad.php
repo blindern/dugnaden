@@ -9,9 +9,9 @@ class AssignDugnad extends BaseAdmin
 {
     function show()
     {
-        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
-        $this->page->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
-        $this->page->addNavigation("Tildele dugnad");
+        $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->template->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
+        $this->template->addNavigation("Tildele dugnad");
 
         $page = get_layout_parts("admin_tildeledugnad");
 
@@ -29,10 +29,10 @@ class AssignDugnad extends BaseAdmin
         /* Calculates how many deltagere do we need on each dugnad. */
         $per_dugnad = (int) (($beboer_count * 2) / $dugnad_count) + ((($beboer_count * 2) % $dugnad_count) > 0);
 
-        $this->page->addContentHtml("<div class='failure'>" . $beboer_count . " dugnadspliktige beboere fordelt p&aring; " . $dugnad_count . " l&oslash;rdager gir " . $per_dugnad . " barn per dugnad.<br /></div>");
+        $this->template->addContentHtml("<div class='failure'>" . $beboer_count . " dugnadspliktige beboere fordelt p&aring; " . $dugnad_count . " l&oslash;rdager gir " . $per_dugnad . " barn per dugnad.<br /></div>");
 
         if (truncateAllowed() == false) {
-            $this->page->addContentHtml("<p class='failure'>Denne operasjonenen er ikke tillatt etter at dugnadsperioden har startet.</p>");
+            $this->template->addContentHtml("<p class='failure'>Denne operasjonenen er ikke tillatt etter at dugnadsperioden har startet.</p>");
         } elseif (isset($_POST['performit'])) {
             $beboerGiven = 0;
             $dugnadGiven = 0;
@@ -49,7 +49,7 @@ class AssignDugnad extends BaseAdmin
                 $beboerGiven += 1;
             }
 
-            $this->page->addContentHtml("<div class='success'>Totalt ble " . $beboerGiven . " dugnadspliktige beboere tildelt " . sprintf("%.5f", ($dugnadGiven / $beboerGiven)) . " dugnader i snitt.<br /></div>");
+            $this->template->addContentHtml("<div class='success'>Totalt ble " . $beboerGiven . " dugnadspliktige beboere tildelt " . sprintf("%.5f", ($dugnadGiven / $beboerGiven)) . " dugnader i snitt.<br /></div>");
         } else {
             $page["pw_line"] = "<p>
                                     <input type='hidden' name='performit' value='1' />
@@ -58,6 +58,6 @@ class AssignDugnad extends BaseAdmin
                                 </p>" . $page["pw_line"];
         }
 
-        $this->page->addContentHtml(implode($page));
+        $this->template->addContentHtml(implode($page));
     }
 }

@@ -6,7 +6,7 @@ class DugnadList extends BaseAdmin
 {
     function show()
     {
-        $this->page->addNavigation("Administrer dugnadsliste");
+        $this->template->addNavigation("Administrer dugnadsliste");
 
         $newnBeboer = isset($this->formdata["newn"])
             ? $this->dugnaden->beboer->getById($this->formdata["newn"])
@@ -32,7 +32,7 @@ class DugnadList extends BaseAdmin
 
             $admin_login["beboer"] = $newnBeboer->getName() . $admin_login["beboer"];
 
-            $this->page->addContentHtml(implode($admin_login));
+            $this->template->addContentHtml(implode($admin_login));
         } else {
             $feedback .= update_dugnads($this->formdata);
 
@@ -57,7 +57,7 @@ class DugnadList extends BaseAdmin
             global $dugnad_is_empty, $dugnad_is_full;
             list($dugnad_is_empty, $dugnad_is_full) = $this->dugnaden->dugnad->getDugnadStatus();
 
-            $this->page->addContentHtml($feedback . output_full_list(1));
+            $this->template->addContentHtml($feedback . output_full_list(1));
         }
     }
 

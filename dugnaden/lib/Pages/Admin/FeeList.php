@@ -15,7 +15,7 @@ class FeeList extends BaseAdmin
 
     private function showPrintView()
     {
-        $this->page->setPrintView();
+        $this->template->setPrintView();
 
         $line_count = 0;
 
@@ -96,12 +96,12 @@ class FeeList extends BaseAdmin
         $flyer["time_space"] = get_simple_date($min_date, true) . " til " . get_simple_date($max_date, true) . $flyer["time_space"];
         $flyer["dugnad_dugnad"] = $entries . $flyer["dugnad_dugnad"];
 
-        $this->page->addContentHtml(implode($flyer));
+        $this->template->addContentHtml(implode($flyer));
     }
 
     private function showMenu()
     {
-        $this->page->addNavigation("Botliste");
+        $this->template->addNavigation("Botliste");
 
         $admin_login = get_layout_parts("admin_login_botlist");
 
@@ -115,7 +115,7 @@ class FeeList extends BaseAdmin
 
         $admin_login["hidden"] = "<input type='hidden' name='admin' value='Botliste'>" . $admin_login["hidden"];
 
-        $this->page->addContentHtml(implode($admin_login));
+        $this->template->addContentHtml(implode($admin_login));
     }
 
     function getFeeCount()

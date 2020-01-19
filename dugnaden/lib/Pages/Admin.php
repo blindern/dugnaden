@@ -25,7 +25,7 @@ class Admin extends BasePage
     function show()
     {
         require_admin();
-        $this->page->addNavigation("Admin", "index.php?do=admin");
+        $this->template->addNavigation("Admin", "index.php?do=admin");
 
         switch (!empty($this->formdata["admin"]) ? $this->formdata["admin"] : "") {
             case "Annulere bot":
@@ -106,7 +106,7 @@ class Admin extends BasePage
         $blivende_updates = $this->updateBlivendeElephants();
 
         if ($blivende_updates) {
-            $this->page->addContentHtml("<p>Gratulerer til " . $blivende_updates . " beboer" . ($blivende_updates > 1 ? "e" : "") . " som endelig er elefant" .
+            $this->template->addContentHtml("<p>Gratulerer til " . $blivende_updates . " beboer" . ($blivende_updates > 1 ? "e" : "") . " som endelig er elefant" .
                 ($blivende_updates > 1 ? "er" : "") . "!<br />Eventuelt tilknyttede dugnader er slettet..</p>");
         }
     }

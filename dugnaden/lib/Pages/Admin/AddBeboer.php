@@ -8,7 +8,7 @@ class AddBeboer extends BaseAdmin
 {
     function show()
     {
-        $this->page->addNavigation("Innkallingslapper");
+        $this->template->addNavigation("Innkallingslapper");
 
         if (!empty($this->formdata["nyinnkalling"])) {
             $beboere = $this->dugnaden->beboer->getImportBeboerList($this->formdata["nyinnkalling"]);
@@ -19,7 +19,7 @@ class AddBeboer extends BaseAdmin
 
         $page = get_layout_parts("form_innkallingnyeste");
         $page["importeringsliste"] = $this->makeLastBeboereSelect() . $page["importeringsliste"];
-        $this->page->addContentHtml(implode($page));
+        $this->template->addContentHtml(implode($page));
     }
 
     function makeLastBeboereSelect()

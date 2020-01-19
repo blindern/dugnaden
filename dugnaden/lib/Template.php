@@ -6,7 +6,7 @@ namespace Blindern\Dugnaden;
  * An object used to collect data that will end up in the template and
  * be rendered to the user.
  */
-class Page
+class Template
 {
     private $cssName = "default";
     private $content = "";

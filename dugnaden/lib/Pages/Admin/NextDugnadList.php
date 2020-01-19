@@ -15,7 +15,7 @@ class NextDugnadList extends BaseAdmin
 
     private function showForDugnadsleder()
     {
-        $this->page->setDugnadlisteView();
+        $this->template->setDugnadlisteView();
 
         $query = "SELECT dugnad_id
                 FROM bs_dugnad
@@ -39,7 +39,7 @@ class NextDugnadList extends BaseAdmin
             }
         }
 
-        $this->page->addContentHtml("<h1 class='big'>Dugnad" . $text . "</h1>
+        $this->template->addContentHtml("<h1 class='big'>Dugnad" . $text . "</h1>
 
     <p>
         M&oslash;t i peisestuen if&oslash;rt antrekk som passer til b&aring;de innend&oslash;rs-
@@ -50,13 +50,13 @@ class NextDugnadList extends BaseAdmin
         $editable = false;
         $dugnadsliste_full_name = true;
 
-        $this->page->addContentHtml(show_day($this->formdata, $row["dugnad_id"], $show_expired_days, $editable, $dugnadsliste_full_name) . '
+        $this->template->addContentHtml(show_day($this->formdata, $row["dugnad_id"], $show_expired_days, $editable, $dugnadsliste_full_name) . '
     <p>Ta kontakt med dugnadsleder ved spørsmål.</p>');
     }
 
     private function showSelect()
     {
-        $this->page->addNavigation("Neste dugnadsliste");
+        $this->template->addNavigation("Neste dugnadsliste");
 
         $admin_login = get_layout_parts("admin_login_dugnadlist");
 
@@ -76,6 +76,6 @@ class NextDugnadList extends BaseAdmin
         $admin_login["dugnadledere"] = $select . $admin_login["dugnadledere"];
         $admin_login["hidden"] = "<input type='hidden' name='admin' value='Neste dugnadsliste'>" . $admin_login["hidden"];
 
-        $this->page->addContentHtml(implode($admin_login));
+        $this->template->addContentHtml(implode($admin_login));
     }
 }

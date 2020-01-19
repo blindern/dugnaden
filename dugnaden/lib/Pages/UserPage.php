@@ -3,16 +3,16 @@
 namespace Blindern\Dugnaden\Pages;
 
 use Blindern\Dugnaden\Model\Beboer;
-use Blindern\Dugnaden\Page;
+use Blindern\Dugnaden\Template;
 
 class UserPage extends BasePage
 {
     /** @var Beboer */
     protected $beboer;
 
-    function __construct(Page $page)
+    function __construct(Template $template)
     {
-        parent::__construct($page);
+        parent::__construct($template);
         $this->loginStatus = $this->getLoginBeboer();
         if (!is_int($this->loginStatus)) {
             $this->beboer = $this->loginStatus;
@@ -22,14 +22,14 @@ class UserPage extends BasePage
     public function showLoginFailure()
     {
         if ($this->loginStatus == 0) {
-            $this->page->addContentHtml("<p class='failure'>Passordet er ikke korrekt, pr&oslash;v igjen.</a>");
+            $this->template->addContentHtml("<p class='failure'>Passordet er ikke korrekt, pr&oslash;v igjen.</a>");
         } elseif ($this->loginStatus == -1) {
-            $this->page->addContentHtml("<p class='failure'>Du har ikke tastet inn ditt passord, vennligst pr&oslash;v igjen.</a>");
+            $this->template->addContentHtml("<p class='failure'>Du har ikke tastet inn ditt passord, vennligst pr&oslash;v igjen.</a>");
         } else {
-            $this->page->addContentHtml("<p class='failure'>Du har ikke valgt navnet ditt fra nedtrekksmenyen.</a>");
+            $this->template->addContentHtml("<p class='failure'>Du har ikke valgt navnet ditt fra nedtrekksmenyen.</a>");
         }
 
-        $this->page->addContentHtml(output_default_frontpage());
+        $this->template->addContentHtml(output_default_frontpage());
     }
 
     private function getLoginBeboer()

@@ -3,11 +3,12 @@
 namespace Blindern\Dugnaden\Fragments;
 
 use Blindern\Dugnaden\Pages\Admin\BaseAdmin;
+use Blindern\Dugnaden\Template;
 
 class Fragment
 {
-    /** @var Page */
-    public $page;
+    /** @var Template */
+    public $template;
 
     /** @var Dugnaden */
     public $dugnaden;
@@ -15,7 +16,7 @@ class Fragment
     // TODO: Should not be BaseAdmin
     function __construct(BaseAdmin $basePage)
     {
-        $this->page = $basePage->page;
+        $this->template = $basePage->template;
         $this->dugnaden = $basePage->dugnaden;
     }
 }

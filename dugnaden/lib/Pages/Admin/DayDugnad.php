@@ -6,8 +6,8 @@ class DayDugnad extends BaseAdmin
 {
     function show()
     {
-        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
-        $this->page->addNavigation("Dagdugnad");
+        $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->template->addNavigation("Dagdugnad");
 
         $newnBeboer = isset($this->formdata["newn"])
             ? $this->dugnaden->beboer->getById($this->formdata["newn"])
@@ -33,7 +33,7 @@ class DayDugnad extends BaseAdmin
 
             $admin_login["beboer"] = htmlspecialchars($newnBeboer->getName()) . $admin_login["beboer"];
 
-            $this->page->addContentHtml(implode($admin_login));
+            $this->template->addContentHtml(implode($admin_login));
         } else {
 
             /* VALID LOGIN  - SHOWING NORMAL DAGDUGNAD PAGE
@@ -59,7 +59,7 @@ class DayDugnad extends BaseAdmin
             global $dugnad_is_empty, $dugnad_is_full;
             list($dugnad_is_empty, $dugnad_is_full) = $this->dugnaden->dugnad->getDugnadStatus();
 
-            $this->page->addContentHtml($feedback . $this->outputVedlikeholdList());
+            $this->template->addContentHtml($feedback . $this->outputVedlikeholdList());
         }
     }
 
