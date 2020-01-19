@@ -2,7 +2,9 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
-class Settings extends BaseAdmin
+use Blindern\Dugnaden\Pages\Page;
+
+class Settings extends Page
 {
     function show()
     {

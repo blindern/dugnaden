@@ -2,7 +2,9 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
-class ChangeDugnadsleder extends BaseAdmin
+use Blindern\Dugnaden\Pages\Page;
+
+class ChangeDugnadsleder extends Page
 {
     function show()
     {

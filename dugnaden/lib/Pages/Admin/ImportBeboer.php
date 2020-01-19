@@ -2,7 +2,9 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
-class ImportBeboer extends BaseAdmin
+use Blindern\Dugnaden\Pages\Page;
+
+class ImportBeboer extends Page
 {
     function show()
     {

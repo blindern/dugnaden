@@ -2,7 +2,9 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
-class Semesterstart extends BaseAdmin
+use Blindern\Dugnaden\Pages\Page;
+
+class Semesterstart extends Page
 {
     function show()
     {

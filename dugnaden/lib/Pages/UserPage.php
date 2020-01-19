@@ -3,16 +3,17 @@
 namespace Blindern\Dugnaden\Pages;
 
 use Blindern\Dugnaden\Model\Beboer;
-use Blindern\Dugnaden\Template;
+use Blindern\Dugnaden\PageContext;
 
-class UserPage extends BasePage
+class UserPage extends Page
 {
     /** @var Beboer */
     protected $beboer;
 
-    function __construct(Template $template)
+    function __construct(PageContext $context)
     {
-        parent::__construct($template);
+        parent::__construct($context);
+
         $this->loginStatus = $this->getLoginBeboer();
         if (!is_int($this->loginStatus)) {
             $this->beboer = $this->loginStatus;

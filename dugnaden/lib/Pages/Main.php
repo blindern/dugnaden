@@ -2,7 +2,7 @@
 
 namespace Blindern\Dugnaden\Pages;
 
-class Main extends BasePage
+class Main extends Page
 {
     function show()
     {

@@ -2,7 +2,9 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
-class DugnadCalendar extends BaseAdmin
+use Blindern\Dugnaden\Pages\Page;
+
+class DugnadCalendar extends Page
 {
     function show()
     {

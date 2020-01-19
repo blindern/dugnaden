@@ -4,8 +4,9 @@ namespace Blindern\Dugnaden\Pages\Admin;
 
 use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\Model\Dugnad;
+use Blindern\Dugnaden\Pages\Page;
 
-class UpdateLastDugnad extends BaseAdmin
+class UpdateLastDugnad extends Page
 {
     function show()
     {

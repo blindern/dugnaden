@@ -3,8 +3,9 @@
 namespace Blindern\Dugnaden\Pages\Admin;
 
 use Blindern\Dugnaden\Fragments\HandoutFragment;
+use Blindern\Dugnaden\Pages\Page;
 
-class AddBeboer extends BaseAdmin
+class AddBeboer extends Page
 {
     function show()
     {
@@ -12,7 +13,7 @@ class AddBeboer extends BaseAdmin
 
         if (!empty($this->formdata["nyinnkalling"])) {
             $beboere = $this->dugnaden->beboer->getImportBeboerList($this->formdata["nyinnkalling"]);
-            $f = new HandoutFragment($this);
+            $f = new HandoutFragment($this->context);
             $f->show($beboere);
             return;
         }

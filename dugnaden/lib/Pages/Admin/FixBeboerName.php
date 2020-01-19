@@ -2,7 +2,9 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
-class FixBeboerName extends BaseAdmin
+use Blindern\Dugnaden\Pages\Page;
+
+class FixBeboerName extends Page
 {
     function show()
     {

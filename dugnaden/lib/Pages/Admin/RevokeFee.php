@@ -2,7 +2,9 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
-class RevokeFee extends BaseAdmin
+use Blindern\Dugnaden\Pages\Page;
+
+class RevokeFee extends Page
 {
     function show()
     {

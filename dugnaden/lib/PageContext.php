@@ -1,11 +1,8 @@
 <?php
 
-namespace Blindern\Dugnaden\Pages;
+namespace Blindern\Dugnaden;
 
-use Blindern\Dugnaden\Dugnaden;
-use Blindern\Dugnaden\Template;
-
-class BasePage
+class PageContext
 {
     /** @var Template */
     public $template;

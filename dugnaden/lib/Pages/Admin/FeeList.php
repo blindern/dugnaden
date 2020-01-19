@@ -2,7 +2,9 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
-class FeeList extends BaseAdmin
+use Blindern\Dugnaden\Pages\Page;
+
+class FeeList extends Page
 {
     function show()
     {

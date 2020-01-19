@@ -2,7 +2,7 @@
 
 namespace Blindern\Dugnaden\Pages;
 
-class Dugnadlist extends BasePage
+class Dugnadlist extends Page
 {
     function show()
     {

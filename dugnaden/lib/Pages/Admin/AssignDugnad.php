@@ -2,10 +2,12 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
+use Blindern\Dugnaden\Pages\Page;
+
 /**
  * Gives all beboere 2 new dugnads.
  */
-class AssignDugnad extends BaseAdmin
+class AssignDugnad extends Page
 {
     function show()
     {

@@ -20,7 +20,7 @@ use Blindern\Dugnaden\Pages\Admin\Semesterstart;
 use Blindern\Dugnaden\Pages\Admin\Settings;
 use Blindern\Dugnaden\Pages\Admin\UpdateLastDugnad;
 
-class Admin extends BasePage
+class Admin extends Page
 {
     function show()
     {
@@ -29,43 +29,43 @@ class Admin extends BasePage
 
         switch (!empty($this->formdata["admin"]) ? $this->formdata["admin"] : "") {
             case "Annulere bot":
-                (new RevokeFee($this))->show();
+                (new RevokeFee($this->context))->show();
                 break;
 
             case "Rette beboernavn":
-                (new FixBeboerName($this))->show();
+                (new FixBeboerName($this->context))->show();
                 break;
 
             case "Innstillinger":
-                (new Settings($this))->show();
+                (new Settings($this->context))->show();
                 break;
 
             case "Tildele dugnad":
-                (new AssignDugnad($this))->show();
+                (new AssignDugnad($this->context))->show();
                 break;
 
             case "Semesterstart":
-                (new Semesterstart($this))->show();
+                (new Semesterstart($this->context))->show();
                 break;
 
             case "Dugnadslederstyring":
-                (new ChangeDugnadsleder($this))->show();
+                (new ChangeDugnadsleder($this->context))->show();
                 break;
 
             case "Infoliste":
-                (new Handout($this))->show();
+                (new Handout($this->context))->show();
                 break;
 
             case "Botliste":
-                (new FeeList($this))->show();
+                (new FeeList($this->context))->show();
                 break;
 
             case "Neste dugnadsliste":
-                (new NextDugnadList($this))->show();
+                (new NextDugnadList($this->context))->show();
                 break;
 
             case "Oppdatere siste":
-                (new UpdateLastDugnad($this))->show();
+                (new UpdateLastDugnad($this->context))->show();
                 break;
 
             case "Justere status":
@@ -73,33 +73,33 @@ class Admin extends BasePage
             case "Se over forrige semester":
                 // fall-through
             case "Dugnadsliste":
-                (new DugnadList($this))->show();
+                (new DugnadList($this->context))->show();
                 break;
 
             case "Dagdugnad":
-                (new DayDugnad($this))->show();
+                (new DayDugnad($this->context))->show();
                 break;
 
             case "Dugnadskalender":
-                (new DugnadCalendar($this))->show();
+                (new DugnadCalendar($this->context))->show();
                 break;
 
             case "Innkalling av nye":
-                (new AddBeboer($this))->show();
+                (new AddBeboer($this->context))->show();
                 break;
 
             case "Nye beboere":
                 // fall-through
             case "Importer beboere":
-                (new ImportBeboer($this))->show();
+                (new ImportBeboer($this->context))->show();
                 break;
 
             case "upload":
-                (new ImportBeboer($this))->showUpload();
+                (new ImportBeboer($this->context))->showUpload();
                 break;
 
             default:
-                (new Main($this))->show();
+                (new Main($this->context))->show();
                 break;
         }
 

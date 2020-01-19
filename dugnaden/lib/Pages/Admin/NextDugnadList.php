@@ -2,7 +2,9 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
-class NextDugnadList extends BaseAdmin
+use Blindern\Dugnaden\Pages\Page;
+
+class NextDugnadList extends Page
 {
     function show()
     {
