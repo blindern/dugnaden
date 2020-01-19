@@ -566,29 +566,12 @@ form.mini_block input {
  *
  * --------------------------------------------------------------- */
 
-.bl {
-  background: url(../images/corner_bottom_left.gif) 0 100% no-repeat #f4e9db;
-  width: 100%;
-  display: block;
+.box-admin {
+  background: #f4e9db;
+  border-radius: 10px;
   margin-top: 50px;
-  clear: both;
-}
-
-.br {
-  background: url(../images/corner_bottom_right.gif) 100% 100% no-repeat;
-}
-.tl {
-  background: url(../images/corner_top_left.gif) 0 0 no-repeat;
-}
-
-.tr {
-  background: url(../images/corner_top_right.gif) 100% 0 no-repeat;
   padding: 10px;
-}
-
-.clear {
-  font-size: 1px;
-  height: 1px;
+  clear: both;
 }
 
 /* --------------------------------------------------------------- *
@@ -597,24 +580,12 @@ form.mini_block input {
  *
  * --------------------------------------------------------------- */
 
-.bl_beboer {
-  background: url(../images/corner_bottom_left.gif) 0 100% no-repeat #f4e9db;
-  width: 100%;
-  display: block;
+.box-beboer {
+  background: #f4e9db;
+  border-radius: 10px;
   margin-top: 50px;
-  clear: both;
-}
-
-.br_beboer {
-  background: url(../images/corner_bottom_right.gif) 100% 100% no-repeat;
-}
-.tl_beboer {
-  background: url(../images/corner_top_left.gif) 0 0 no-repeat;
-}
-
-.tr_beboer {
-  background: url(../images/corner_top_right.gif) 100% 0 no-repeat;
   padding: 10px;
+  clear: both;
 }
 
 /* --------------------------------------------------------------- *
@@ -623,25 +594,12 @@ form.mini_block input {
  *
  * --------------------------------------------------------------- */
 
-.bl_green {
-  background: url(../images/green_bottom_left.gif) 0 100% no-repeat #168e39;
-  width: 100%;
-  display: block;
+.box-green {
+  background: #168e39;
+  border-radius: 10px;
   margin-top: 5px;
-  clear: both;
-}
-
-.br_green {
-  background: url(../images/green_bottom_right.gif) 100% 100% no-repeat;
-}
-
-.tl_green {
-  background: url(../images/green_top_left.gif) 0 0 no-repeat;
-}
-
-.tr_green {
-  background: url(../images/green_top_right.gif) 100% 0 no-repeat;
   padding: 10px;
+  clear: both;
 }
 
 /* --------------------------------------------------------------- *
@@ -650,28 +608,16 @@ form.mini_block input {
  *
  * --------------------------------------------------------------- */
 
-.bl_red {
-  background: url(../images/red_bottom_left.gif) 0 100% no-repeat #d72525;
-  width: 100%;
-  display: block;
+.box-red {
+  background: #d72525;
+  border-radius: 10px;
   margin-top: 5px;
+  margin-bottom: 15px;
+  padding: 10px;
   clear: both;
   font: bold 10px/16px Verdana, Arial, sans-serif;
   color: white;
   text-align: center;
-}
-
-.br_red {
-  background: url(../images/red_bottom_right.gif) 100% 100% no-repeat;
-}
-
-.tl_red {
-  background: url(../images/red_top_left.gif) 0 0 no-repeat;
-}
-
-.tr_red {
-  background: url(../images/red_top_right.gif) 100% 0 no-repeat;
-  padding: 10px;
 }
 
 /* Import beboere

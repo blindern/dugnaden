@@ -43,13 +43,15 @@ class SwitchDugnad extends UserPage
         $file["gutta"] = get_dugnadsledere() . $file["gutta"];
         $this->template->addContentHtml(implode($file));
 
-        $this->template->addContentHtml("    <div class='bl'><div class='br'><div class='tl'><div class='tr'>
-                                <form action='index.php' method='post'>
-                                <input type='hidden' name='do' value='Bytte dugnad' />
-                                <input type='hidden' name='beboer' value='" . $this->formdata['beboer'] . "' />
-                                <input type='hidden' name='pw' value='" . $this->formdata['pw'] . "' />");
-
-        $this->template->addContentHtml($this->showBeboerCtrlPanel() . "</form></div></div></div></div>");
+        $this->template->addContentHtml('
+            <div class="box-beboer">
+                <form action="index.php" method="post">
+                    <input type="hidden" name="do" value="Bytte dugnad" />
+                    <input type="hidden" name="beboer" value="' . $this->formdata["beboer"] . '" />
+                    <input type="hidden" name="pw" value="' . $this->formdata["pw"] . '" />
+                    ' . $this->showBeboerCtrlPanel() . '
+                </form>
+            </div>');
     }
 
     function showBeboerCtrlPanel()

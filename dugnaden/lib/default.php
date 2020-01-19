@@ -666,33 +666,6 @@ function forceNewDugnads($beboer_id, $forceCount, $perDugnad, $note = null)
     return $forceCount;
 }
 
-
-/*
- * Simple feedback to the user.
- *
- * Returns: A html-formatted message, with a rounded colored box and white text.
- *
- * Used by: div. cases
- *
- * color: green, red
- * text: html formated text
- *
- */
-function rounded_feedback_box($color, $html_txt)
-{
-    return "\n\t\t\t\t\t<div class='bl_" . $color  . "'>
-                <div class='br_" . $color  . "'>
-                    <div class='tl_" . $color  . "'>
-                        <div class='tr_" . $color  . "'>
-                            <p class=\"white_message\">" . $html_txt . "</p>
-                        </div>
-                    </div>
-                </div>
-            </div>\n
-            <p>&nbsp;</p>";
-}
-
-
 function database_health()
 {
     $query = "SELECT 1 FROM bs_rom LIMIT 1";
@@ -700,15 +673,11 @@ function database_health()
 
     if (@mysql_num_rows($result) == 0) {
 
-        return "<p>&nbsp;</p>\n\t\t\t\t\t<div class='bl_red'>
-                        <div class='br_red'>
-                            <div class='tl_red'>
-                                <div class='tr_red'>
-                                    Beklager, databasen er for &oslash;yeblikket ikke tilgjengelig, vennligst kom tilbake senere.
-                                </div>
-                            </div>
-                        </div>
-                    </div>\n";
+        return '
+            <p>&nbsp;</p>
+            <div class="box-red">
+                Beklager, databasen er for &oslash;yeblikket ikke tilgjengelig, vennligst kom tilbake senere.
+            </div>';
     }
 }
 

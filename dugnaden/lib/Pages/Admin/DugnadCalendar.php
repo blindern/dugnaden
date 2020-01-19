@@ -59,15 +59,11 @@ class DugnadCalendar extends Page
 
         if (truncateAllowed($future_check) == false) {
 
-            $warning = "<p>&nbsp;</p>\n\t\t\t\t\t\t\t<div class='bl_red'>
-                            <div class='br_red'>
-                                <div class='tl_red'>
-                                    <div class='tr_red'>
-                                        <b>MERK</b>: Sletter du alle l&oslash;rdager, slettes ogs&aring; alle tilknyttede dugnader. Nye dugnader m&aring; derfor alltid tildeles etter sletting.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>\n";
+            $warning = '
+                <p>&nbsp;</p>
+                <div class="box-red">
+                    <b>MERK</b>: Sletter du alle l&oslash;rdager, slettes ogs&aring; alle tilknyttede dugnader. Nye dugnader m&aring; derfor alltid tildeles etter sletting.
+                </div>';
 
             $content .= $warning;
         }

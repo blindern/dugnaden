@@ -196,16 +196,10 @@ class RevokeFee extends Page
         $f = new BeboerSelectFragment($this->context);
         $f->truncateName = false;
 
-        $admin_buttons = "\t\t\t\t\t\t\t<div class='bl_green'>
-                            <div class='br_green'>
-                                <div class='tl_green'>
-                                    <div class='tr_green'>
-                                        Tilf&oslash;y ny annulering manuelt fordi boten ikke finnes i Botlisten over: " . $f->build() . "
-                                    </div>
-                                </div>
-                            </div>
-                        </div>\n";
-
+        $admin_buttons = '
+            <div class="box-green">
+                Tilf&oslash;y ny annulering manuelt fordi boten ikke finnes i Botlisten over: ' . $f->build() . '
+            </div>';
 
         /* SHOW THE LIST OF ALL ANNULERTE WITHOUT AN ASSOCIATED DUGNAD
         ----------------------------------------------------------------- */

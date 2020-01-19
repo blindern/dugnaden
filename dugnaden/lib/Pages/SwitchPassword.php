@@ -22,7 +22,7 @@ class SwitchPassword extends UserPage
                     $this->formdata["pw_2"]
                 );
 
-                $feedback = rounded_feedback_box("green", "Ditt nye passord er lagret.");
+                $feedback = '<div class="box-green">Ditt nye passord er lagret.</div>';
 
                 $this->page_array = get_layout_parts("menu_main");
                 $this->template->addContentHtml($feedback);
@@ -32,10 +32,10 @@ class SwitchPassword extends UserPage
                 return;
             }
 
-            $feedback = rounded_feedback_box("red", "Passordene du valgte stemmer ikke overens, de m&aring; v&aelig;re like...");
+            $feedback = '<div class="box-red">Passordene du valgte stemmer ikke overens, de m&aring; v&aelig;re like...</div>';
         } else {
             if ((empty($this->formdata["pw_2"]) && !empty($this->formdata["pw_b"])) || (!empty($this->formdata["pw_2"]) && empty($this->formdata["pw_b"]))) {
-                $feedback = rounded_feedback_box("red", "Du har ikke fylt inn begge feltene..");
+                $feedback = '<div class="box-red">Du har ikke fylt inn begge feltene..</div>';
             }
         }
 
