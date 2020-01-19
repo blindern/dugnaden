@@ -5,6 +5,7 @@ header("Content-type: text/html; charset=utf-8");
 include "../lib/default.php";
 
 $page = new \Blindern\Dugnaden\Page();
+$page->addNavigation("Hovedmeny", "index.php");
 
 switch (empty($_REQUEST["do"]) ? "" : $_REQUEST["do"]) {
     case "admin":

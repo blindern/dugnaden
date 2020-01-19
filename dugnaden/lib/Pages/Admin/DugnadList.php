@@ -6,8 +6,7 @@ class DugnadList extends BaseAdmin
 {
     function show()
     {
-        $this->page->setTitleHtml("Administrere dugnadsliste");
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Dugnadsliste");
+        $this->page->addNavigation("Administrer dugnadsliste");
 
         $newnBeboer = isset($this->formdata["newn"])
             ? $this->dugnaden->beboer->getById($this->formdata["newn"])

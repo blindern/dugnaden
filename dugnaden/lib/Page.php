@@ -9,9 +9,9 @@ namespace Blindern\Dugnaden;
 class Page
 {
     private $cssName = "default";
-    private $navigation = "";
-    private $title = "";
     private $content = "";
+
+    private $navigationItems = [];
 
     function setPrintView()
     {
@@ -23,19 +23,35 @@ class Page
         $this->cssName = "default_dugnadsliste";
     }
 
-    function setTitleHtml($value)
-    {
-        $this->title = $value;
-    }
-
     function addContentHtml($value)
     {
         $this->content .= $value;
     }
 
-    function setNavigationHtml($value)
+    function addNavigation($title, $link = null)
     {
-        $this->navigation = $value;
+        $this->navigationItems[] = [$title, $link];
+    }
+
+    private function buildNavigation()
+    {
+        $result = [];
+
+        $num = count($this->navigationItems);
+        $i = 0;
+        foreach ($this->navigationItems as $item) {
+            $i++;
+
+            $title = htmlspecialchars($item[0]);
+
+            if ($i == $num || !$item[1]) {
+                $result[] = $title;
+            } else {
+                $result[] = '<a href="' . htmlspecialchars($item[1]) . '">' . $title . '</a>';
+            }
+        }
+
+        return implode(" &raquo; ", $result);
     }
 
     function render()
@@ -61,8 +77,8 @@ class Page
 <body ' . (DEVELOPER_MODE ? "id='red'" : '') . '>
     <div class="main">
         <div class="navBar">
-            <div class="navBar_menu">' . $this->navigation . '</div>
-            <div class="navBar_heading">' . $this->title . '</div>
+            <div class="navBar_menu">' . $this->buildNavigation() . '</div>
+            <div class="navBar_heading">&nbsp;</div>
         </div>
         <div class="content">
             ' . $this->content . '

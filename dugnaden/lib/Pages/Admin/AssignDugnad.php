@@ -9,6 +9,10 @@ class AssignDugnad extends BaseAdmin
 {
     function show()
     {
+        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->page->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
+        $this->page->addNavigation("Tildele dugnad");
+
         $page = get_layout_parts("admin_tildeledugnad");
 
         $query = "SELECT dugnad_id FROM bs_dugnad WHERE dugnad_slettet = '0' ORDER BY dugnad_dato";
@@ -53,9 +57,6 @@ class AssignDugnad extends BaseAdmin
                                     <input type='submit' name='admin' value='Semesterstart'>
                                 </p>" . $page["pw_line"];
         }
-
-        $this->page->setTitleHtml($this->formdata["admin"]);
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; <a href='index.php?do=admin&admin=Innstillinger'>Innstillinger</a> &gt; <a href='index.php?do=admin&admin=Semesterstart'>Semesterstart</a> &gt; $title");
 
         $this->page->addContentHtml(implode($page));
     }

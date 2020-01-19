@@ -6,8 +6,9 @@ class ImportBeboer extends BaseAdmin
 {
     function show()
     {
-        $this->page->setTitleHtml($this->formdata["admin"]);
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; <a href='index.php?do=admin&admin=Innstillinger'>Innstillinger</a> &gt; <a href='index.php?do=admin&admin=Semesterstart'>Semesterstart</a> &gt; $title");
+        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->page->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
+        $this->page->addNavigation("Importer beboere");
 
         $query = "SELECT dugnad_id
                         FROM bs_dugnad
@@ -32,8 +33,9 @@ class ImportBeboer extends BaseAdmin
 
     function showUpload()
     {
-        $this->page->setTitleHtml("Lagring av importerte beboere");
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Lagring");
+        $this->page->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
+        $this->page->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
+        $this->page->addNavigation("Importer beboere");
 
         $content = "";
 

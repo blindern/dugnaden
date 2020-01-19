@@ -25,6 +25,7 @@ class Admin extends BasePage
     function show()
     {
         require_admin();
+        $this->page->addNavigation("Admin", "index.php?do=admin");
 
         switch (!empty($this->formdata["admin"]) ? $this->formdata["admin"] : "") {
             case "Annulere bot":

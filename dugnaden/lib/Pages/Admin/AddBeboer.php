@@ -8,8 +8,7 @@ class AddBeboer extends BaseAdmin
 {
     function show()
     {
-        $this->page->setTitleHtml("Innkallingslapper");
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Innkallingslapper");
+        $this->page->addNavigation("Innkallingslapper");
 
         if (!empty($this->formdata["nyinnkalling"])) {
             $beboere = $this->dugnaden->beboer->getImportBeboerList($this->formdata["nyinnkalling"]);

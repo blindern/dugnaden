@@ -56,8 +56,7 @@ class NextDugnadList extends BaseAdmin
 
     private function showSelect()
     {
-        $this->page->setTitleHtml("Neste dugnadsliste");
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Botliste");
+        $this->page->addNavigation("Neste dugnadsliste");
 
         $admin_login = get_layout_parts("admin_login_dugnadlist");
 

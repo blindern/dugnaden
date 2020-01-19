@@ -18,8 +18,7 @@ class SwitchDugnad extends UserPage
 
     function showLogin()
     {
-        $this->page->setTitleHtml("Bytte Dugnad");
-        $this->page->setNavigationHtml("<a href='index.php?beboer=" . $this->formdata["beboer"] . "'>Hovedmeny</a> &gt; Dugnad");
+        $this->page->addNavigation("Bytte dugnad", "index.php?do=Bytte dugnad");
         $this->showLoginFailure();
     }
 
@@ -38,8 +37,7 @@ class SwitchDugnad extends UserPage
             $this->dugnaden->beboer->updateRoom($this->beboer, $room);
         }
 
-        $this->page->setTitleHtml("Bytte dugnadsdatoer");
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; Profilen til " . htmlspecialchars($this->beboer->getName()));
+        $this->page->addNavigation("Bytte dugnad");
 
         $file = get_layout_parts("menu_beboerctrl");
         $file["gutta"] = get_dugnadsledere() . $file["gutta"];

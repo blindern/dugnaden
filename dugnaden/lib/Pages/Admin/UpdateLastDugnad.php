@@ -108,8 +108,7 @@ class UpdateLastDugnad extends BaseAdmin
 
     private function showStraffedugnad()
     {
-        $this->page->setTitleHtml("Oppdatere siste dugnadliste");
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Ajourf&oslash;re");
+        $this->page->addNavigation("Oppdatere siste dugnadsliste");
 
         $newnBeboer = !empty($this->formdata["newn"])
             ? $this->dugnaden->beboer->getById($this->formdata["newn"])

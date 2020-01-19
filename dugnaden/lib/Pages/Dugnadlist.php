@@ -9,8 +9,7 @@ class Dugnadlist extends BasePage
         global $dugnad_is_empty, $dugnad_is_full;
         list($dugnad_is_empty, $dugnad_is_full) = $this->dugnaden->dugnad->getDugnadStatus();
 
-        $this->page->setTitleHtml("Komplett dugnadsliste");
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; Dugnadslisten");
+        $this->page->addNavigation("Komplett dugnadsliste");
 
         $admin_access = false;
         $this->page->addContentHtml(output_full_list($admin_access));

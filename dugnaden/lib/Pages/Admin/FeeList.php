@@ -101,8 +101,7 @@ class FeeList extends BaseAdmin
 
     private function showMenu()
     {
-        $this->page->setTitleHtml("Vise botlisten");
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Botliste");
+        $this->page->addNavigation("Botliste");
 
         $admin_login = get_layout_parts("admin_login_botlist");
 
