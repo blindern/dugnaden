@@ -58,9 +58,6 @@ class ImportBeboer extends BaseAdmin
                     $dugnad_query = "SELECT beboer_id FROM bs_beboer, bs_innstillinger WHERE innstillinger_felt = 'dugnadsleder' AND innstillinger_verdi = beboer_id";
                     $dugnad_result = @run_query($dugnad_query);
 
-                    $query = "TRUNCATE TABLE bs_admin_access";
-                    @run_query($query);
-
                     $query = "TRUNCATE TABLE bs_notat";
                     @run_query($query);
 
@@ -133,6 +130,8 @@ class ImportBeboer extends BaseAdmin
                     $dugnadGiven = 0;
                     $beboerGiven = 0;
 
+                    $importName = $this->dugnaden->beboer->getNextImportName();
+
                     foreach ($txt_lines as $line) {
                         $c++;
                         $splits = split("/", $line);
@@ -146,7 +145,7 @@ class ImportBeboer extends BaseAdmin
                         $beboer = $this->dugnaden->beboer->getByName($first, $last);
                         $person_id = $beboer ? $beboer->id : -1;
 
-                        $dugnadGiven += forceNewDugnads($person_id, 2, 25, "IMP" . get_usage_count(false));
+                        $dugnadGiven += forceNewDugnads($person_id, 2, 25, $importName);
                         $beboerGiven += 1;
                     }
 

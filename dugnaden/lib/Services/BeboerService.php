@@ -66,7 +66,7 @@ class BeboerService
         $stmt = $this->dugnaden->pdo->query($sql);
 
         $result = [];
-        foreach($stmt as $row) {
+        foreach ($stmt as $row) {
             $result[] = Beboer::fromRow($row);
         }
 
@@ -86,7 +86,7 @@ class BeboerService
         $stmt = $this->dugnaden->pdo->query($sql);
 
         $result = [];
-        foreach($stmt as $row) {
+        foreach ($stmt as $row) {
             $result[] = Beboer::fromRow($row);
         }
 
@@ -260,5 +260,25 @@ class BeboerService
         }
 
         return $result;
+    }
+
+    /**
+     * Get name of next import which is used for the note.
+     */
+    public function getNextImportName()
+    {
+        $notes = $this->getImportsList();
+        $numbers = [];
+        foreach ($notes as $note) {
+            $numbers[] = (int) substr($note, 3);
+        }
+
+        sort($numbers);
+
+        $next = sizeof($numbers) == 0
+            ? 1
+            : $numbers[sizeof($numbers) - 1] + 1;
+
+        return "IMP" . $next;
     }
 }

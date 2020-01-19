@@ -2,13 +2,6 @@ USE dugnaden;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-CREATE TABLE bs_admin_access (
-  admin_access_id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  admin_access_ip varchar(25) NOT NULL DEFAULT '',
-  admin_access_date datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  admin_access_success tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 CREATE TABLE bs_beboer (
   beboer_id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   beboer_for varchar(100) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL DEFAULT '',

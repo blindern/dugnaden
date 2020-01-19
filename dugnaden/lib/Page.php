@@ -62,7 +62,7 @@ class Page
     <div class="main">
         <div class="navBar">
             <div class="navBar_menu">' . $this->navigation . '</div>
-            <div class="navBar_heading">' . $this->title . ' - ' . get_usage_count() . '</div>
+            <div class="navBar_heading">' . $this->title . '</div>
         </div>
         <div class="content">
             ' . $this->content . '

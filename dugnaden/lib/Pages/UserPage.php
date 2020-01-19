@@ -51,20 +51,9 @@ class UserPage extends BasePage
         }
 
         if ($this->formdata["pw"] === $beboer->password) {
-            $this->increaseNormalLogin();
             return $beboer;
         } else {
             return 0;
         }
-    }
-
-    function increaseNormalLogin()
-    {
-        $visitor_ip = getenv("REMOTE_ADDR");
-
-        $query = "INSERT INTO bs_admin_access  (admin_access_ip, admin_access_date, admin_access_success)
-                VALUES ('" . $visitor_ip . "', NOW(), '0')";
-
-        @run_query($query);
     }
 }

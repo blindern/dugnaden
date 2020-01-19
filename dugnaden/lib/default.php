@@ -18,32 +18,6 @@ mysql_set_charset("utf8", $link);
 $database = mysql_select_db($config_database["dbname"], $link);
 
 
-function get_usage_count($full_message = true)
-{
-    global $formdata;
-
-    if (!strcmp($formdata["do"], "admin")) {
-        $query = "SELECT COUNT(admin_access_id) AS counted FROM bs_admin_access WHERE admin_access_success > '0'";
-    } else {
-        $query = "SELECT COUNT(admin_access_id) AS counted FROM bs_admin_access WHERE admin_access_success = '0'";
-    }
-
-    $result = @run_query($query);
-
-    if (@mysql_num_rows($result)) {
-        $row = @mysql_fetch_array($result);
-
-        if ($full_message) {
-            return "brukt " . (int) $row["counted"] . " ganger";
-        } else {
-            return $row["counted"];
-        }
-    } else {
-        return "<span class='failure'>databasen er ikke tilgjengelig!</span>";
-    }
-}
-
-
 function show_day($formdata, $day, $show_expired_days = false, $editable = false, $dugnadsliste_full_name = false, $supress_header = false)
 {
     if (!$show_expired_days) {
