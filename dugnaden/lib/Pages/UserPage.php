@@ -2,18 +2,25 @@
 
 namespace Blindern\Dugnaden\Pages;
 
-use Blindern\Dugnaden\Dugnaden;
+use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\Page;
 
 class UserPage extends BasePage
 {
+    /** @var Beboer */
+    protected $beboer;
+
     function __construct(Page $page)
     {
         parent::__construct($page);
-        $this->loginStatus = $this->getLoginStatus();
+        $this->loginStatus = $this->getLoginBeboer();
+        if (!is_int($this->loginStatus)) {
+            $this->beboer = $this->loginStatus;
+        }
     }
 
-    public function showLoginFailure() {
+    public function showLoginFailure()
+    {
         if ($this->loginStatus == 0) {
             $this->page->addContentHtml("<p class='failure'>Passordet er ikke korrekt, pr&oslash;v igjen.</a>");
         } elseif ($this->loginStatus == -1) {
@@ -25,41 +32,39 @@ class UserPage extends BasePage
         $this->page->addContentHtml(output_default_frontpage());
     }
 
-    public function isValidLogin() {
-        return $this->loginStatus == 1;
-    }
+    private function getLoginBeboer()
+    {
+        $beboer = isset($this->formdata["beboer"])
+            ? $this->dugnaden->beboer->getById($this->formdata["beboer"])
+            : null;
 
-    private function getLoginStatus() {
-        if (check_is_admin()) {
-            return 1;
-        }
-
-        if (!strcmp($this->formdata["beboer"], "-1")) {
-            // User has not selected a valid beboer from the drop down list
+        if (!$beboer) {
             return -2;
         }
 
+        if (check_is_admin()) {
+            return $beboer;
+        }
+
         if (empty($this->formdata["pw"])) {
-            // Password is missing
             return -1;
         }
 
-        // Password has been entered and a use selected from the drop down box
-        $query = "SELECT beboer_id, beboer_passord
-                    FROM bs_beboer
-                    WHERE beboer_id = '" . $this->formdata["beboer"] . "'
-                    LIMIT 1";
-        $result = @run_query($query);
-
-        $row = @mysql_fetch_array($result);
-
-        if (isset($this->formdata["pw"]) && !strcmp($row["beboer_passord"], $this->formdata["pw"])) {
-            // VALID LOGIN
-            increase_normal_login();
-            return 1;
+        if ($this->formdata["pw"] === $beboer->password) {
+            $this->increaseNormalLogin();
+            return $beboer;
         } else {
-            // INVALID LOGIN
             return 0;
         }
+    }
+
+    function increaseNormalLogin()
+    {
+        $visitor_ip = getenv("REMOTE_ADDR");
+
+        $query = "INSERT INTO bs_admin_access  (admin_access_ip, admin_access_date, admin_access_success)
+                VALUES ('" . $visitor_ip . "', NOW(), '0')";
+
+        @run_query($query);
     }
 }

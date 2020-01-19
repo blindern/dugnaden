@@ -16,21 +16,13 @@ class RevokeFee extends BaseAdmin
         $page["hidden"] = " <input type='hidden' name='admin'    value='" . $this->formdata["admin"] . "' />
                             <input type='hidden' name='do'        value='admin' />" . $page["hidden"];
 
-        if ((int) $this->formdata["beboer"] > 0) {
-            /* A BEBOER IS CHOSEN TO RECEIVE AN ANNULERING
-            ------------------------------------------------------------------ */
+        $beboer = !empty($this->formdata["beboer"])
+            ? $this->dugnaden->beboer->getById($this->formdata["beboer"])
+            : null;
 
-
-
-            $query = "INSERT INTO bs_bot (bot_beboer, bot_annulert) VALUES ('" . $this->formdata["beboer"] . "', '-1')";
-            @run_query($query);
-
-            if (@mysql_affected_rows() == 1) {
-                $content .= "<div class='success'>Ny annulering ble tilf&oslash;yd for " . get_beboer_name($this->formdata["beboer"], true) . "...</div>";
-            } else {
-                $content .= "<div class='failure'>Beklager, det oppstod en feil - annuleringen ble <u>ikke</u> lagret...</div>";
-            }
-            $this->formdata["beboer"] = null;
+        if ($beboer) {
+            $this->dugnaden->fee->createRevoke($beboer);
+            $content .= "<div class='success'>Ny annulering ble tilf&oslash;yd for " . $beboer->getName() . "...</div>";
         }
 
         if (isset($this->formdata["del_dl"])) {
@@ -164,7 +156,9 @@ class RevokeFee extends BaseAdmin
                     $row_Text_and_Background .= "_odd";
                 }
 
-                $all_dl .= "<div class='row" . $row_Text_and_Background . "'><div class='check_left'><input type='checkbox' name='del_dl[]' " . ((int) $row["bot_annulert"] == 1 ? "checked='checked' disabled " : null) . "value='" . $row['bot_id'] . "'></div><div class='name_wide" . (!(int) $row["bot_registrert"] ? "_success" : null) . "'>" . $line_count . ". " . get_beboerid_name($row['beboer_id']) . "</div><div class='when'>" . get_simple_date($row["dugnad_dato"], true) . " " . $desc . "</div></div>\n";
+                $beboer = $this->dugnaden->beboer->getById($row['beboer_id']);
+
+                $all_dl .= "<div class='row" . $row_Text_and_Background . "'><div class='check_left'><input type='checkbox' name='del_dl[]' " . ((int) $row["bot_annulert"] == 1 ? "checked='checked' disabled " : null) . "value='" . $row['bot_id'] . "'></div><div class='name_wide" . (!(int) $row["bot_registrert"] ? "_success" : null) . "'>" . $line_count . ". " . htmlspecialchars($beboer->getName()) . "</div><div class='when'>" . get_simple_date($row["dugnad_dato"], true) . " " . $desc . "</div></div>\n";
 
                 if (!$row["bot_annulert"]) $bot_count++;
                 else $annulert_count++;

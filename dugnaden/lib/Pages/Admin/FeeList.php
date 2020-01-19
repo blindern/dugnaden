@@ -17,12 +17,7 @@ class FeeList extends BaseAdmin
     {
         $this->page->setPrintView();
 
-        $this->formdata["view"] = "Botliste";
-
         $line_count = 0;
-
-        $max_time = 0;
-        $min_time = time();
 
         $flyer = get_layout_parts("flyer_botlist");
 
@@ -54,23 +49,20 @@ class FeeList extends BaseAdmin
 
         $result = @run_query($query);
 
+        $min_date = null;
+        $max_date = null;
+
         while ($row = @mysql_fetch_array($result)) {
 
-            $dug_time = make_unixtime($row["id"]);
-
-            if ($dug_time < $min_time) {
-                $min_time = $dug_time;
+            if ($row["dato"] < $min_date) {
                 $min_date = $row["dato"];
             }
 
-            if ($dug_time > $max_time) {
-                $max_time = $dug_time;
+            if ($row["dato"] > $max_date) {
                 $max_date = $row["dato"];
             }
 
             $entries .= "<div class='row" . (++$line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $line_count . ". " . $row["beboer_etter"] . ", " . $row["beboer_for"]  . "</div>\n<div class='when'>" . get_simple_date($row["dato"], true) . "</div><div class='note'>" . $row["notat"] . "&nbsp;</div><div class='note'>" . (!strcmp($row["bot_annulert"], "-1") ? "-" : null) . ONE_BOT . " kroner&nbsp;" . (!strcmp($row["bot_annulert"], "-1") ? "(ettergitt)" : null) . "</div><div class='spacer'>&nbsp;</div></div>\n\n";
-
-            $c++;
         }
 
         /* ADDING ALL THAT ARE ONLY ANNULERING, WITH
@@ -94,8 +86,6 @@ class FeeList extends BaseAdmin
 
             $dug_time = "Etterbehandlet";
             $entries .= "<div class='row" . (++$line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $line_count . ". " . $row["beboer_etter"] . ", " . $row["beboer_for"]  . "</div>\n<div class='when'>" . $dug_time . "</div><div class='note'></div><div class='note'>" . (!strcmp($row["bot_annulert"], "-1") ? "-" : null) . ONE_BOT . " kroner&nbsp;" . (!strcmp($row["bot_annulert"], "-1") ? "(ettergitt)" : null) . "</div><div class='spacer'>&nbsp;</div></div>\n\n";
-
-            $c++;
         }
 
 
@@ -116,7 +106,7 @@ class FeeList extends BaseAdmin
 
         $admin_login = get_layout_parts("admin_login_botlist");
 
-        $bot_count = get_bot_count();
+        $bot_count = $this->getFeeCount();
 
         if ($bot_count == 0) {
             $admin_login["bot_count"] = "<div class='failure'>Det er for tiden ingen nye b&oslash;ter &aring; skrive ut.</div>" . $admin_login["bot_count"];
@@ -127,5 +117,28 @@ class FeeList extends BaseAdmin
         $admin_login["hidden"] = "<input type='hidden' name='admin' value='Botliste'>" . $admin_login["hidden"];
 
         $this->page->addContentHtml(implode($admin_login));
+    }
+
+    function getFeeCount()
+    {
+        $query = "SELECT 1
+                FROM bs_bot
+                WHERE bot_deltager = 0
+                    AND bot_beboer <> 0
+                    AND bot_registrert = 0";
+
+        $result = @run_query($query);
+        $annuleringer = @mysql_num_rows($result);
+
+        $query = "SELECT 1
+                FROM bs_bot, bs_deltager, bs_dugnad
+                WHERE bot_registrert = '0'
+                    AND bot_deltager = deltager_id
+                    AND deltager_dugnad = dugnad_id
+                    AND dugnad_checked = '1'";
+
+        $result = @run_query($query);
+
+        return (@mysql_num_rows($result) + $annuleringer);
     }
 }

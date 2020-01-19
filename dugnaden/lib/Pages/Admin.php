@@ -102,11 +102,59 @@ class Admin extends BasePage
                 break;
         }
 
-        $blivende_updates = update_blivende_elephants();
+        $blivende_updates = $this->updateBlivendeElephants();
 
         if ($blivende_updates) {
             $this->page->addContentHtml("<p>Gratulerer til " . $blivende_updates . " beboer" . ($blivende_updates > 1 ? "e" : "") . " som endelig er elefant" .
                 ($blivende_updates > 1 ? "er" : "") . "!<br />Eventuelt tilknyttede dugnader er slettet..</p>");
         }
+    }
+
+    function updateBlivendeElephants()
+    {
+        $blivende = 0;
+
+        $month = date("m", time());
+        $day = date("d", time());
+
+        if ($month > 7) {
+            /* We now know we are in the autumn semester
+        -------------------------------------------------------- */
+
+            if ($month == 10 && $day > 15 && $day < 22) {
+                $query = "SELECT beboer_id FROM bs_beboer, bs_deltager WHERE beboer_spesial = '8' AND deltager_beboer = beboer_id";
+                $result = @run_query($query);
+
+                while (list($beboer_id) = @mysql_fetch_row($result)) {
+                    // Remove dugnads from this person
+                    $query = "DELETE FROM bs_deltager WHERE deltager_beboer = '" . $beboer_id . "'";
+                    @run_query($query);
+                }
+
+                $query = "UPDATE bs_beboer SET beboer_spesial = '2' WHERE beboer_spesial = '8'";
+                @run_query($query);
+                $blivende++;
+            }
+        } else {
+            /* .. Spring
+        -------------------------------------------------------- */
+
+            if ($month == 3 && $day > 15 && $day < 22) {
+                $query = "SELECT beboer_id FROM bs_beboer, bs_deltager WHERE beboer_spesial = '8' AND deltager_beboer = beboer_id";
+                $result = @run_query($query);
+
+                while (list($beboer_id) = @mysql_fetch_row($result)) {
+                    // Remove dugnads from this person
+                    $query = "DELETE FROM bs_deltager WHERE deltager_beboer = '" . $beboer_id . "'";
+                    @run_query($query);
+                }
+
+                $query = "UPDATE bs_beboer SET beboer_spesial = '2' WHERE beboer_spesial = '8'";
+                @run_query($query);
+                $blivende++;
+            }
+        }
+
+        return $blivende;
     }
 }

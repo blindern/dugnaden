@@ -2,6 +2,9 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
+use Blindern\Dugnaden\Model\Beboer;
+use Blindern\Dugnaden\Model\Dugnad;
+
 class UpdateLastDugnad extends BaseAdmin
 {
     function show()
@@ -24,7 +27,8 @@ class UpdateLastDugnad extends BaseAdmin
             $result    = @run_query($query);
             $denne_dugnaden    = @mysql_fetch_array($result);
 
-            $week            = date("W", make_unixtime($denne_dugnaden["id"]));
+            $dugnad = $this->dugnaden->dugnad->getById($denne_dugnaden["id"]);
+            $week = $dugnad->getWeekNumber();
 
             $query = "SELECT
                                     beboer_id,
@@ -107,8 +111,12 @@ class UpdateLastDugnad extends BaseAdmin
         $this->page->setTitleHtml("Oppdatere siste dugnadliste");
         $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Ajourf&oslash;re");
 
-        if (!empty($this->formdata["newn"]) && get_beboer_name($this->formdata["newn"]) && empty($this->formdata["notat"])) {
-            $this->showStraffedugnadNewNote();
+        $newnBeboer = !empty($this->formdata["newn"])
+            ? $this->dugnaden->beboer->getById($this->formdata["newn"])
+            : null;
+
+        if ($newnBeboer && empty($this->formdata["notat"])) {
+            $this->showStraffedugnadNewNote($newnBeboer);
         } else {
             global $dugnad_is_empty, $dugnad_is_full;
             list($dugnad_is_empty, $dugnad_is_full) = $this->dugnaden->dugnad->getDugnadStatus();
@@ -119,78 +127,71 @@ class UpdateLastDugnad extends BaseAdmin
                 ------------------------------------------------ */
             list($dugnad_is_empty, $dugnad_is_full) = $this->dugnaden->dugnad->getDugnadStatus();
 
+            $beboer = !empty($this->formdata["beboer"])
+                ? $this->dugnaden->beboer->getById($this->formdata["beboer"])
+                : null;
 
             if (!empty($this->formdata["deln"])) {
-                delete_note($this->formdata["deln"]);
-            } elseif (!empty($this->formdata["notat"]) && !empty($this->formdata["beboer"]) && get_beboer_name($this->formdata["beboer"])) {
-                /* Valid beboer - adding notat ..
-                    ------------------------------------------------ */
-
-                if (insert_note($this->formdata["beboer"], $this->formdata["notat"], $this->formdata["mottaker"])) {
-                    $feedback .= "<p class='success'>Nytt notat ble lagret.</p>";
-                } else {
-                    $feedback .= "<p class='failure'>Det oppstod en feil, nytt notat ble ikke lagret.</p>";
-                }
+                $this->dugnaden->note->deleteById($this->formdata["deln"]);
+            } elseif (!empty($this->formdata["notat"]) && $beboer) {
+                $this->dugnaden->note->create(
+                    $beboer,
+                    $this->formdata["notat"]
+                );
             }
 
-            $result = @run_query("
-                    SELECT dugnad_id, dugnad_dato, dugnad_type
-                    FROM bs_dugnad
-                    WHERE dugnad_slettet = '0'
-                    ORDER BY dugnad_dato");
-            $all_dugnads = [];
-            while ($row = mysql_fetch_assoc($result)) {
-                $all_dugnads[$row['dugnad_id']] = $row;
+            $dugnadList = $this->dugnaden->dugnad->getAll();
+            $dugnadListById = [];
+            foreach ($dugnadList as $dugnad) {
+                $dugnadListById[$dugnad->id] = $dugnad;
             }
 
-            $dugnad_id = null;
-            if (empty($this->formdata["show"]) || !isset($all_dugnads[$this->formdata['show']])) {
-                foreach ($all_dugnads as $dugnad) {
-                    if ($dugnad_id === null || strtotime($dugnad['dugnad_dato']) < time()) {
-                        $dugnad_id = $dugnad['dugnad_id'];
+            $dugnad = null;
+            if (empty($this->formdata["show"]) || !isset($dugnadListById[$this->formdata['show']])) {
+                foreach ($dugnadList as $item) {
+                    if ($dugnad === null || !$item->isFuture()) {
+                        $dugnad = $item;
                     }
                 }
             } else {
-                $dugnad_id = $this->formdata['show'];
+                $dugnad = $dugnadListById[$this->formdata['show']];
 
                 if (isset($this->formdata["prev"])) {
                     $prev = null;
-                    foreach ($all_dugnads as $dugnad) {
-                        if ($dugnad['dugnad_id'] == $dugnad_id) {
+                    foreach ($dugnadList as $item) {
+                        if ($item->id == $dugnad->id) {
                             if ($prev) {
-                                $dugnad_id = $prev;
+                                $dugnad = $prev;
                             }
                             break;
                         }
-                        $prev = $dugnad['dugnad_id'];
+                        $prev = $item;
                     }
                 } elseif (isset($this->formdata["next"])) {
                     $next = null;
-                    foreach ($all_dugnads as $dugnad) {
+                    foreach ($dugnadList as $item) {
                         if ($next) {
-                            $dugnad_id = $dugnad['dugnad_id'];
+                            $dugnad = $item;
                             break;
                         }
-                        if ($dugnad['dugnad_id'] == $dugnad_id) {
+                        if ($item->id == $dugnad->id) {
                             $next = true;
                         }
                     }
                 }
             }
 
-            if ($dugnad_id) {
+            if ($dugnad) {
                 if (isset($this->formdata["done"]) && $this->formdata["done"] === "Merke dagen som ferdigbehandlet") {
-                    $query = "UPDATE bs_dugnad SET dugnad_checked = '1' WHERE dugnad_id = '" . $dugnad_id . "'";
-                    @run_query($query);
+                    $this->dugnaden->dugnad->markCompleted($dugnad);
                 } elseif (isset($this->formdata["done"]) && $this->formdata["done"] === "Angre ferdigbehandling") {
-                    $query = "UPDATE bs_dugnad SET dugnad_checked = '0' WHERE dugnad_id = '" . $dugnad_id . "'";
-                    @run_query($query);
+                    $this->dugnaden->dugnad->markCompletedUndo($dugnad);
                 }
 
-                $show_status = update_status_on_all($dugnad_id);
+                $show_status = $this->updateStatusOnAll($dugnad->id);
 
 
-                if (get_straff_count($dugnad_id) > 0) {
+                if ($this->getStraffCount($dugnad->id) > 0) {
                     $straff = "<input type='submit' name='view' value='Straffedugnadslapper'> ";
                 }
 
@@ -199,7 +200,7 @@ class UpdateLastDugnad extends BaseAdmin
                 $content  = "<form action='index.php' method='post'>
                                     <input type='hidden' name='do' value='admin'>
                                     <input type='hidden' name='admin' value='Oppdatere siste'>
-                                    <input type='hidden' name='show' value='" . $dugnad_id . "'>
+                                    <input type='hidden' name='show' value='" . $dugnad->id . "'>
                                     <input type='submit' name='prev' value='&larr;'><input type='submit' name='next' value='&rarr;'> " . $straff . $nav_status . "</form>";
 
 
@@ -209,13 +210,17 @@ class UpdateLastDugnad extends BaseAdmin
                 $content  .= "<form action='index.php' method='post'>
                                     <input type='hidden' name='do' value='admin'>
                                     <input type='hidden' name='admin' value='Oppdatere siste'>
-                                    <input type='hidden' name='show' value='" . $dugnad_id . "'>";
+                                    <input type='hidden' name='show' value='" . $dugnad->id . "'>";
 
 
 
-                $content .= admin_show_day($this->formdata, $dugnad_id, false);
+                $content .= $this->adminShowDay($this->formdata, $dugnad->id, false);
 
-                if ((int) status_of_dugnad($dugnad_id) == 0) {
+                $dugnad = $this->dugnaden->dugnad->getById($dugnad->id);
+                if (!$dugnad) {
+                }
+
+                if (!$dugnad->isDone()) {
                     $done_caption = "Merke dagen som ferdigbehandlet";
                 } else {
                     $done_caption = "Angre ferdigbehandling";
@@ -229,7 +234,7 @@ class UpdateLastDugnad extends BaseAdmin
         }
     }
 
-    private function showStraffedugnadNewNote()
+    private function showStraffedugnadNewNote(Beboer $beboer)
     {
         $admin_login = get_layout_parts("admin_notat");
 
@@ -243,11 +248,203 @@ class UpdateLastDugnad extends BaseAdmin
 
         $admin_login["hidden"] = "<input type='hidden' name='do' value='admin'>\n" .
             "<input type='hidden' name='admin' value='" . $this->formdata["admin"] . "'>\n" .
-            "<input type='hidden' name='beboer' value='" . $this->formdata["newn"] . "'>\n" . $show .
+            "<input type='hidden' name='beboer' value='" . $beboer->id . "'>\n" . $show .
             $admin_login["hidden"];
 
-        $admin_login["beboer"] = get_beboer_name($this->formdata["newn"]) . $admin_login["beboer"];
+        $admin_login["beboer"] = $beboer->getName() . $admin_login["beboer"];
 
         $this->page->addContentHtml(implode($admin_login));
+    }
+
+    function adminShowDay($formdata, $day, $use_dayspacer = true)
+    {
+        $dugnad = $this->dugnaden->dugnad->getById($day);
+
+        $query = "SELECT
+                        beboer_id        AS id,
+                        beboer_for        AS first,
+                        beboer_etter    AS last,
+
+
+                        dugnad_dato        AS done_when,
+
+                        deltager_gjort    AS completed,
+                        deltager_type    AS kind,
+                        deltager_notat    AS note
+
+                FROM bs_deltager, bs_beboer, bs_dugnad
+
+                WHERE dugnad_id = '" . $day . "'
+                    AND deltager_beboer = beboer_id
+                    AND deltager_dugnad = dugnad_id
+                    AND dugnad_slettet = '0'
+                ORDER BY beboer_for, beboer_etter";
+
+        $result = @run_query($query);
+
+        if (@mysql_num_rows($result) >= 1) {
+            $line_count = 0;
+
+            $entries .= "<div class='row_header'><h1>" . $dugnad->getDayHeader() . "</h1></div>\n\n";
+            $entries .= "<div class='row_explained_day'><div class='" . (strcmp($formdata["admin"], "Dugnadsliste") ? "select_narrow" : "checkbox_narrow") . "'>" . (strcmp($formdata["admin"], "Dugnadsliste") ? "Frav&aelig;r" : "Slett") . "</div><div class='name_narrow'>Beboer</div><div class='when_narrow'>Tildelte dugnader</div><div class='note'>Admin</div><div class='spacer'>&nbsp;</div></div>";
+
+            while (list($id, $first, $last, $when, $done, $kind, $note) = @mysql_fetch_row($result)) {
+                $full_name = $last . ", " . $first;
+
+                if (strcmp($formdata["admin"], "Dugnadsliste")) {
+                    /* Showing checkbox only when this is not admin mode..
+                ---------------------------------------------------------------- */
+                    $select_box = get_beboer_selectbox($id, $day);
+                } else {
+                    $select_box = "<div class='checkbox_narrow'><input type='checkbox' name='delete[]' value='" . $id . "_" . $day . "' /></div>";
+                }
+
+                $dugnads = admin_get_dugnads($id) . admin_addremove_dugnad($id, $line_count);
+
+                $entries .= "<div class='row" . ($line_count++ % 2 ? "_odd" : null) . "'>" . $select_box . "<div class='name_narrow'>" . $line_count . ". " . $full_name . "</div>\n<div class='when_narrow'>" . $dugnads . "</div><div class='note'>" . get_notes($formdata, $id, true) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
+            }
+
+            if ($use_dayspacer) {
+                $entries .= "<div class='day_spacer'>&nbsp;</div>";
+            }
+
+            return $entries;
+        } else {
+            return null;
+        }
+    }
+
+    function getStraffCount($dugnad_id)
+    {
+        $query = "SELECT COUNT(deltager_id) AS straffs
+                FROM bs_deltager, bs_dugnad
+                WHERE dugnad_id =  '" . $dugnad_id . "'
+                    AND deltager_gjort > 0
+                    AND deltager_dugnad = dugnad_id";
+
+        $result = @run_query($query);
+
+        if (@mysql_num_rows($result) > 0) {
+            $row = @mysql_fetch_array($result);
+            return $row["straffs"];
+        } else {
+            return 0;
+        }
+    }
+
+    function updateStatusOnAll($day_id)
+    {
+        global $formdata;
+
+        $dugnad = $this->dugnaden->dugnad->getById($day_id);
+        if (!$dugnad) return;
+
+        $barn = 0;
+
+        foreach ($formdata as $key => $value) {
+            $deltager = null;
+            $beboer = null;
+            if (is_numeric($key)) {
+                $beboer = $this->dugnaden->beboer->getById($key);
+                if ($beboer) {
+                    $deltager = $this->dugnaden->deltager->getByBeboerAndDugnad($beboer, $dugnad);
+                }
+            }
+
+            if ($deltager) {
+                $barn = $barn + 1;
+
+                $this->dugnaden->deltager->updateDone($deltager, $value);
+
+                // Updating, adding or removing dugnad and bot.
+
+                $fee = $this->dugnaden->fee->getByBeboerAndDugnad($beboer, $dugnad);
+
+                switch ($value) {
+                    case 1: // Bot og ny dugnad
+                        if (!$fee) {
+                            $this->dugnaden->fee->create($deltager);
+                        }
+
+                        $this->newDugnad($beboer, $dugnad, $value);
+                        break;
+
+                    case 2: // Kun ny dugnad
+                        if ($fee) {
+                            $this->dugnaden->fee->delete($fee);
+                        }
+
+                        $this->newDugnad($beboer, $dugnad, $value);
+                        break;
+
+                    case 3: // Kun bot
+                        if (!$fee) {
+                            $this->dugnaden->fee->create($deltager);
+                        }
+
+                        $this->removeDugnad($beboer, $dugnad);
+                        break;
+
+                    default: // No bot and no new dugnad
+                        if ($fee) {
+                            $this->dugnaden->fee->delete($fee);
+                        }
+
+                        $this->removeDugnad($beboer, $dugnad);
+                        break;
+                }
+            }
+        }
+    }
+
+    function newDugnad(Beboer $beboer, Dugnad $dugnad, $deltager_gjort)
+    {
+        $deltager = $this->dugnaden->deltager->getByBeboerAndDugnad($beboer, $dugnad);
+        if (!$this->dugnaden->deltager->hasCreatedNew($deltager, $deltager_gjort)) {
+            $this->addStraffDugnad($beboer, $dugnad, $deltager_gjort);
+        }
+    }
+
+    function removeDugnad(Beboer $beboer, Dugnad $dugnad)
+    {
+        $deltager = $this->dugnaden->deltager->getDeltagerStraffFor($beboer, $dugnad);
+        if ($deltager) {
+            $this->dugnaden->deltager->delete($deltager);
+        }
+    }
+
+    function addStraffDugnad(Beboer $beboer, Dugnad $dugnad, $deltager_gjort)
+    {
+        global $dugnad_is_full;
+
+        $deltagerStraff = $this->dugnaden->deltager->getDeltagerStraffFor($beboer, $dugnad);
+        if ($deltagerStraff) {
+            return;
+        }
+
+        $dugnadList = $this->dugnaden->dugnad->getFutureLoerdagDugnadList();
+        foreach ($dugnadList as $nextDugnad) {
+            if ($nextDugnad->offsetDaysFromToday() < 10) continue;
+
+            // Skip if full.
+            if (!empty($dugnad_is_full[$nextDugnad->id])) continue;
+
+            // Skip if already having dugnad.
+            if ($this->dugnaden->deltager->getByBeboerAndDugnad($beboer, $nextDugnad)) continue;
+
+            $this->dugnaden->deltager->createDugnadCustom(
+                $beboer,
+                $nextDugnad,
+                ($deltager_gjort ? -1 : 1),
+                "Straff fra uke " . $dugnad->getWeekNumber() . "."
+            );
+
+            return;
+        }
+
+        $this->dugnaden->note->create(
+            $beboer,
+            "Dugnad " . $dugnad->formatDate() . " utsatt til neste semester (fant ingen ledige dugnader)."
+        );
     }
 }

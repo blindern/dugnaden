@@ -17,8 +17,6 @@ class NextDugnadList extends BaseAdmin
     {
         $this->page->setDugnadlisteView();
 
-        $this->formdata['view'] = "Dugnadsliste";
-
         $query = "SELECT dugnad_id
                 FROM bs_dugnad
                 WHERE dugnad_dato > CURDATE()
@@ -27,8 +25,21 @@ class NextDugnadList extends BaseAdmin
         $result = @run_query($query);
         $row = @mysql_fetch_array($result);
 
-        $fullname = false;
-        $this->page->addContentHtml("<h1 class='big'>Dugnad" . (!empty($this->formdata["dugnadsleder"]) && (int) $this->formdata["dugnadsleder"] != -1 ? " med " . ($name = get_beboerid_name($this->formdata["dugnadsleder"], $fullname)) . ($name == "Karl-Martin" ? " - 971 59 266" : ($name == "Theodor Tinius" ? " - 400 41 458" : "")) : "sinnkalling") . "</h1>
+        $text = "sinnkalling";
+
+        $dugnadsleder = isset($this->formdata["dugnadsleder"])
+            ? $this->dugnaden->beboer->getById($this->formdata["dugnadsleder"])
+            : null;
+
+        if ($dugnadsleder) {
+            $text = " med " . $dugnadsleder->firstName;
+            $phone = $dugnadsleder->getDugnadslederPhone();
+            if ($phone) {
+                $text .= " - " . $phone;
+            }
+        }
+
+        $this->page->addContentHtml("<h1 class='big'>Dugnad" . $text . "</h1>
 
     <p>
         M&oslash;t i peisestuen if&oslash;rt antrekk som passer til b&aring;de innend&oslash;rs-
@@ -55,11 +66,10 @@ class NextDugnadList extends BaseAdmin
 
         $select = "<select name='dugnadsleder'><option value='-1'>Velg dugnadsleder</option>";
 
-        $result = get_result("dugnadsleder");
+        $dugnadslederList = $this->dugnaden->dugnadsleder->getList();
 
-        while ($row = @mysql_fetch_array($result)) {
-            $fullname = false;
-            $select .= "<option value='" . $row["value"] . "'>" . get_beboerid_name($row["value"], $fullname) . "</option>";
+        foreach ($dugnadslederList as $beboer) {
+            $select .= "<option value='" . $beboer->id . "'>" . $beboer->getName() . "</option>";
         }
 
         $select .= "</select>";

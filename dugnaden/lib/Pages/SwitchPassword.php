@@ -6,7 +6,7 @@ class SwitchPassword extends UserPage
 {
     public function show()
     {
-        if (!$this->isValidLogin()) {
+        if (!$this->beboer) {
             $this->showLogin();
             return;
         }
@@ -35,8 +35,7 @@ class SwitchPassword extends UserPage
             }
         }
 
-        $beboer_navn = get_beboer_name($this->formdata["beboer"], true);
-        $this->page->setTitleHtml("Endre passord til " . $beboer_navn);
+        $this->page->setTitleHtml("Endre passord til " . htmlspecialchars($this->beboer->getName()));
         $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; Passord");
 
         $this->page_array = get_layout_parts("form_pw");

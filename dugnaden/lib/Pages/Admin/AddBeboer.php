@@ -2,84 +2,49 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
+use Blindern\Dugnaden\Fragments\HandoutFragment;
+
 class AddBeboer extends BaseAdmin
 {
     function show()
     {
         $this->page->setTitleHtml("Innkallingslapper");
-        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt;" . $title);
+        $this->page->setNavigationHtml("<a href='index.php'>Hovedmeny</a> &gt; <a href='index.php?do=admin'>Admin</a> &gt; Innkallingslapper");
 
-        $query = "SELECT DISTINCT deltager_beboer
-                    FROM bs_deltager
-                    WHERE deltager_notat = '" . $this->formdata["nyinnkalling"] . "'";
+        if (!empty($this->formdata["nyinnkalling"])) {
+            $beboere = $this->dugnaden->beboer->getImportBeboerList($this->formdata["nyinnkalling"]);
+            $f = new HandoutFragment($this);
+            $f->show($beboere);
+            return;
+        }
 
-        $result_deltager = run_query($query);
+        $page = get_layout_parts("form_innkallingnyeste");
+        $page["importeringsliste"] = $this->makeLastBeboereSelect() . $page["importeringsliste"];
+        $this->page->addContentHtml(implode($page));
+    }
 
-        if (mysql_num_rows($result_deltager)) {
-            $this->page->setPrintView();
+    function makeLastBeboereSelect()
+    {
+        $imports = $this->dugnaden->beboer->getImportsList();
 
-            $this->formdata["view"] = "Infoliste";
-
-            $element_count = 0;
-
-            $flyer = get_layout_parts("flyer_passord");
-
-            while (list($beboer_id) = mysql_fetch_row($result_deltager)) {
-                $query = "SELECT
-
-                                beboer_id,
-                                beboer_passord,
-                                beboer_for,
-                                beboer_etter,
-                                (rom_nr + 0) AS rom_int,
-                                rom_nr AS rom_alpha,
-                                rom_type
-
-                            FROM bs_beboer
-
-                                LEFT JOIN bs_rom
-                                    ON rom_id = beboer_rom
-
-                            WHERE beboer_id = '" . $beboer_id . "'
-
-                            ORDER BY rom_int, rom_alpha, beboer_etter, beboer_for";
-
-                $result = @run_query($query);
-
-                $dugnadsledere = get_dugnadsledere();
-                while ($row = @mysql_fetch_array($result)) {
-                    $undone_dugnads = get_undone_dugnads($row["beboer_id"]);
-
-                    if (!empty($undone_dugnads)) {
-                        $new_flyer = $flyer;
-
-                        $new_flyer["rom_info"] = get_public_lastname($row["beboer_etter"], $row["beboer_for"], false, true) . "<br />" .
-                            ($row["rom_int"] === $row["rom_alpha"] ? $row["rom_int"] : $row["rom_alpha"]) . $row["rom_type"] . $new_flyer["rom_info"];
-
-                        if ($element_count++ % 2) {
-                            $new_flyer["format_print"] = "_break" . $new_flyer["format_print"];
-                        }
-
-                        $new_flyer["gutta"] = $dugnadsledere . $new_flyer["gutta"];
-                        $new_flyer["dugnad_url"] = DUGNADURL . $new_flyer["dugnad_url"];
-                        $new_flyer["dugnad_dugnad"] = $undone_dugnads . $new_flyer["dugnad_dugnad"];
-                        $new_flyer["passord"] = $row["beboer_passord"] . $new_flyer["passord"];
-
-                        $this->page->addContentHtml(implode($new_flyer));
-                    }
-                }
-            }
+        $options = '';
+        if (sizeof($imports) == 0) {
+            $options .= '
+                <option value="-1">Ingen tilf&oslash;yninger</option>
+            ';
         } else {
-            $this->page->addContentHtml("<p class='success'>Beklager, men den valgte tilf&oslash;yningen inneholder ingen beboere..</p>");
-            $ops = true;
+            foreach ($imports as $import) {
+                $import_title = "Import " . sprintf("%03d", substr($import, 3));
+                $options .= '
+                    <option value="' . htmlspecialchars($import) . '">' . htmlspecialchars($import_title) . '</option>
+                ';
+            }
         }
 
-        if ($ops) {
-            $page = get_layout_parts("form_innkallingnyeste");
-
-            $page["importeringsliste"] = make_last_beboere_select() . $page["importeringsliste"];
-
-            $this->page->addContentHtml(implode($page));
-        }
+        return '
+            <select size="1" name="nyinnkalling">
+                ' . $options . '
+            </select>
+        ';
     }
 }

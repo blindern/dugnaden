@@ -83,7 +83,7 @@ class ImportBeboer extends BaseAdmin
 
             // --------------------------------------------------------- ADDING NEW DATA!
 
-            if ($do_it && store_data($this->formdata["list"], "/")) {
+            if ($do_it && $this->storeData($this->formdata["list"], "/")) {
                 $content .= "<p class='success'>Oppdatering av databasen var vellykket.</p>";
 
                 // ADDING SPECIAL STATUS TO ALL THAT HAD IT BEFORE DELETING ALL!
@@ -127,7 +127,7 @@ class ImportBeboer extends BaseAdmin
                     /* Adding dugnads to newly added beboere:
                         ------------------------------------------------- */
 
-                    $txt_lines = split("\*\*", clean_txt($this->formdata["list"]));
+                    $txt_lines = split("\*\*", $this->cleanText($this->formdata["list"]));
                     $c = 0;
 
                     $dugnadGiven = 0;
@@ -143,7 +143,8 @@ class ImportBeboer extends BaseAdmin
                         $first = trim($first);
                         $last  = trim($last);
 
-                        $person_id = get_person_id($last, $first);
+                        $beboer = $this->dugnaden->beboer->getByName($first, $last);
+                        $person_id = $beboer ? $beboer->id : -1;
 
                         $dugnadGiven += forceNewDugnads($person_id, 2, 25, "IMP" . get_usage_count(false));
                         $beboerGiven += 1;
@@ -201,5 +202,65 @@ class ImportBeboer extends BaseAdmin
         }
 
         $this->page->addContentHtml($content);
+    }
+
+    function cleanText($str)
+    {
+        $str = preg_replace('/ +/', ' ', trim($str));
+        //$str = ereg_replace (', +', ',', $str);
+        $str = preg_replace("/[\r\n]+/", "\r\n", $str);
+        $str = preg_replace("/\r\n/", "**", $str);
+        return $str;
+    }
+
+    function storeData($txt_data, $split_char = "/", $split_name = ",")
+    {
+        $c = 0;
+        $success = true;
+        $txt_lines = split("\*\*", $this->cleanText($txt_data));
+
+        foreach ($txt_lines as $line) {
+            $c++;
+            $splits = split("/", $line);
+
+            if (strcmp($split_char, $split_name)) {
+                list($last, $first) = split($split_name, $splits[0]);
+            }
+
+            $first = trim($first);
+            $last  = trim($last);
+
+            $beboer = $this->dugnaden->beboer->getByName($first, $last);
+
+            if (!$beboer) {
+                /* Person does not exist, inserting it into the db:
+            ---------------------------------------------------------------------- */
+
+                /* Generate random password: */
+                $jumble = md5(((time() / 10000) + ($c * 45))  . getmypid());
+                $password = substr($jumble, 0, 5);
+
+                $phone_query = "SELECT rom_id FROM bs_rom WHERE CONCAT(rom_nr, rom_type) = '" . trim($splits[1]) . "' LIMIT 1";
+
+                $phone_result = @run_query($phone_query);
+                if (@mysql_num_rows($phone_result)) {
+                    list($rom_id) = @mysql_fetch_array($phone_result);
+                } else {
+                    $rom_id = 0;
+                }
+
+                /* Inserting person: */
+                $query = "INSERT INTO bs_beboer (beboer_for, beboer_etter, beboer_rom, beboer_passord)
+                        VALUES ('" . $first . "', '" . $last . "', '" . $rom_id . "', '" . $password . "')";
+
+                @run_query($query);
+
+                if (@mysql_errno() > 0) {
+                    $success = false;
+                }
+            }
+        }
+
+        return $success;
     }
 }

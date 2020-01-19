@@ -11,7 +11,7 @@ class AssignDugnad extends BaseAdmin
     {
         $page = get_layout_parts("admin_tildeledugnad");
 
-        $query = "SELECT dugnad_id FROM bs_dugnad WHERE dugnad_slettet = '0' AND " . get_dugnad_range() . " ORDER BY dugnad_dato";
+        $query = "SELECT dugnad_id FROM bs_dugnad WHERE dugnad_slettet = '0' ORDER BY dugnad_dato";
         $result = @run_query($query);
         $dugnad_count = @mysql_num_rows($result);
 
