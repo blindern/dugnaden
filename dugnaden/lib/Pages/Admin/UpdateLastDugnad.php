@@ -2,6 +2,7 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
+use Blindern\Dugnaden\Fragments\DugnadlistFragment;
 use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\Model\Dugnad;
 use Blindern\Dugnaden\Pages\Page;
@@ -229,7 +230,7 @@ class UpdateLastDugnad extends Page
                 $content .= "<div class='row_explained'><input type='reset' class='check_space' value='Nullstille endringer' />&nbsp;&nbsp;&nbsp;<input type='submit' value='Oppdatere dugnadsbarna'>&nbsp;&nbsp;&nbsp;<input type='submit' name='done' value='" . $done_caption . "'></div></form>";
                 $this->template->addContentHtml($content);
             } else {
-                $this->template->addContentHtml("<p class='failure'>Det oppstod en feil, viser derfor hele dugnadslisten.</p>" . output_full_list(1));
+                $this->template->addContentHtml("<p class='failure'>Det oppstod en feil, viser derfor hele dugnadslisten.</p>" . (new DugnadlistFragment($this->context))->build(true));
             }
         }
     }

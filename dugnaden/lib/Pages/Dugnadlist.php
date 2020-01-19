@@ -2,6 +2,8 @@
 
 namespace Blindern\Dugnaden\Pages;
 
+use Blindern\Dugnaden\Fragments\DugnadlistFragment;
+
 class Dugnadlist extends Page
 {
     function show()
@@ -11,7 +13,6 @@ class Dugnadlist extends Page
 
         $this->template->addNavigation("Komplett dugnadsliste");
 
-        $admin_access = false;
-        $this->template->addContentHtml(output_full_list($admin_access));
+        $this->template->addContentHtml((new DugnadlistFragment($this->context))->build());
     }
 }

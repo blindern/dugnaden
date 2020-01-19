@@ -2,6 +2,7 @@
 
 namespace Blindern\Dugnaden\Pages;
 
+use Blindern\Dugnaden\Fragments\FrontpageFragment;
 use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\PageContext;
 
@@ -30,7 +31,9 @@ class UserPage extends Page
             $this->template->addContentHtml("<p class='failure'>Du har ikke valgt navnet ditt fra nedtrekksmenyen.</a>");
         }
 
-        $this->template->addContentHtml(output_default_frontpage());
+        $this->template->addContentHtml(
+            (new FrontpageFragment($this->context))->build()
+        );
     }
 
     private function getLoginBeboer()

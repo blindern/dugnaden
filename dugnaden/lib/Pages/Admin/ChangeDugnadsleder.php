@@ -2,6 +2,7 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
+use Blindern\Dugnaden\Fragments\BeboerSelectFragment;
 use Blindern\Dugnaden\Pages\Page;
 
 class ChangeDugnadsleder extends Page
@@ -42,8 +43,11 @@ class ChangeDugnadsleder extends Page
 
         $page["dugnadslederne"] = $all_dl . $page["dugnadslederne"];
 
-        $dugnadsleder = true;
-        $page["andre_beboere"] = get_beboer_select($dugnadsleder) . $page["andre_beboere"];
+        $f = new BeboerSelectFragment($this->context);
+        $f->truncateName = false;
+        $f->selectText = "Velg ny dugnadslder...";
+
+        $page["andre_beboere"] = $f->build() . $page["andre_beboere"];
 
         $content .= implode($page);
         $this->template->addContentHtml($content);

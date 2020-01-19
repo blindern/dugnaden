@@ -2,6 +2,7 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
+use Blindern\Dugnaden\Fragments\BeboerSelectFragment;
 use Blindern\Dugnaden\Pages\Page;
 
 class DayDugnad extends Page
@@ -78,7 +79,10 @@ class DayDugnad extends Page
 
         $list_title = "Dagdugnad";
 
-        $admin_buttons = "<div class='dagdugnad_beboerselect'>Velg ny beboer som skal ha dagdugnad: " . get_vedlikehold_beboer_select() . " <input type='submit' class='check_space' value='Oppdater Dagdugnadslisten' /></div>";
+        $f = new BeboerSelectFragment($this->context);
+        $f->truncateName = false;
+
+        $admin_buttons = "<div class='dagdugnad_beboerselect'>Velg ny beboer som skal ha dagdugnad: " . $f->build() . " <input type='submit' class='check_space' value='Oppdater Dagdugnadslisten' /></div>";
 
         $content  = "<h1>" . $list_title . "</h1>
                 <p>

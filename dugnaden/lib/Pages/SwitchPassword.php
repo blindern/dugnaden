@@ -2,6 +2,8 @@
 
 namespace Blindern\Dugnaden\Pages;
 
+use Blindern\Dugnaden\Fragments\FrontpageFragment;
+
 class SwitchPassword extends UserPage
 {
     public function show()
@@ -23,7 +25,10 @@ class SwitchPassword extends UserPage
                 $feedback = rounded_feedback_box("green", "Ditt nye passord er lagret.");
 
                 $this->page_array = get_layout_parts("menu_main");
-                $this->template->addContentHtml($feedback . output_default_frontpage());
+                $this->template->addContentHtml($feedback);
+                $this->template->addContentHtml(
+                    (new FrontpageFragment($this->context))->build()
+                );
                 return;
             }
 

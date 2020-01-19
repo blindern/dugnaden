@@ -2,6 +2,7 @@
 
 namespace Blindern\Dugnaden\Fragments;
 
+use Blindern\Dugnaden\Dugnaden;
 use Blindern\Dugnaden\PageContext;
 use Blindern\Dugnaden\Template;
 

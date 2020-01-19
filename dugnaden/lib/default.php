@@ -9,6 +9,7 @@ require_once("config.php");
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use Blindern\Dugnaden\Dugnaden;
+use Blindern\Dugnaden\Fragments\BeboerSelectFragment;
 use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\Model\Dugnad;
 use Blindern\Dugnaden\Util\Semester;
@@ -340,92 +341,6 @@ function admin_make_select($user_id, $select_count, $date_id, $deltager_id = fal
 }
 
 
-function get_dugnads($id, $hide_outdated_dugnads = false)
-{
-
-    /* Creates static text showing all dugnads for a beboer ($id)
-       If you need drop-down boxes containing ALL valid options, use admin_get_dugnads()
-     -------------------------------------------------------------------------------------------- */
-
-    $query = "SELECT    deltager_dugnad    AS id,
-
-                        dugnad_dato        AS dugnad_dato,
-                        dugnad_checked    AS checked,
-                        dugnad_type,
-
-                        deltager_gjort    AS status,
-                        deltager_type    AS kind,
-                        deltager_notat    AS note
-
-                FROM bs_deltager
-
-                    LEFT JOIN bs_dugnad
-                        ON dugnad_id = deltager_dugnad AND dugnad_slettet = '0'
-
-                WHERE deltager_beboer = '" . $id . "'
-                    " . ($hide_outdated_dugnads ? 'AND (deltager_gjort = \'0\' AND (dugnad_dato > now() OR dugnad_dato IS NULL)) ' : '') . "
-                ORDER BY dugnad_dato";
-
-    $result = @run_query($query);
-
-    while ($row = @mysql_fetch_array($result)) {
-        $type = Dugnad::getTypePrefix($row["dugnad_type"]);
-
-        /* ADDING NOTES
-        ------------------------------------------------------------ */
-
-        if (!empty($row["note"])) {
-            // Showing the note
-            $more_info = " <img src='./images/info.gif' alt='[i]' title='" . $row["note"] . "'>";
-        } else {
-            // No note to show
-            $more_info = null;
-        }
-
-        /* ADDING DUGNADS
-        ------------------------------------------------------------ */
-
-        if ((int) $row["id"] > 0 && !strcmp($row["status"], "0")) {
-
-            // Those done and not done (yet)
-
-            if (!strcmp($row["checked"], "1")) {
-                $use_class = "done_dugnad";
-            } else {
-                $use_class = "valid_dugnad";
-            }
-            $content .= "<span class='" . $use_class . "'>" . $type .  get_simple_date($row["dugnad_dato"], true) . $more_info . "</span>\n";
-        } else {
-
-            /* Dugnad special cases
-            --------------------------- */
-
-            if ((int) $row["id"] < 0) {
-
-                // OK dugnads;
-
-                if ((int) $row["id"] == -2) {
-                    $content .=    "<span class='valid_dugnad'>Dagdugnad</span>\n";
-                } elseif ((int) $row["id"] == -3) {
-                    $content .=    "<span class='done_dugnad'>Utf&oslash;rt</span>\n";
-                } elseif ((int) $row["id"] == -10) {
-                    $content .=    "<span class='valid_dugnad'>Hyttedugnad</span>\n";
-                } elseif ((int) $row["id"] == -11) {
-                    $content .=    "<span class='valid_dugnad'>Ryddevakt</span>\n";
-                } elseif ((int) $row["id"] == -12) {
-                    $content .=    "<span class='valid_dugnad'>Billavakt</span>\n";
-                }
-            } else {
-                // Damn dugnads; those they did not do..
-
-                $content .= "<span class='damn_dugnad'>" . $type . get_simple_date($row["dugnad_dato"], true) . $more_info . "</span>\n";
-            }
-        }
-    }
-
-    return $content;
-}
-
 function admin_get_petter_select($beboer_id)
 {
 
@@ -550,8 +465,6 @@ function admin_addremove_dugnad($user_id, $date_id = null)
 
 function get_undone_dugnads($id)
 {
-    global $formdata;
-
     $query = "SELECT    dugnad_id        AS id,
                         dugnad_dato        AS dugnad_dato,
                         dugnad_checked    AS checked,
@@ -601,30 +514,6 @@ function get_simple_date($complex, $very_simple = false)
 
 
 
-function show_person(Beboer $beboer, $line_count, $admin = false)
-{
-    global $formdata;
-
-    if ($admin) {
-        $check_box = "<input type='checkbox' name='delete_person[]' value='" . $beboer->id . "'> ";
-    }
-
-    $full_name = $admin ? $beboer->getName() : $beboer->getNameTruncated();
-
-    /* Outputting a static list of dugnads and status
-    --------------------------------------------------------------------- */
-
-    if (!$admin) {
-        $dugnads = get_special_status_image($beboer, $line_count) . get_dugnads($beboer->id);
-    } else {
-        $dugnads = get_special_status_image($beboer, $line_count) . admin_get_dugnads($beboer->id) . admin_addremove_dugnad($beboer->id, $line_count);
-    }
-
-    $entries .= "<div class='row" . ($line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $check_box . $full_name . (empty($rom) ? " (<b>rom ukjent</b>)" : null) . "</div>\n<div class='when'>" . $dugnads . "</div><div class='note'>" . get_notes($formdata, $beboer->id, $admin) . "&nbsp;</div><div class='spacer'>&nbsp;</div></div>\n\n";
-
-    return $entries;
-}
-
 function get_public_lastname($last, $first, $last_first = false, $admin = false)
 {
     if ($last_first) {
@@ -645,107 +534,9 @@ function get_public_lastname($last, $first, $last_first = false, $admin = false)
 }
 
 
-/*
- * Returns   : the compelete list for all beboere, showing all dugnads
- *
- * Used by   : BOTH beboere and Admin.
- *
- * Parameters: $admin == 1 enables drop down boxes enabling user to change dates and states
- *               $admin == 2 allows change of date and status
- *               $admin == 3 only allowed to change status
- *               $admin == false disables ALL editing; shows a text based list
- */
-
-function output_full_list($admin = false)
-{
-    if ($admin) {
-        /* ADDING HEADER FOR ADMIN OF DUGNADSLISTE
-        ---------------------------------------------------- */
-
-        $hidden = "<input type='hidden' name='do' value='admin' />
-                            <input type='hidden' name='admin' value='Dugnadsliste' />";
-
-        $list_title = "Administrering av dugnadsliste";
-
-        $admin_buttons = "<div class='row_explained'><div class='name'><input type='reset' class='check_space' value='Nullstille endringer' /></div><div class='when_narrow'><input type='submit' class='check_space' value='Oppdater dugnadslisten' /></div></div>";
-    } else {
-        /* SHOWING LIST FOR STATIC DUGNADSLISTE
-        ---------------------------------------------------- */
-
-        $hidden = "<input type='hidden' name='do' value='Se dugnadslisten uten passord' />";
-        $list_title = "Fullstendig dugnadsliste";
-    }
-
-    $content  = "<h1>" . $list_title . "</h1>";
-    $content .= "<form method='post' action='index.php'>" . $hidden . "
-        \n";
-
-    /* CREATING THE ITEM LINES
-    ---------------------------------------------------------------------- */
-
-    $beboere = Dugnaden::get()->beboer->getAll();
-
-    $content .= "<div class='row_explained'><div class='name'>" . ($admin == 1 ? "Slett " : null) . "Beboer</div><div class='when_narrow'>Tildelte dugnader</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
-
-    $c = 0;
-    foreach ($beboere as $beboer) {
-        $content .= "\n\n" . show_person($beboer, $c++, $admin) . "\n";
-    }
-
-    return $content . $admin_buttons . "</form>";
-}
 
 
-function get_beboer_select($new_dugnadsleder = false)
-{
-    global $formdata;
 
-    $content .= "\n<select size='1' name='beboer'>\n";
-    $content .= "<option value='-1' >" . ($new_dugnadsleder ? "Velg ny dugnadsleder..." : "Hvem er du?") . "</option>\n";
-
-    $query = "SELECT beboer_for, beboer_etter, beboer_id AS id
-                FROM bs_beboer
-                ORDER BY beboer_for, beboer_etter";
-
-    $result = @run_query($query);
-
-    while ($row = @mysql_fetch_array($result)) {
-        if (!strcmp($formdata["beboer"], $row["id"])) {
-            $selected = "selected='selected' ";
-        } else {
-            $selected = null;
-        }
-
-        $content .= "<option value='" . $row["id"] . "' " . $selected . ">" . get_public_lastname($row["beboer_etter"], $row["beboer_for"], false) . "</option>\n";
-    }
-
-    $content .= "</select>\n";
-
-    return $content;
-}
-
-
-function get_vedlikehold_beboer_select()
-{
-    $content .= "\n<select size='1' name='beboer'>\n";
-    $content .= "<option value='-1' >Velg beboer fra listen</option>\n";
-
-    $query = "SELECT beboer_for, beboer_etter, beboer_id AS id
-                FROM bs_beboer
-                WHERE beboer_spesial = '0'
-                ORDER BY beboer_etter, beboer_for";
-
-    $result = @run_query($query);
-
-    while ($row = @mysql_fetch_array($result)) {
-        $beboer_name = $row["beboer_etter"] . ", " . $row["beboer_for"];
-        $content .= "<option value='" . $row["id"] . "' >" . $beboer_name . "</option>\n";
-    }
-
-    $content .= "</select>\n";
-
-    return $content;
-}
 
 
 function utf8_substr($str, $start)
@@ -788,30 +579,6 @@ function get_layout_parts($name)
 
 
 
-function get_special_status_image(Beboer $beboer, $line_count)
-{
-    $result = "";
-
-    if ($beboer->specialId == Beboer::SPECIAL_ELEPHANT) {
-        $result .= "<img src='./images/elephant" . ($line_count % 2 ? "_odd" : null) . ".gif' title='Elefanter har dugnadsfri' border='0' align='top'>";
-    }
-
-    if ($beboer->specialId == Beboer::SPECIAL_FF) {
-        $result .= "<img src='./images/festforeningen" . ($line_count % 2 ? "_odd" : null) . ".gif' title='Festforeningen har dugnadsfri' border='0' align='top'>";
-    }
-
-    if ($beboer->specialId == Beboer::SPECIAL_DUGNADSFRI) {
-        $result .= "<img src='./images/dugnadsfri" . ($line_count % 2 ? "_odd" : null) . ".gif' width='24px' height='24px' title='Denne beboeren har dugnadsfri' border='0' align='top'>";
-    }
-
-    if ($beboer->specialId == Beboer::SPECIAL_BLIVENDE_ELEPHANT) {
-        $result .= "<img class='dugnads_status' src='./images/blivende" . ($line_count % 2 ? "_odd" : null) . ".gif' width='32px' height='20px' title='Denne beboeren skal kun ha en dugnad' border='0' align='top'>";
-    }
-
-    return $result;
-}
-
-
 function get_dugnadsledere()
 {
     $dugnadsledere = Dugnaden::get()->dugnadsleder->getList();
@@ -828,19 +595,6 @@ function get_dugnadsledere()
     }
 
     return $names;
-}
-
-
-function output_default_frontpage()
-{
-    $page_array = get_layout_parts("menu_main");
-
-    $page_array["gutta"] = get_dugnadsledere() . $page_array["gutta"];
-    $page_array["beboer"] = get_beboer_select() . $page_array["beboer"];
-
-    $page_array["db_error"] = database_health() . $page_array["db_error"];
-
-    return implode($page_array);
 }
 
 

@@ -2,6 +2,7 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
+use Blindern\Dugnaden\Fragments\BeboerSelectFragment;
 use Blindern\Dugnaden\Pages\Page;
 
 class FixBeboerName extends Page
@@ -28,8 +29,10 @@ class FixBeboerName extends Page
         }
 
         if (!$beboer) {
-            $dugnadsleder = false;
-            $page["beboer_bytte"] = "1. " . get_beboer_select($dugnadsleder) . "&nbsp;&nbsp;&nbsp;&nbsp; <input type='submit' value='OK'><br />" .
+            $f = new BeboerSelectFragment($this->context);
+            $f->currentBeboer = $beboer;
+
+            $page["beboer_bytte"] = "1. " . $f->build() . "&nbsp;&nbsp;&nbsp;&nbsp; <input type='submit' value='OK'><br />" .
                 "<div class='hint'>2. Fyll inn nytt etternavn og fornavn...</div>" . $page["beboer_bytte"];
         } else {
             $page["hidden"] = "<input type='hidden' name='beboer' value='" . $beboer->id . "'>" . $page["hidden"];

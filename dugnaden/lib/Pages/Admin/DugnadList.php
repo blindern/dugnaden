@@ -2,6 +2,7 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
+use Blindern\Dugnaden\Fragments\DugnadlistFragment;
 use Blindern\Dugnaden\Pages\Page;
 
 class DugnadList extends Page
@@ -59,7 +60,7 @@ class DugnadList extends Page
             global $dugnad_is_empty, $dugnad_is_full;
             list($dugnad_is_empty, $dugnad_is_full) = $this->dugnaden->dugnad->getDugnadStatus();
 
-            $this->template->addContentHtml($feedback . output_full_list(1));
+            $this->template->addContentHtml($feedback . (new DugnadlistFragment($this->context))->build(true));
         }
     }
 

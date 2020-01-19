@@ -2,6 +2,7 @@
 
 namespace Blindern\Dugnaden\Pages\Admin;
 
+use Blindern\Dugnaden\Fragments\BeboerSelectFragment;
 use Blindern\Dugnaden\Pages\Page;
 
 class RevokeFee extends Page
@@ -192,11 +193,14 @@ class RevokeFee extends Page
 
         $page["botliste"] = $all_dl . $page["botliste"];
 
+        $f = new BeboerSelectFragment($this->context);
+        $f->truncateName = false;
+
         $admin_buttons = "\t\t\t\t\t\t\t<div class='bl_green'>
                             <div class='br_green'>
                                 <div class='tl_green'>
                                     <div class='tr_green'>
-                                        Tilf&oslash;y ny annulering manuelt fordi boten ikke finnes i Botlisten over: " . get_vedlikehold_beboer_select() . "
+                                        Tilf&oslash;y ny annulering manuelt fordi boten ikke finnes i Botlisten over: " . $f->build() . "
                                     </div>
                                 </div>
                             </div>
