@@ -39,7 +39,7 @@ class SwitchDugnad extends UserPage
 
         $this->template->addNavigation("Bytte dugnad");
 
-        $file = get_layout_parts("menu_beboerctrl");
+        $file = $this->template->getLayoutParts("menu_beboerctrl");
         $file["gutta"] = get_dugnadsledere() . $file["gutta"];
         $this->template->addContentHtml(implode($file));
 

@@ -9,7 +9,7 @@ class Main extends Page
     function show()
     {
         $this->template->addContentHtml(
-            implode(get_layout_parts("menu_admin"))
+            implode($this->template->getLayoutParts("menu_admin"))
         );
     }
 }

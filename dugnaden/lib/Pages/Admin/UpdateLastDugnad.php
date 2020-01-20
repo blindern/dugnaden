@@ -22,7 +22,7 @@ class UpdateLastDugnad extends Page
 
             $item_count = 0;
 
-            $flyer_template = get_layout_parts("flyer_bot");
+            $flyer_template = $this->template->getLayoutParts("flyer_bot");
 
             $query = "SELECT dugnad_id AS id, dugnad_dato AS dato FROM bs_dugnad WHERE dugnad_dato >= (SELECT dugnad_dato FROM bs_dugnad WHERE dugnad_id = ${formdata['show']}) AND dugnad_slettet ='0' ORDER BY dugnad_dato LIMIT 1";
 
@@ -237,7 +237,7 @@ class UpdateLastDugnad extends Page
 
     private function showStraffedugnadNewNote(Beboer $beboer)
     {
-        $admin_login = get_layout_parts("admin_notat");
+        $admin_login = $this->template->getLayoutParts("admin_notat");
 
         $show = (!empty($this->formdata["show"]) ? "<input type='hidden' name='show' value='" . $this->formdata["show"] . "'>\n" : null);
 

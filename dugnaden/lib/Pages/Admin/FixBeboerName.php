@@ -12,7 +12,7 @@ class FixBeboerName extends Page
         $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
         $this->template->addNavigation("Rette beboernavn");
 
-        $page = get_layout_parts("menu_name");
+        $page = $this->template->getLayoutParts("menu_name");
 
         $page["hidden"] = "<input type='hidden' name='admin' value='" . $this->formdata["admin"] . "'><input type='hidden' name='do' value='admin'>" . $page["hidden"];
 

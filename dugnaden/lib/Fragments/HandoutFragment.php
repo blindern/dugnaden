@@ -12,7 +12,7 @@ class HandoutFragment extends Fragment
         $this->template->setPrintView();
 
         $element_count = 0;
-        $flyer = get_layout_parts("flyer_passord");
+        $flyer = $this->template->getLayoutParts("flyer_passord");
 
         $dugnadsledere = get_dugnadsledere();
 

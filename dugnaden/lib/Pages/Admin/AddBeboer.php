@@ -18,7 +18,7 @@ class AddBeboer extends Page
             return;
         }
 
-        $page = get_layout_parts("form_innkallingnyeste");
+        $page = $this->template->getLayoutParts("form_innkallingnyeste");
         $page["importeringsliste"] = $this->makeLastBeboereSelect() . $page["importeringsliste"];
         $this->template->addContentHtml(implode($page));
     }

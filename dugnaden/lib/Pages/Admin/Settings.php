@@ -9,6 +9,6 @@ class Settings extends Page
     function show()
     {
         $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
-        $this->template->addContentHtml(implode(get_layout_parts("admin_mainmenu")));
+        $this->template->addContentHtml(implode($this->template->getLayoutParts("admin_mainmenu")));
     }
 }

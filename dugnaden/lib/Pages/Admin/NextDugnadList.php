@@ -60,7 +60,7 @@ class NextDugnadList extends Page
     {
         $this->template->addNavigation("Neste dugnadsliste");
 
-        $admin_login = get_layout_parts("admin_login_dugnadlist");
+        $admin_login = $this->template->getLayoutParts("admin_login_dugnadlist");
 
 
         /* Making the select drop-down box with all dugnadsledere .. */

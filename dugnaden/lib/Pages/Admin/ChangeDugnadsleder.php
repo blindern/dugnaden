@@ -12,7 +12,7 @@ class ChangeDugnadsleder extends Page
         $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
         $this->template->addNavigation("Dugnadslederstyring");
 
-        $page = get_layout_parts("admin_dugnadsledere");
+        $page = $this->template->getLayoutParts("admin_dugnadsledere");
 
         $content = "";
 

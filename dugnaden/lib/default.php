@@ -535,10 +535,6 @@ function get_public_lastname($last, $first, $last_first = false, $admin = false)
 
 
 
-
-
-
-
 function utf8_substr($str, $start)
 {
     preg_match_all("/./su", $str, $ar);
@@ -550,33 +546,6 @@ function utf8_substr($str, $start)
         return join("", array_slice($ar[0], $start));
     }
 }
-
-
-function get_layout_content($name)
-{
-    return file_get_contents(__DIR__ . "/layout/$name.html");
-}
-
-
-function get_layout_parts($name)
-{
-    $buffer = get_layout_content($name);
-
-    // Returns an array with content and the entire tag
-    // in the order they were found in $filename.
-
-    $out = preg_split('(\[([a-zA-Z_]+?)\])', $buffer, -1, PREG_SPLIT_DELIM_CAPTURE);
-
-    $final = array();
-    $final["head"] = $out[0];
-
-    for ($c = 1; $c < sizeof($out); $c = $c + 2) {
-        $final[strtolower($out[$c])] = $out[$c + 1];
-    }
-
-    return $final;
-}
-
 
 
 function get_dugnadsledere()

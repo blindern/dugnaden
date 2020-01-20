@@ -55,7 +55,7 @@ class DugnadCalendar extends Page
         }
 
         $content .= "<form action='index.php' method='post'>" . $this->showAllSaturdays();
-        $content .= get_layout_content("form_update") . "</form>" . $msg;
+        $content .= implode("", $this->template->getLayoutParts("form_update")) . "</form>" . $msg;
 
         if (truncateAllowed($future_check) == false) {
 

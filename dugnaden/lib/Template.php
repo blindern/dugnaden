@@ -54,6 +54,30 @@ class Template
         return implode(" &raquo; ", $result);
     }
 
+    private function getLayoutContent($name)
+    {
+        return file_get_contents(__DIR__ . "/layout/$name.html");
+    }
+
+    function getLayoutParts($name)
+    {
+        $buffer = $this->getLayoutContent($name);
+
+        // Returns an array with content and the entire tag
+        // in the order they were found in $filename.
+
+        $out = preg_split('(\[([a-zA-Z_]+?)\])', $buffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        $final = array();
+        $final["head"] = $out[0];
+
+        for ($c = 1; $c < sizeof($out); $c = $c + 2) {
+            $final[strtolower($out[$c])] = $out[$c + 1];
+        }
+
+        return $final;
+    }
+
     function render()
     {
         $show_queries = isset($GLOBALS['queries']) && DEVELOPER_MODE;

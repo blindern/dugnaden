@@ -13,7 +13,7 @@ class RevokeFee extends Page
 
         $content = "";
 
-        $page = get_layout_parts("admin_annulerebot");
+        $page = $this->template->getLayoutParts("admin_annulerebot");
 
         $page["hidden"] = " <input type='hidden' name='admin'    value='" . $this->formdata["admin"] . "' />
                             <input type='hidden' name='do'        value='admin' />" . $page["hidden"];

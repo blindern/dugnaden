@@ -15,7 +15,7 @@ class AssignDugnad extends Page
         $this->template->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
         $this->template->addNavigation("Tildele dugnad");
 
-        $page = get_layout_parts("admin_tildeledugnad");
+        $page = $this->template->getLayoutParts("admin_tildeledugnad");
 
         $query = "SELECT dugnad_id FROM bs_dugnad WHERE dugnad_slettet = '0' ORDER BY dugnad_dato";
         $result = @run_query($query);

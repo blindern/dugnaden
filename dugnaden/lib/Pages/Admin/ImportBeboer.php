@@ -22,7 +22,7 @@ class ImportBeboer extends Page
             $feedback .= "<div class='failure'>Det er ikke generert noen dugnadsdager, dette gj&oslash;res fra <a href='?do=admin&admin=Dugnadskalender'>Dugnadskalenderen</a>.</div>";
         }
 
-        $page = get_layout_parts("form_import");
+        $page = $this->template->getLayoutParts("form_import");
 
         if (truncateAllowed() == false) {
             $page["disable_slett"] = "disabled='disabled'" . $page["disable_slett"];
@@ -185,23 +185,23 @@ class ImportBeboer extends Page
 
 
 
-                    $content .= get_layout_content("admin_mainmenu");
+                    $content .= implode("", $this->template->getLayoutParts("admin_mainmenu"));
 
                     /* -------------------------------------------------
                             Done adding dugnads                           */
                 } else {
-                    $content .= get_layout_content("menu_semesterstart");
+                    $content .= implode("", $this->template->getLayoutParts("menu_semesterstart"));
                 }
             } else {
                 if ($do_it) {
                     $content .= "Det skjedde en feil under lagring av dugnadsliste, vennligst pr&oslash;v igjen...";
-                    $content .= get_layout_content("form_import");
+                    $content .= implode("", $this->template->getLayoutParts("form_import"));
                 } else {
-                    $content .= get_layout_content("menu_semesterstart");
+                    $content .= implode("", $this->template->getLayoutParts("menu_semesterstart"));
                 }
             }
         } else {
-            $content = get_layout_content("form_import");
+            $content = implode("", $this->template->getLayoutParts("form_import"));
         }
 
         $this->template->addContentHtml($content);

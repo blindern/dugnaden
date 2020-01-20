@@ -21,7 +21,7 @@ class FeeList extends Page
 
         $line_count = 0;
 
-        $flyer = get_layout_parts("flyer_botlist");
+        $flyer = $this->template->getLayoutParts("flyer_botlist");
 
         /* ADDING ALL BOTS AND ANNULERINGER THAT ARE
                 FROM DUGNADS/DELTAGELSE THAT STILL EXSITS.
@@ -105,7 +105,7 @@ class FeeList extends Page
     {
         $this->template->addNavigation("Botliste");
 
-        $admin_login = get_layout_parts("admin_login_botlist");
+        $admin_login = $this->template->getLayoutParts("admin_login_botlist");
 
         $bot_count = $this->getFeeCount();
 

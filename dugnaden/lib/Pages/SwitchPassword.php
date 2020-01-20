@@ -24,7 +24,7 @@ class SwitchPassword extends UserPage
 
                 $feedback = '<div class="box-green">Ditt nye passord er lagret.</div>';
 
-                $this->page_array = get_layout_parts("menu_main");
+                $this->page_array = $this->template->getLayoutParts("menu_main");
                 $this->template->addContentHtml($feedback);
                 $this->template->addContentHtml(
                     (new FrontpageFragment($this->context))->build()
@@ -39,7 +39,7 @@ class SwitchPassword extends UserPage
             }
         }
 
-        $this->page_array = get_layout_parts("form_pw");
+        $this->page_array = $this->template->getLayoutParts("form_pw");
 
         $this->template->addContentHtml($feedback . $this->page_array["head"] . "<input type='hidden' name='beboer' value='" . $this->formdata["beboer"] . "' /><input type='hidden' name='pw' value='" . $this->formdata["pw"] . "' />" .  $this->page_array["hidden"] . $this->beboer->getName() . $this->page_array["beboer_navn"]);
     }

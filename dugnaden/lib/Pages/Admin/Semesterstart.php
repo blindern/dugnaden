@@ -11,7 +11,7 @@ class Semesterstart extends Page
         $this->template->addNavigation("Innstillinger", "index.php?do=admin&admin=Innstillinger");
         $this->template->addNavigation("Semesterstart", "index.php?do=admin&admin=Semesterstart");
 
-        $page = get_layout_parts("menu_semesterstart");
+        $page = $this->template->getLayoutParts("menu_semesterstart");
 
         if (truncateAllowed() == false) {
             // $page["disable_kalender"] = "disabled='disabled'" . $page["disable_kalender"];

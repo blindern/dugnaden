@@ -6,7 +6,7 @@ class FrontpageFragment extends Fragment
 {
     public function build()
     {
-        $page_array = get_layout_parts("menu_main");
+        $page_array = $this->template->getLayoutParts("menu_main");
 
         $page_array["gutta"] = get_dugnadsledere() . $page_array["gutta"];
 

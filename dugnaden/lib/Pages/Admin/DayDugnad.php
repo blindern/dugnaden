@@ -19,7 +19,7 @@ class DayDugnad extends Page
         if ($newnBeboer && empty($this->formdata["notat"])) {
             /* Valid beboer - adding note..
                 ------------------------------------------------ */
-            $admin_login = get_layout_parts("admin_notat");
+            $admin_login = $this->template->getLayoutParts("admin_notat");
 
             $show = (!empty($this->formdata["show"]) ? "<input type='hidden' name='show' value='" . $this->formdata["show"] . "'>\n" : null);
 
