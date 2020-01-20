@@ -4,6 +4,7 @@ namespace Blindern\Dugnaden\Pages;
 
 use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\Model\Dugnad;
+use Blindern\Dugnaden\Util\DateUtil;
 
 class SwitchDugnad extends UserPage
 {
@@ -125,7 +126,7 @@ class SwitchDugnad extends UserPage
                     } else {
                         $use_class = "valid_dugnad";
                     }
-                    $static_content .= "<span class='" . $use_class . "'>" . get_simple_date($row["dugnad_dato"], true) . "</span>\n";
+                    $static_content .= "<span class='" . $use_class . "'>" . DateUtil::formatDateShort($row["dugnad_dato"]) . "</span>\n";
                 } else {
                     /* Add the dugnad as a selection box
                 ---------------------------------------------------------------------------------------- */
@@ -137,7 +138,7 @@ class SwitchDugnad extends UserPage
                     $more_info = " <img src='./images/info.gif' alt='[i]' title='" . $row["note"] . "'>";
                 }
 
-                $static_content .= "<span class='damn_dugnad'>" . get_simple_date($row["dugnad_dato"], true) . $more_info . "</span>\n";
+                $static_content .= "<span class='damn_dugnad'>" . DateUtil::formatDateShort($row["dugnad_dato"]) . $more_info . "</span>\n";
             }
         }
 
@@ -175,7 +176,7 @@ class SwitchDugnad extends UserPage
 
             if (@mysql_num_rows($result) == 1) {
                 $row = @mysql_fetch_array($result);
-                $content .= "<option value='" . $row["id"] . "' selected='selected' >" . $prefix . get_simple_date($row["da_date"], true) . "</option>\n";
+                $content .= "<option value='" . $row["id"] . "' selected='selected' >" . $prefix . DateUtil::formatDateShort($row["da_date"]) . "</option>\n";
             } else {
                 $content .= "<option value='-1' selected='selected' >:-)</option>\n";
             }
@@ -200,7 +201,7 @@ class SwitchDugnad extends UserPage
                     $content .=    "<option value='-12' selected='selected' >Billavakt</option>\n";
                 }
             } elseif ($dugnad && $dugnad['dugnad_type'] == 'anretning') {
-                $content .=    "<option value='" . $dugnad['dugnad_id'] . "' selected='selected'>Anretningsdugnad: " . get_simple_date($dugnad['dugnad_dato'], true) . "</option>\n";
+                $content .=    "<option value='" . $dugnad['dugnad_id'] . "' selected='selected'>Anretningsdugnad: " . DateUtil::formatDateShort($dugnad['dugnad_dato']) . "</option>\n";
             } else {
                 $content .=    "<option value='-10' >Hyttedugnad</option>\n";
 
@@ -218,12 +219,12 @@ class SwitchDugnad extends UserPage
 
                 while ($row = @mysql_fetch_array($result)) {
                     if (!strcmp($row["id"], $date_id)) {
-                        $content .= "<option value='" . $row["id"] . "' selected='selected' >" . $prefix . get_simple_date($row["da_date"], true) . "</option>\n";
+                        $content .= "<option value='" . $row["id"] . "' selected='selected' >" . $prefix . DateUtil::formatDateShort($row["da_date"]) . "</option>\n";
                     } else {
                         $checked = null;
 
                         if (empty($dugnad_is_full[$row["id"]])) {
-                            $content .= "<option value='" . $row["id"] . "' " . $checked . ">" . $prefix . get_simple_date($row["da_date"], true) . "</option>\n";
+                            $content .= "<option value='" . $row["id"] . "' " . $checked . ">" . $prefix . DateUtil::formatDateShort($row["da_date"]) . "</option>\n";
                         }
                     }
                 }

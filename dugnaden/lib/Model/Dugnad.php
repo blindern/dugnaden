@@ -2,6 +2,8 @@
 
 namespace Blindern\Dugnaden\Model;
 
+use Blindern\Dugnaden\Util\DateUtil;
+
 class Dugnad
 {
     /**
@@ -84,7 +86,7 @@ class Dugnad
 
     public function formatDate()
     {
-        return get_simple_date($this->date);
+        return DateUtil::formatDate($this->date);
     }
 
     public function getDateObj()

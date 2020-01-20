@@ -12,6 +12,7 @@ use Blindern\Dugnaden\Dugnaden;
 use Blindern\Dugnaden\Fragments\BeboerSelectFragment;
 use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\Model\Dugnad;
+use Blindern\Dugnaden\Util\DateUtil;
 use Blindern\Dugnaden\Util\Semester;
 
 $link     = mysql_connect($config_database["host"], $config_database["username"], $config_database["password"]);
@@ -331,7 +332,7 @@ function admin_make_select($user_id, $select_count, $date_id, $deltager_id = fal
             }
 
             $selected = $row['id'] == $date_id ? ' selected="selected"' : '';
-            $content .= "<option value='" . $row["id"] . "'" . $selected . ">" . get_simple_date($row["da_date"], true) . $note . "</option>\n";
+            $content .= "<option value='" . $row["id"] . "'" . $selected . ">" . DateUtil::formatDateShort($row["da_date"]) . $note . "</option>\n";
         }
     }
 
@@ -416,15 +417,11 @@ function admin_get_dugnads($id)
                 /* Did not do dugnad, mark as damn_dugnad (red)
                 -------------------------------------------------------- */
 
-                // $content .= "<div class='damn_dugnad'>". get_simple_date($row["dugnad_dato"], true) . $more_info ."</div>\n";
-
-                $content .= "<img class='dugnads_status' src='./images/dugnad_damn.png' width='24px' height='24px' title='" . get_simple_date($row["dugnad_dato"], true) . " " . $row["note"] . "' alt='[BOT - " . get_simple_date($row["dugnad_dato"], true) . " " . $row["note"] . "]'>\n";
+                $content .= "<img class='dugnads_status' src='./images/dugnad_damn.png' width='24px' height='24px' title='" . DateUtil::formatDateShort($row["dugnad_dato"]) . " " . $row["note"] . "' alt='[BOT - " . DateUtil::formatDateShort($row["dugnad_dato"]) . " " . $row["note"] . "]'>\n";
             } else {
                 /* Dugnad is done, mark as done_dugnad (green)
                 -------------------------------------------------------- */
-                // $content .= "<div class='done_dugnad'>". get_simple_date($row["dugnad_dato"], true) . $more_info ."</div>\n";
-
-                $content .= "<img class='dugnads_status' src='./images/dugnad_ok.png' width='24px' height='24px' title='" . get_simple_date($row["dugnad_dato"], true) . " " . $row["note"] . "' alt='[OK - " . get_simple_date($row["dugnad_dato"], true) . " " . $row["note"] . "]'>\n";
+                $content .= "<img class='dugnads_status' src='./images/dugnad_ok.png' width='24px' height='24px' title='" . DateUtil::formatDateShort($row["dugnad_dato"]) . " " . $row["note"] . "' alt='[OK - " . DateUtil::formatDateShort($row["dugnad_dato"]) . " " . $row["note"] . "]'>\n";
             }
         } else {
             /* Paramters for admin_make_select: $user_id, $select_count, $date_id, $deltager_id = false) */
@@ -487,7 +484,7 @@ function get_undone_dugnads($id)
 
     while ($row = @mysql_fetch_array($result)) {
         $count++;
-        $content .= $comma . Dugnad::getTypePrefix($row["dugnad_type"]) . get_simple_date($row["dugnad_dato"], true);
+        $content .= $comma . Dugnad::getTypePrefix($row["dugnad_type"]) . DateUtil::formatDateShort($row["dugnad_dato"]);
 
         if (($count + 1) < $total_count) {
             $comma = ", ";
@@ -502,16 +499,6 @@ function get_undone_dugnads($id)
         return $content;
     }
 }
-
-function get_simple_date($complex, $very_simple = false)
-{
-    $complex = explode("-", substr($complex, 0, 10));
-
-    $simple = $complex[2] . "." . $complex[1] . "." . ($very_simple ? substr($complex[0], -2) : $complex[0]);
-
-    return $simple;
-}
-
 
 
 function get_public_lastname($last, $first, $last_first = false, $admin = false)

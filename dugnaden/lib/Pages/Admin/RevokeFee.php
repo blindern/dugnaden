@@ -4,6 +4,7 @@ namespace Blindern\Dugnaden\Pages\Admin;
 
 use Blindern\Dugnaden\Fragments\BeboerSelectFragment;
 use Blindern\Dugnaden\Pages\Page;
+use Blindern\Dugnaden\Util\DateUtil;
 
 class RevokeFee extends Page
 {
@@ -160,7 +161,7 @@ class RevokeFee extends Page
 
                 $beboer = $this->dugnaden->beboer->getById($row['beboer_id']);
 
-                $all_dl .= "<div class='row" . $row_Text_and_Background . "'><div class='check_left'><input type='checkbox' name='del_dl[]' " . ((int) $row["bot_annulert"] == 1 ? "checked='checked' disabled " : null) . "value='" . $row['bot_id'] . "'></div><div class='name_wide" . (!(int) $row["bot_registrert"] ? "_success" : null) . "'>" . $line_count . ". " . htmlspecialchars($beboer->getName()) . "</div><div class='when'>" . get_simple_date($row["dugnad_dato"], true) . " " . $desc . "</div></div>\n";
+                $all_dl .= "<div class='row" . $row_Text_and_Background . "'><div class='check_left'><input type='checkbox' name='del_dl[]' " . ((int) $row["bot_annulert"] == 1 ? "checked='checked' disabled " : null) . "value='" . $row['bot_id'] . "'></div><div class='name_wide" . (!(int) $row["bot_registrert"] ? "_success" : null) . "'>" . $line_count . ". " . htmlspecialchars($beboer->getName()) . "</div><div class='when'>" . DateUtil::formatDateShort($row["dugnad_dato"]) . " " . $desc . "</div></div>\n";
 
                 if (!$row["bot_annulert"]) $bot_count++;
                 else $annulert_count++;

@@ -4,6 +4,7 @@ namespace Blindern\Dugnaden\Fragments;
 
 use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\Model\Dugnad;
+use Blindern\Dugnaden\Util\DateUtil;
 
 class DugnadlistFragment extends Fragment
 {
@@ -130,7 +131,7 @@ class DugnadlistFragment extends Fragment
                 } else {
                     $use_class = "valid_dugnad";
                 }
-                $content .= "<span class='" . $use_class . "'>" . $type .  get_simple_date($row["dugnad_dato"], true) . $more_info . "</span>\n";
+                $content .= "<span class='" . $use_class . "'>" . $type .  DateUtil::formatDateShort($row["dugnad_dato"]) . $more_info . "</span>\n";
             } else {
 
                 /* Dugnad special cases
@@ -154,7 +155,7 @@ class DugnadlistFragment extends Fragment
                 } else {
                     // Damn dugnads; those they did not do..
 
-                    $content .= "<span class='damn_dugnad'>" . $type . get_simple_date($row["dugnad_dato"], true) . $more_info . "</span>\n";
+                    $content .= "<span class='damn_dugnad'>" . $type . DateUtil::formatDateShort($row["dugnad_dato"]) . $more_info . "</span>\n";
                 }
             }
         }

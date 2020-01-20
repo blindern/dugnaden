@@ -6,6 +6,7 @@ use Blindern\Dugnaden\Fragments\DugnadlistFragment;
 use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\Model\Dugnad;
 use Blindern\Dugnaden\Pages\Page;
+use Blindern\Dugnaden\Util\DateUtil;
 
 class UpdateLastDugnad extends Page
 {
@@ -77,7 +78,7 @@ class UpdateLastDugnad extends Page
                 $flyer = $flyer_template;
 
                 $flyer["rom_info"] = get_public_lastname($row["beboer_etter"], $row["beboer_for"], false, true) . "<br />" . $row["rom_nr"] . $row["rom_type"] . $flyer["rom_info"];
-                $flyer["dugnad_dato"] = get_simple_date($denne_dugnaden["dato"], true) . $flyer["dugnad_dato"];
+                $flyer["dugnad_dato"] = DateUtil::formatDateShort($denne_dugnaden["dato"]) . $flyer["dugnad_dato"];
 
                 if (empty($row["bot_id"])) {
                     $flyer["dugnad_bot"] = ". " . $flyer["dugnad_bot"];
@@ -88,7 +89,7 @@ class UpdateLastDugnad extends Page
                 }
 
                 if (!empty($row["straff_dato"])) {
-                    $flyer["dugnad_straff"] = "Du har " . $add_and . " blitt satt opp p&aring; straffedugnad " . get_simple_date($row["straff_dato"], true) . "." . $flyer["dugnad_straff"];
+                    $flyer["dugnad_straff"] = "Du har " . $add_and . " blitt satt opp p&aring; straffedugnad " . DateUtil::formatDateShort($row["straff_dato"]) . "." . $flyer["dugnad_straff"];
                 }
 
                 $remaining_dugnads = get_undone_dugnads($row["beboer_id"]);

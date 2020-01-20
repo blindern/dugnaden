@@ -3,6 +3,7 @@
 namespace Blindern\Dugnaden\Pages\Admin;
 
 use Blindern\Dugnaden\Pages\Page;
+use Blindern\Dugnaden\Util\DateUtil;
 
 class FeeList extends Page
 {
@@ -64,7 +65,7 @@ class FeeList extends Page
                 $max_date = $row["dato"];
             }
 
-            $entries .= "<div class='row" . (++$line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $line_count . ". " . $row["beboer_etter"] . ", " . $row["beboer_for"]  . "</div>\n<div class='when'>" . get_simple_date($row["dato"], true) . "</div><div class='note'>" . $row["notat"] . "&nbsp;</div><div class='note'>" . (!strcmp($row["bot_annulert"], "-1") ? "-" : null) . ONE_BOT . " kroner&nbsp;" . (!strcmp($row["bot_annulert"], "-1") ? "(ettergitt)" : null) . "</div><div class='spacer'>&nbsp;</div></div>\n\n";
+            $entries .= "<div class='row" . (++$line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $line_count . ". " . $row["beboer_etter"] . ", " . $row["beboer_for"]  . "</div>\n<div class='when'>" . DateUtil::formatDateShort($row["dato"]) . "</div><div class='note'>" . $row["notat"] . "&nbsp;</div><div class='note'>" . (!strcmp($row["bot_annulert"], "-1") ? "-" : null) . ONE_BOT . " kroner&nbsp;" . (!strcmp($row["bot_annulert"], "-1") ? "(ettergitt)" : null) . "</div><div class='spacer'>&nbsp;</div></div>\n\n";
         }
 
         /* ADDING ALL THAT ARE ONLY ANNULERING, WITH
@@ -95,7 +96,7 @@ class FeeList extends Page
         /* Creating the page
             ------------------------------------------------------------- */
 
-        $flyer["time_space"] = get_simple_date($min_date, true) . " til " . get_simple_date($max_date, true) . $flyer["time_space"];
+        $flyer["time_space"] = DateUtil::formatDateShort($min_date) . " til " . DateUtil::formatDateShort($max_date) . $flyer["time_space"];
         $flyer["dugnad_dugnad"] = $entries . $flyer["dugnad_dugnad"];
 
         $this->template->addContentHtml(implode($flyer));
