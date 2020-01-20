@@ -7,6 +7,7 @@ use PDO;
 class Db
 {
     private static $instance;
+
     public static function get()
     {
         if (!static::$instance) {

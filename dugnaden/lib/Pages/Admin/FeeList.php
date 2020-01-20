@@ -65,7 +65,7 @@ class FeeList extends Page
                 $max_date = $row["dato"];
             }
 
-            $entries .= "<div class='row" . (++$line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $line_count . ". " . $row["beboer_etter"] . ", " . $row["beboer_for"]  . "</div>\n<div class='when'>" . DateUtil::formatDateShort($row["dato"]) . "</div><div class='note'>" . $row["notat"] . "&nbsp;</div><div class='note'>" . (!strcmp($row["bot_annulert"], "-1") ? "-" : null) . ONE_BOT . " kroner&nbsp;" . (!strcmp($row["bot_annulert"], "-1") ? "(ettergitt)" : null) . "</div><div class='spacer'>&nbsp;</div></div>\n\n";
+            $entries .= "<div class='row" . (++$line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $line_count . ". " . $row["beboer_etter"] . ", " . $row["beboer_for"] . "</div>\n<div class='when'>" . DateUtil::formatDateShort($row["dato"]) . "</div><div class='note'>" . $row["notat"] . "&nbsp;</div><div class='note'>" . (!strcmp($row["bot_annulert"], "-1") ? "-" : null) . ONE_BOT . " kroner&nbsp;" . (!strcmp($row["bot_annulert"], "-1") ? "(ettergitt)" : null) . "</div><div class='spacer'>&nbsp;</div></div>\n\n";
         }
 
         /* ADDING ALL THAT ARE ONLY ANNULERING, WITH
@@ -88,9 +88,8 @@ class FeeList extends Page
         while ($row = @mysql_fetch_array($result)) {
 
             $dug_time = "Etterbehandlet";
-            $entries .= "<div class='row" . (++$line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $line_count . ". " . $row["beboer_etter"] . ", " . $row["beboer_for"]  . "</div>\n<div class='when'>" . $dug_time . "</div><div class='note'></div><div class='note'>" . (!strcmp($row["bot_annulert"], "-1") ? "-" : null) . ONE_BOT . " kroner&nbsp;" . (!strcmp($row["bot_annulert"], "-1") ? "(ettergitt)" : null) . "</div><div class='spacer'>&nbsp;</div></div>\n\n";
+            $entries .= "<div class='row" . (++$line_count % 2 ? "_odd" : null) . "'><div class='name'>" . $line_count . ". " . $row["beboer_etter"] . ", " . $row["beboer_for"] . "</div>\n<div class='when'>" . $dug_time . "</div><div class='note'></div><div class='note'>" . (!strcmp($row["bot_annulert"], "-1") ? "-" : null) . ONE_BOT . " kroner&nbsp;" . (!strcmp($row["bot_annulert"], "-1") ? "(ettergitt)" : null) . "</div><div class='spacer'>&nbsp;</div></div>\n\n";
         }
-
 
 
         /* Creating the page

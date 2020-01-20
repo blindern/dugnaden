@@ -2,14 +2,16 @@
 
 namespace Blindern\Dugnaden\Util;
 
-class Semester {
+class Semester
+{
     public $year;
     public $semester;
 
     /** @return Semester */
-    public static function getNextSemester() {
-        $year = (int) date("Y", time());
-        $month = (int) date("m", time());
+    public static function getNextSemester()
+    {
+        $year = (int)date("Y", time());
+        $month = (int)date("m", time());
 
         if ($month > 7) {
             $year++;
@@ -20,7 +22,8 @@ class Semester {
         $semester->semester = $month > 7 ? "V" : "H";
     }
 
-    public function str() {
+    public function str()
+    {
         return $this->semester . $this->year;
     }
 }

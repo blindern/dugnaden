@@ -9,6 +9,7 @@ use Blindern\Dugnaden\Services\DugnadslederService;
 use Blindern\Dugnaden\Services\FeeService;
 use Blindern\Dugnaden\Services\NoteService;
 use Blindern\Dugnaden\Services\RoomService;
+use PDO;
 
 class Dugnaden
 {
@@ -18,13 +19,13 @@ class Dugnaden
     public static function get()
     {
         if (!static::$instance) {
-            static::$instance = new \Blindern\Dugnaden\Dugnaden();
+            static::$instance = new Dugnaden();
         }
 
         return static::$instance;
     }
 
-    /** @var \PDO */
+    /** @var PDO */
     public $pdo;
 
     /** @var BeboerService */

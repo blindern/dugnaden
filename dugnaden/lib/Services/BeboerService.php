@@ -270,7 +270,7 @@ class BeboerService
         $notes = $this->getImportsList();
         $numbers = [];
         foreach ($notes as $note) {
-            $numbers[] = (int) substr($note, 3);
+            $numbers[] = (int)substr($note, 3);
         }
 
         sort($numbers);

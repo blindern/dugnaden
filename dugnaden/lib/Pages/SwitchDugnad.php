@@ -117,7 +117,7 @@ class SwitchDugnad extends UserPage
         while ($row = @mysql_fetch_array($result)) {
             if (!strcmp($row["status"], "0")) {
 
-                if ((int) $row["id"] > 0 && (int) $row["is_happening"] < (time() + (60 * 60 * 24 * 6))) {
+                if ((int)$row["id"] > 0 && (int)$row["is_happening"] < (time() + (60 * 60 * 24 * 6))) {
                     /* If the dugnad is allready completed - add it as pure text
                 ---------------------------------------------------------------------------------------- */
 
@@ -188,22 +188,22 @@ class SwitchDugnad extends UserPage
 
             $content .= "\n<select size='1' name='" . $this->beboer->id . "_" . $deltager->id . "_" . $select_count . "' class='no_block' >\n";
 
-            if ((int) $date_id < 0) {
-                if ((int) $date_id == -2) {
-                    $content .=    "<option value='-2' selected='selected' >Dagdugnad</option>\n";
-                } elseif ((int) $date_id == -3) {
-                    $content .=    "<option value='-3' selected='selected' >Utf&oslash;rt</option>\n";
-                } elseif ((int) $date_id == -10) {
-                    $content .=    "<option value='-10' selected='selected' >Hyttedugnad</option>\n";
-                } elseif ((int) $date_id == -11) {
-                    $content .=    "<option value='-11' selected='selected' >Ryddevakt</option>\n";
-                } elseif ((int) $date_id == -12) {
-                    $content .=    "<option value='-12' selected='selected' >Billavakt</option>\n";
+            if ((int)$date_id < 0) {
+                if ((int)$date_id == -2) {
+                    $content .= "<option value='-2' selected='selected' >Dagdugnad</option>\n";
+                } elseif ((int)$date_id == -3) {
+                    $content .= "<option value='-3' selected='selected' >Utf&oslash;rt</option>\n";
+                } elseif ((int)$date_id == -10) {
+                    $content .= "<option value='-10' selected='selected' >Hyttedugnad</option>\n";
+                } elseif ((int)$date_id == -11) {
+                    $content .= "<option value='-11' selected='selected' >Ryddevakt</option>\n";
+                } elseif ((int)$date_id == -12) {
+                    $content .= "<option value='-12' selected='selected' >Billavakt</option>\n";
                 }
             } elseif ($dugnad && $dugnad['dugnad_type'] == 'anretning') {
-                $content .=    "<option value='" . $dugnad['dugnad_id'] . "' selected='selected'>Anretningsdugnad: " . DateUtil::formatDateShort($dugnad['dugnad_dato']) . "</option>\n";
+                $content .= "<option value='" . $dugnad['dugnad_id'] . "' selected='selected'>Anretningsdugnad: " . DateUtil::formatDateShort($dugnad['dugnad_dato']) . "</option>\n";
             } else {
-                $content .=    "<option value='-10' >Hyttedugnad</option>\n";
+                $content .= "<option value='-10' >Hyttedugnad</option>\n";
 
                 $query = "SELECT
 

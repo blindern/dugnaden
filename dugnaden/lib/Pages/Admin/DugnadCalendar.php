@@ -79,8 +79,8 @@ class DugnadCalendar extends Page
         if (check_is_admin()) {
             $count = 0;
 
-            $year    = date("Y", time());
-            $month    = date("m", time());
+            $year = date("Y", time());
+            $month = date("m", time());
 
             foreach ($formdata["sat"] as $value) {
                 /* making an array to make it easier to check further down */
@@ -131,8 +131,8 @@ class DugnadCalendar extends Page
     {
         $count = 0;
 
-        $year    = date("Y", time());
-        $month    = date("m", time());
+        $year = date("Y", time());
+        $month = date("m", time());
 
         if ($month > 7) {
             /* We now know we are in the autumn semester
@@ -177,8 +177,8 @@ class DugnadCalendar extends Page
     {
         $count = 0;
 
-        $year    = date("Y", time());
-        $month    = date("m", time());
+        $year = date("Y", time());
+        $month = date("m", time());
 
         if ($month > 7) {
             /* We now know we are in the autumn semester

@@ -41,8 +41,8 @@ class RevokeFee extends Page
             // Set the $done_type accoringly:
 
             $done_type = array(0, 0, 0, 0);
-            $deleted_bots    = 0;
-            $negated_bots    = 0;
+            $deleted_bots = 0;
+            $negated_bots = 0;
 
             foreach ($this->formdata["del_dl"] as $value) {
                 $query = "SELECT bot_id, bot_annulert, bot_registrert, bot_deltager, deltager_gjort
@@ -75,7 +75,7 @@ class RevokeFee extends Page
                     /* getting the deltager_id from the query above: */
                     $row = @mysql_fetch_array($result);
 
-                    if ((int) $row["bot_registrert"] == 1) {
+                    if ((int)$row["bot_registrert"] == 1) {
                         /* A) ---- 1. */
 
                         $negated_bots++;
@@ -109,7 +109,7 @@ class RevokeFee extends Page
             }
 
             if ($deleted_bots + $negated_bots) {
-                $ord_negert  = ($negated_bots > 1 ? "b&oslash;ter" : "bot");
+                $ord_negert = ($negated_bots > 1 ? "b&oslash;ter" : "bot");
                 $ord_slettet = ($deleted_bots > 1 ? "b&oslash;ter" : "bot");
 
                 $page["feedback"] = "<div class='success'>" . ($deleted_bots ? "Det ble slettet " . $deleted_bots . " ufakturert" . ($deleted_bots > 1 ? "e" : null) . " " . $ord_slettet . ". " : null) .
@@ -120,9 +120,9 @@ class RevokeFee extends Page
         /* Generate first month of the semester, so bots from the previous semester is not shown...
         ---------------------------------------------------------------------------------------------------------------- */
 
-        $year    = date("Y", time());
-        $month    = date("m", time());
-        $day    = date("d", time());
+        $year = date("Y", time());
+        $month = date("m", time());
+        $day = date("d", time());
 
         $query = "SELECT bot_id, bot_annulert, bot_registrert, beboer_id, dugnad_dato
                     FROM bs_dugnad, bs_bot, bs_deltager, bs_beboer
@@ -146,7 +146,7 @@ class RevokeFee extends Page
         if (@mysql_num_rows($result)) {
             while ($row = @mysql_fetch_array($result)) {
                 // Setting text AND background color: requires a double if
-                if ((int) $row["bot_annulert"] == 1) {
+                if ((int)$row["bot_annulert"] == 1) {
                     // This item is disabled (annulert)
                     $row_Text_and_Background = "_disabled";
                     $desc = "(annulert)";
@@ -161,7 +161,7 @@ class RevokeFee extends Page
 
                 $beboer = $this->dugnaden->beboer->getById($row['beboer_id']);
 
-                $all_dl .= "<div class='row" . $row_Text_and_Background . "'><div class='check_left'><input type='checkbox' name='del_dl[]' " . ((int) $row["bot_annulert"] == 1 ? "checked='checked' disabled " : null) . "value='" . $row['bot_id'] . "'></div><div class='name_wide" . (!(int) $row["bot_registrert"] ? "_success" : null) . "'>" . $line_count . ". " . htmlspecialchars($beboer->getName()) . "</div><div class='when'>" . DateUtil::formatDateShort($row["dugnad_dato"]) . " " . $desc . "</div></div>\n";
+                $all_dl .= "<div class='row" . $row_Text_and_Background . "'><div class='check_left'><input type='checkbox' name='del_dl[]' " . ((int)$row["bot_annulert"] == 1 ? "checked='checked' disabled " : null) . "value='" . $row['bot_id'] . "'></div><div class='name_wide" . (!(int)$row["bot_registrert"] ? "_success" : null) . "'>" . $line_count . ". " . htmlspecialchars($beboer->getName()) . "</div><div class='when'>" . DateUtil::formatDateShort($row["dugnad_dato"]) . " " . $desc . "</div></div>\n";
 
                 if (!$row["bot_annulert"]) $bot_count++;
                 else $annulert_count++;
@@ -183,7 +183,7 @@ class RevokeFee extends Page
         /* How many bots have been cancelled? */
 
         if ($annulert_count) {
-            $ord_negert  = ($negated_bots > 1 ? "b&oslash;ter" : "bot");
+            $ord_negert = ($negated_bots > 1 ? "b&oslash;ter" : "bot");
             $simple_stats .= ($bot_count ? " og " : null) . $annulert_count . " " . $ord_negert . " har blitt annulert ";
         }
 

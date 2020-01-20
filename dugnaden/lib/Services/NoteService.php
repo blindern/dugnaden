@@ -17,7 +17,8 @@ class NoteService
     }
 
     /** @return Note */
-    public function getById($id) {
+    public function getById($id)
+    {
         $sql =
             "SELECT *
             FROM bs_notat
@@ -34,17 +35,20 @@ class NoteService
         return Note::fromRow($row);
     }
 
-    public function delete(Note $note) {
+    public function delete(Note $note)
+    {
         $this->deleteById($note->id);
     }
 
-    public function deleteById($id) {
+    public function deleteById($id)
+    {
         $sql = "DELETE FROM bs_notat WHERE notat_id = ?";
         $this->dugnaden->pdo->prepare($sql)->execute([$id]);
     }
 
     /** @return Note */
-    public function create(Beboer $beboer, string $text) {
+    public function create(Beboer $beboer, string $text)
+    {
         $sql = "INSERT INTO bs_notat (notat_txt, notat_beboer) VALUES (?, ?)";
         $this->dugnaden->pdo->prepare($sql)->execute([$text, $beboer->id]);
 

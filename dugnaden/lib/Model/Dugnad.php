@@ -3,6 +3,7 @@
 namespace Blindern\Dugnaden\Model;
 
 use Blindern\Dugnaden\Util\DateUtil;
+use DateTime;
 
 class Dugnad
 {
@@ -91,12 +92,12 @@ class Dugnad
 
     public function getDateObj()
     {
-        return new \DateTime($this->date);
+        return new DateTime($this->date);
     }
 
     public function offsetDaysFromToday()
     {
-        $today = new \DateTime(date("Y-m-d"));
+        $today = new DateTime(date("Y-m-d"));
         return $today->diff($this->getDateObj())->days;
     }
 

@@ -3,5 +3,8 @@
   "description": "Dugnadssystemet",
   "autoload": {
       "psr-4": {"Blindern\\Dugnaden\\": "dugnaden/lib"}
+  },
+  "require": {
+    "ext-mbstring": "*"
   }
 }

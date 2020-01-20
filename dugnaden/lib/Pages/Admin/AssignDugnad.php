@@ -29,7 +29,7 @@ class AssignDugnad extends Page
         $beboer_count = @mysql_num_rows($result);
 
         /* Calculates how many deltagere do we need on each dugnad. */
-        $per_dugnad = (int) (($beboer_count * 2) / $dugnad_count) + ((($beboer_count * 2) % $dugnad_count) > 0);
+        $per_dugnad = (int)(($beboer_count * 2) / $dugnad_count) + ((($beboer_count * 2) % $dugnad_count) > 0);
 
         $this->template->addContentHtml("<div class='failure'>" . $beboer_count . " dugnadspliktige beboere fordelt p&aring; " . $dugnad_count . " l&oslash;rdager gir " . $per_dugnad . " barn per dugnad.<br /></div>");
 

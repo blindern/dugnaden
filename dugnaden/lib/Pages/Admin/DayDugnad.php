@@ -84,7 +84,7 @@ class DayDugnad extends Page
 
         $admin_buttons = "<div class='dagdugnad_beboerselect'>Velg ny beboer som skal ha dagdugnad: " . $f->build() . " <input type='submit' class='check_space' value='Oppdater Dagdugnadslisten' /></div>";
 
-        $content  = "<h1>" . $list_title . "</h1>
+        $content = "<h1>" . $list_title . "</h1>
                 <p>
                     Du kan tilf&oslash;ye en dagdugnad ved &aring; velge beboeren fra listen under.
                     <b>Hvis du tildeler en dagdugnad</b>, er det viktig at du ber beboeren velge hvilken av de ordin&aelig;re dugnadene

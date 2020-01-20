@@ -2,6 +2,8 @@
 
 namespace Blindern\Dugnaden\Util;
 
+use DateTime;
+
 class DateUtil
 {
     /**
@@ -9,7 +11,7 @@ class DateUtil
      */
     public static function formatDate($date)
     {
-        $d = new \DateTime($date);
+        $d = new DateTime($date);
         return $d->format("d.m.Y");
     }
 
@@ -18,7 +20,7 @@ class DateUtil
      */
     public static function formatDateShort($date)
     {
-        $d = new \DateTime($date);
+        $d = new DateTime($date);
         return $d->format("d.m.y");
     }
 }

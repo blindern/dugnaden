@@ -6,7 +6,7 @@ use Blindern\Dugnaden\Dugnaden;
 use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\Model\Deltager;
 use Blindern\Dugnaden\Model\Dugnad;
-use Blindern\Dugnaden\Model\Fee;
+use Exception;
 
 class DeltagerService
 {
@@ -82,7 +82,7 @@ class DeltagerService
         $sql = "UPDATE bs_deltager SET deltager_gjort = ? WHERE deltager_id = ?";
         $this->dugnaden->pdo->prepare($sql)->execute([$done, $deltager->id]);
 
-        $deltager->done = (int) $done;
+        $deltager->done = (int)$done;
     }
 
     public function delete(Deltager $deltager)
@@ -105,7 +105,7 @@ class DeltagerService
     public function updateSpecialDugnad(Deltager $deltager, $dugnadId)
     {
         if (!($dugnadId < -1)) {
-            throw new \Exception("Invalid dugnad ID");
+            throw new Exception("Invalid dugnad ID");
         }
 
         $sql = "UPDATE bs_deltager SET deltager_dugnad = ? WHERE deltager_id = ?";

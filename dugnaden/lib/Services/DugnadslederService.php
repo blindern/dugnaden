@@ -4,8 +4,6 @@ namespace Blindern\Dugnaden\Services;
 
 use Blindern\Dugnaden\Dugnaden;
 use Blindern\Dugnaden\Model\Beboer;
-use Blindern\Dugnaden\Model\Deltager;
-use Blindern\Dugnaden\Model\Fee;
 
 class DugnadslederService
 {
@@ -18,7 +16,8 @@ class DugnadslederService
     }
 
     /** @return Beboer[] */
-    public function getList() {
+    public function getList()
+    {
         $sql =
             "SELECT bs_beboer.*
             FROM bs_innstillinger
@@ -34,7 +33,8 @@ class DugnadslederService
         return $result;
     }
 
-    public function isDugnadsleder(Beboer $beboer) {
+    public function isDugnadsleder(Beboer $beboer)
+    {
         $sql =
             "SELECT 1
             FROM bs_innstillinger
@@ -46,11 +46,13 @@ class DugnadslederService
         return !!$stmt->fetchColumn();
     }
 
-    public function delete(Beboer $beboer) {
+    public function delete(Beboer $beboer)
+    {
         $this->deleteById($beboer->id);
     }
 
-    public function deleteById($id) {
+    public function deleteById($id)
+    {
         $sql =
             "DELETE FROM bs_innstillinger
             WHERE
@@ -59,7 +61,8 @@ class DugnadslederService
         $this->dugnaden->pdo->prepare($sql)->execute([$id]);
     }
 
-    public function assign(Beboer $beboer) {
+    public function assign(Beboer $beboer)
+    {
         if ($this->isDugnadsleder($beboer)) return;
 
         $sql =

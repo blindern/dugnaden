@@ -3,10 +3,12 @@
 // For details about this setup, see
 // https://simplesamlphp.org/docs/stable/simplesamlphp-sp
 
+use SimpleSAML\Auth\Simple;
+
 function get_auth_simple()
 {
     require_once("/var/simplesamlphp/lib/_autoload.php");
-    return new \SimpleSAML\Auth\Simple('default-sp');
+    return new Simple('default-sp');
 }
 
 function require_admin()

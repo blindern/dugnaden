@@ -41,7 +41,7 @@ class SwitchPassword extends UserPage
 
         $this->page_array = $this->template->getLayoutParts("form_pw");
 
-        $this->template->addContentHtml($feedback . $this->page_array["head"] . "<input type='hidden' name='beboer' value='" . $this->formdata["beboer"] . "' /><input type='hidden' name='pw' value='" . $this->formdata["pw"] . "' />" .  $this->page_array["hidden"] . $this->beboer->getName() . $this->page_array["beboer_navn"]);
+        $this->template->addContentHtml($feedback . $this->page_array["head"] . "<input type='hidden' name='beboer' value='" . $this->formdata["beboer"] . "' /><input type='hidden' name='pw' value='" . $this->formdata["pw"] . "' />" . $this->page_array["hidden"] . $this->beboer->getName() . $this->page_array["beboer_navn"]);
     }
 
     public function showLogin()

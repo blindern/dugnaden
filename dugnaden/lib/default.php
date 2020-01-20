@@ -9,13 +9,12 @@ require_once("config.php");
 require_once __DIR__ . "/../../vendor/autoload.php";
 
 use Blindern\Dugnaden\Dugnaden;
-use Blindern\Dugnaden\Fragments\BeboerSelectFragment;
 use Blindern\Dugnaden\Model\Beboer;
 use Blindern\Dugnaden\Model\Dugnad;
 use Blindern\Dugnaden\Util\DateUtil;
 use Blindern\Dugnaden\Util\Semester;
 
-$link     = mysql_connect($config_database["host"], $config_database["username"], $config_database["password"]);
+$link = mysql_connect($config_database["host"], $config_database["username"], $config_database["password"]);
 mysql_set_charset("utf8", $link);
 $database = mysql_select_db($config_database["dbname"], $link);
 
@@ -134,11 +133,11 @@ function get_notes($formdata, $id, $admin = false)
 
     while ($row = @mysql_fetch_array($result)) {
         $admin_starta = "<a href='index.php?do=admin" . $show . $navigate . "&admin=" . $formdata["admin"] . "&deln=" . $row["notat_id"] . "'>";
-        $passord =  "\nPassord: " . $row["beboer_passord"];
-        $room     =  "\nRom: " . $row["rom_nr"] . $row["romtype"];
+        $passord = "\nPassord: " . $row["beboer_passord"];
+        $room = "\nRom: " . $row["rom_nr"] . $row["romtype"];
 
         if (!empty($row["the_note"])) {
-            $content .= $admin_starta . "<img src='./images/postit" . ((int) $row["notat_mottaker"] == 1 ? "_petter" : null) . ".gif' alt='[note]' title='" . $row["the_note"] . "' class='postit_note' />" . $admin_enda;
+            $content .= $admin_starta . "<img src='./images/postit" . ((int)$row["notat_mottaker"] == 1 ? "_petter" : null) . ".gif' alt='[note]' title='" . $row["the_note"] . "' class='postit_note' />" . $admin_enda;
         }
     }
 
@@ -198,41 +197,41 @@ function update_dugnads($formdata)
                 ? Dugnaden::get()->beboer->getById($splits[1])
                 : null;
 
-            if ($beboer && (int) $new_dugnad > 0) {
-                for ($c = 0; $c < (int) $new_dugnad; $c++) {
+            if ($beboer && (int)$new_dugnad > 0) {
+                for ($c = 0; $c < (int)$new_dugnad; $c++) {
                     smart_create_dugnad($beboer);
                 }
-            } elseif ($beboer && (int) $new_dugnad == -1) {
+            } elseif ($beboer && (int)$new_dugnad == -1) {
                 Dugnaden::get()->deltager->deleteAllForBeboer($beboer);
-            } elseif ($beboer && (int) $new_dugnad == -2) {
+            } elseif ($beboer && (int)$new_dugnad == -2) {
                 if (Dugnaden::get()->beboer->setAsElephant($beboer)) {
                     $feedback .= "<div class='success'>En ny elefant vandrer iblant oss!</div>";
                 }
-            } elseif ($beboer && (int) $new_dugnad == -3) {
+            } elseif ($beboer && (int)$new_dugnad == -3) {
                 if (Dugnaden::get()->beboer->setAsNormal($beboer)) {
                     $feedback .= "<div class='success'>En elefantfeil har blitt rettet opp...</div>";
                 }
-            } elseif ($beboer && (int) $new_dugnad == -8) {
+            } elseif ($beboer && (int)$new_dugnad == -8) {
                 if (Dugnaden::get()->beboer->setAsBlivendeElephant($beboer)) {
                     $feedback .= "<div class='success'>En beboer blir elefant dette semesteret...</div>";
                 }
-            } elseif ($beboer && (int) $new_dugnad == -9) {
+            } elseif ($beboer && (int)$new_dugnad == -9) {
                 if (Dugnaden::get()->beboer->setAsNormal($beboer)) {
                     $feedback .= "<div class='success'>En beboer blir ikke elefant dette semestere likevel...</div>";
                 }
-            } elseif ($beboer && (int) $new_dugnad == -4) {
+            } elseif ($beboer && (int)$new_dugnad == -4) {
                 if (Dugnaden::get()->beboer->setAsFestforening($beboer)) {
                     $feedback .= "<div class='success'>Blindern&aring;nden lever - en beboer er i festforeningen!</div>";
                 }
-            } elseif ($beboer && (int) $new_dugnad == -5) {
+            } elseif ($beboer && (int)$new_dugnad == -5) {
                 if (Dugnaden::get()->beboer->setAsNormal($beboer)) {
                     $feedback .= "<div class='success'>En er ikke lenger med i Festforeningen...</div>";
                 }
-            } elseif ($beboer && (int) $new_dugnad == -6) {
+            } elseif ($beboer && (int)$new_dugnad == -6) {
                 if (Dugnaden::get()->beboer->setAsDugnadsfri($beboer)) {
                     $feedback .= "<div class='success'>En ny beboer har n&aring; dugnadsfri...</div>";
                 }
-            } elseif ($beboer && (int) $new_dugnad == -7) {
+            } elseif ($beboer && (int)$new_dugnad == -7) {
                 if (Dugnaden::get()->beboer->setAsNormal($beboer)) {
                     $feedback .= "<div class='success'>En beboer har ikke lenger dugnadsfri...</div>";
                 }
@@ -250,10 +249,10 @@ function update_dugnads($formdata)
         if ($beboer && $deltager) {
             $dugnad = $new_dugnad > 0 ? Dugnaden::get()->dugnad->getById($new_dugnad) : null;
 
-            if ((int) $new_dugnad < -1) {
+            if ((int)$new_dugnad < -1) {
                 // The beboer want to take or has completed a dugnad at Vedlikehold
                 Dugnaden::get()->deltager->updateSpecialDugnad($deltager, $new_dugnad);
-            } elseif ((int) $new_dugnad == -1) {
+            } elseif ((int)$new_dugnad == -1) {
                 Dugnaden::get()->deltager->delete($deltager);
             } elseif ($dugnad) {
                 if (Dugnaden::get()->deltager->updateDugnad($deltager, $dugnad)) {
@@ -283,23 +282,24 @@ function admin_make_select($user_id, $select_count, $date_id, $deltager_id = fal
 
     $content .= "\n<select size='1' name='" . $user_id . "_" . $deltager_id . "'>\n";
 
-    if ((int) $date_id == -2) {
+    if ((int)$date_id == -2) {
         $petter_selected = "selected='selected' ";
-    } elseif ((int) $date_id == -3) {
+    } elseif ((int)$date_id == -3) {
         $petter_done_selected = "selected='selected' ";
-    } elseif ((int) $date_id == -10) {
+    } elseif ((int)$date_id == -10) {
         $hyttedugnad_selected = "selected='selected' ";
-    } elseif ((int) $date_id == -11) {
+    } elseif ((int)$date_id == -11) {
         $ryddevakt_selected = "selected='selected' ";
-    } elseif ((int) $date_id == -12) {
+    } elseif ((int)$date_id == -12) {
         $billavakt_selected = "selected='selected' ";
     }
 
 
-    $content .=    "<option value='-10' " . $hyttedugnad_selected . ">Hyttedugnad</option>\n";
+    $content .= "<option value='-10' " . $hyttedugnad_selected . ">Hyttedugnad</option>\n";
     $content .= "<option value='-11' " . $ryddevakt_selected . ">Ryddevakt</option>\n";
     $content .= "<option value='-12' " . $billavakt_selected . ">Billavakt</option>\n";
-    $content .= "<option value='-3' " . $petter_done_selected . ">Utf&oslash;rt</option>\n<option value='-2' " . $petter_selected . ">Dagdugnad</option>\n<option value='-1'>Slett</option>\n"; {
+    $content .= "<option value='-3' " . $petter_done_selected . ">Utf&oslash;rt</option>\n<option value='-2' " . $petter_selected . ">Dagdugnad</option>\n<option value='-1'>Slett</option>\n";
+    {
 
         $count_all = Dugnaden::get()->dugnad->getDugnadDeltagerCountAll();
 
@@ -630,7 +630,7 @@ function truncateAllowed($future_check = false)
         // This is to prevent being refused to change the dugnadsliste
         // after deleting all beboere, but before adding any valid dugnads
 
-        $query =   "SELECT
+        $query = "SELECT
                         deltager_id
 
                     FROM
@@ -657,7 +657,7 @@ function truncateAllowed($future_check = false)
         // beboere attached - return false!
 
         if ($future_check == false) {
-            $query =   "SELECT
+            $query = "SELECT
                             deltager_id
 
                         FROM
@@ -673,7 +673,7 @@ function truncateAllowed($future_check = false)
 
                         LIMIT 1";
         } else {
-            $query =   "SELECT
+            $query = "SELECT
                             deltager_id
 
                         FROM

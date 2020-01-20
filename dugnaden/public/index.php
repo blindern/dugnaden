@@ -1,35 +1,41 @@
 <?php
 
 use Blindern\Dugnaden\PageContext;
+use Blindern\Dugnaden\Pages\Admin;
+use Blindern\Dugnaden\Pages\Dugnadlist;
+use Blindern\Dugnaden\Pages\Main;
+use Blindern\Dugnaden\Pages\SwitchDugnad;
+use Blindern\Dugnaden\Pages\SwitchPassword;
+use Blindern\Dugnaden\Template;
 
 header("Content-type: text/html; charset=utf-8");
 
 include "../lib/default.php";
 
-$template = new \Blindern\Dugnaden\Template();
+$template = new Template();
 $template->addNavigation("Hovedmeny", "index.php");
 
 $context = new PageContext($template);
 
 switch (empty($_REQUEST["do"]) ? "" : $_REQUEST["do"]) {
     case "admin":
-        (new \Blindern\Dugnaden\Pages\Admin($context))->show();
+        (new Admin($context))->show();
         break;
 
     case "Bytte dugnad":
-        (new \Blindern\Dugnaden\Pages\SwitchDugnad($context))->show();
+        (new SwitchDugnad($context))->show();
         break;
 
     case "Bytte passord":
-        (new \Blindern\Dugnaden\Pages\SwitchPassword($context))->show();
+        (new SwitchPassword($context))->show();
         break;
 
     case "Se dugnadslisten uten passord":
-        (new \Blindern\Dugnaden\Pages\Dugnadlist($context))->show();
+        (new Dugnadlist($context))->show();
         break;
 
     default:
-        (new \Blindern\Dugnaden\Pages\Main($context))->show();
+        (new Main($context))->show();
         break;
 }
 

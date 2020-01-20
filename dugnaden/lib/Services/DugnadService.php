@@ -21,7 +21,7 @@ class DugnadService
         // TODO: Can we model this in a better way?
         if ($id == -2 || $id == -3 || $id == -10 || $id == -11 || $id == -12) {
             $dugnad = new Dugnad();
-            $dugnad->id = (int) $id;
+            $dugnad->id = (int)$id;
             return $dugnad;
         }
 

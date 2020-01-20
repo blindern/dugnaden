@@ -27,8 +27,8 @@ class UpdateLastDugnad extends Page
 
             $query = "SELECT dugnad_id AS id, dugnad_dato AS dato FROM bs_dugnad WHERE dugnad_dato >= (SELECT dugnad_dato FROM bs_dugnad WHERE dugnad_id = ${formdata['show']}) AND dugnad_slettet ='0' ORDER BY dugnad_dato LIMIT 1";
 
-            $result    = @run_query($query);
-            $denne_dugnaden    = @mysql_fetch_array($result);
+            $result = @run_query($query);
+            $denne_dugnaden = @mysql_fetch_array($result);
 
             $dugnad = $this->dugnaden->dugnad->getById($denne_dugnaden["id"]);
             $week = $dugnad->getWeekNumber();
@@ -199,7 +199,7 @@ class UpdateLastDugnad extends Page
 
                 /* Top navigational buttons
                     ----------------------------------------------------------------- */
-                $content  = "<form action='index.php' method='post'>
+                $content = "<form action='index.php' method='post'>
                                     <input type='hidden' name='do' value='admin'>
                                     <input type='hidden' name='admin' value='Oppdatere siste'>
                                     <input type='hidden' name='show' value='" . $dugnad->id . "'>
@@ -209,11 +209,10 @@ class UpdateLastDugnad extends Page
                 /* The form to the actual list of beboere
                     ----------------------------------------------------------------- */
 
-                $content  .= "<form action='index.php' method='post'>
+                $content .= "<form action='index.php' method='post'>
                                     <input type='hidden' name='do' value='admin'>
                                     <input type='hidden' name='admin' value='Oppdatere siste'>
                                     <input type='hidden' name='show' value='" . $dugnad->id . "'>";
-
 
 
                 $content .= $this->adminShowDay($this->formdata, $dugnad->id, false);

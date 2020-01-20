@@ -22,7 +22,7 @@ class DugnadlistFragment extends Fragment
             $list_title = "Fullstendig dugnadsliste";
         }
 
-        $content  = "<h1>" . $list_title . "</h1>";
+        $content = "<h1>" . $list_title . "</h1>";
         $content .= "<form method='post' action='index.php'>" . $hidden . "
         \n";
 
@@ -122,7 +122,7 @@ class DugnadlistFragment extends Fragment
             /* ADDING DUGNADS
         ------------------------------------------------------------ */
 
-            if ((int) $row["id"] > 0 && !strcmp($row["status"], "0")) {
+            if ((int)$row["id"] > 0 && !strcmp($row["status"], "0")) {
 
                 // Those done and not done (yet)
 
@@ -131,26 +131,26 @@ class DugnadlistFragment extends Fragment
                 } else {
                     $use_class = "valid_dugnad";
                 }
-                $content .= "<span class='" . $use_class . "'>" . $type .  DateUtil::formatDateShort($row["dugnad_dato"]) . $more_info . "</span>\n";
+                $content .= "<span class='" . $use_class . "'>" . $type . DateUtil::formatDateShort($row["dugnad_dato"]) . $more_info . "</span>\n";
             } else {
 
                 /* Dugnad special cases
             --------------------------- */
 
-                if ((int) $row["id"] < 0) {
+                if ((int)$row["id"] < 0) {
 
                     // OK dugnads;
 
-                    if ((int) $row["id"] == -2) {
-                        $content .=    "<span class='valid_dugnad'>Dagdugnad</span>\n";
-                    } elseif ((int) $row["id"] == -3) {
-                        $content .=    "<span class='done_dugnad'>Utf&oslash;rt</span>\n";
-                    } elseif ((int) $row["id"] == -10) {
-                        $content .=    "<span class='valid_dugnad'>Hyttedugnad</span>\n";
-                    } elseif ((int) $row["id"] == -11) {
-                        $content .=    "<span class='valid_dugnad'>Ryddevakt</span>\n";
-                    } elseif ((int) $row["id"] == -12) {
-                        $content .=    "<span class='valid_dugnad'>Billavakt</span>\n";
+                    if ((int)$row["id"] == -2) {
+                        $content .= "<span class='valid_dugnad'>Dagdugnad</span>\n";
+                    } elseif ((int)$row["id"] == -3) {
+                        $content .= "<span class='done_dugnad'>Utf&oslash;rt</span>\n";
+                    } elseif ((int)$row["id"] == -10) {
+                        $content .= "<span class='valid_dugnad'>Hyttedugnad</span>\n";
+                    } elseif ((int)$row["id"] == -11) {
+                        $content .= "<span class='valid_dugnad'>Ryddevakt</span>\n";
+                    } elseif ((int)$row["id"] == -12) {
+                        $content .= "<span class='valid_dugnad'>Billavakt</span>\n";
                     }
                 } else {
                     // Damn dugnads; those they did not do..

@@ -144,7 +144,7 @@ class ImportBeboer extends Page
                         list($last, $first) = split(",", $splits[0]);
 
                         $first = trim($first);
-                        $last  = trim($last);
+                        $last = trim($last);
 
                         $beboer = $this->dugnaden->beboer->getByName($first, $last);
                         $person_id = $beboer ? $beboer->id : -1;
@@ -182,7 +182,6 @@ class ImportBeboer extends Page
                                         </p>
                                         <input type='submit' name='admin' value='Innkalling av nye'>
                                     </form><p>&nbsp;</p>";
-
 
 
                     $content .= implode("", $this->template->getLayoutParts("admin_mainmenu"));
@@ -231,7 +230,7 @@ class ImportBeboer extends Page
             }
 
             $first = trim($first);
-            $last  = trim($last);
+            $last = trim($last);
 
             $beboer = $this->dugnaden->beboer->getByName($first, $last);
 
@@ -240,7 +239,7 @@ class ImportBeboer extends Page
             ---------------------------------------------------------------------- */
 
                 /* Generate random password: */
-                $jumble = md5(((time() / 10000) + ($c * 45))  . getmypid());
+                $jumble = md5(((time() / 10000) + ($c * 45)) . getmypid());
                 $password = substr($jumble, 0, 5);
 
                 $phone_query = "SELECT rom_id FROM bs_rom WHERE CONCAT(rom_nr, rom_type) = '" . trim($splits[1]) . "' LIMIT 1";
