@@ -55,7 +55,7 @@ class Beboer
             return $this->firstName;
         }
 
-        return $this->firstName . " " . utf8_substr($this->lastName, 0, 4) . "...";
+        return $this->firstName . " " . mb_substr($this->lastName, 0, 4) . "...";
     }
 
     /** @return Room */

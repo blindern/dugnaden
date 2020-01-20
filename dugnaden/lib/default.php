@@ -518,33 +518,19 @@ function get_public_lastname($last, $first, $last_first = false, $admin = false)
 {
     if ($last_first) {
         if (!$admin && strlen($last) > 4) {
-            $full_name = utf8_substr($last, 0, 4) . "., " . $first;
+            $full_name = mb_substr($last, 0, 4) . "., " . $first;
         } else {
             $full_name = $last . ", " . $first;
         }
     } else {
         if (!$admin && strlen($last) > 4) {
-            $full_name = $first . " " . utf8_substr($last, 0, 4) . "...";
+            $full_name = $first . " " . mb_substr($last, 0, 4) . "...";
         } else {
             $full_name = $first . " " . $last;
         }
     }
 
     return $full_name;
-}
-
-
-
-function utf8_substr($str, $start)
-{
-    preg_match_all("/./su", $str, $ar);
-
-    if (func_num_args() >= 3) {
-        $end = func_get_arg(2);
-        return join("", array_slice($ar[0], $start, $end));
-    } else {
-        return join("", array_slice($ar[0], $start));
-    }
 }
 
 
