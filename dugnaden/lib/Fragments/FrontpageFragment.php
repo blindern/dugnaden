@@ -18,8 +18,6 @@ class FrontpageFragment extends Fragment
 
         $page_array["beboer"] = $f->build() . $page_array["beboer"];
 
-        $page_array["db_error"] = database_health() . $page_array["db_error"];
-
         return implode($page_array);
     }
 }

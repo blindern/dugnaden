@@ -666,22 +666,6 @@ function forceNewDugnads($beboer_id, $forceCount, $perDugnad, $note = null)
     return $forceCount;
 }
 
-function database_health()
-{
-    $query = "SELECT 1 FROM bs_rom LIMIT 1";
-    $result = @run_query($query);
-
-    if (@mysql_num_rows($result) == 0) {
-
-        return '
-            <p>&nbsp;</p>
-            <div class="box-red">
-                Beklager, databasen er for &oslash;yeblikket ikke tilgjengelig, vennligst kom tilbake senere.
-            </div>';
-    }
-}
-
-
 /*
  * Used to check that the dugnadsperiode has not started, and if so will not allow any truncate
  * of any data tables unless in developer mode.
