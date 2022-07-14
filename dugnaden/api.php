@@ -2,7 +2,7 @@
 
 // begrens tilgang
 $allow = array(
-	gethostbyname("web-1.zt.foreningenbs.no"),
+	gethostbyname("intern-backend.zt.foreningenbs.no"),
 );
 if (!in_array($_SERVER['REMOTE_ADDR'], $allow)) die("Not authorized.");
 
