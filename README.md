@@ -13,10 +13,6 @@ docker-compose up --build
 Pålogging vil fungere mot foreningenbs.no ut av boksen (merk at man må være
 i gruppen "dugnaden" for å kunne benytte admin-sidene).
 
-Admin-sidene finnes under:
-
-http://localhost:8080/dughttp://localhost:8080/dugnaden/naden/index.php?do=admin
-
 ### Database under utvikling
 
 Dersom man utfører database-endringer må disse utføres manuelt i produksjon.
