@@ -128,7 +128,7 @@ class ImportBeboer extends Page
                     /* Adding dugnads to newly added beboere:
                         ------------------------------------------------- */
 
-                    $txt_lines = split("\*\*", $this->cleanText($this->formdata["list"]));
+                    $txt_lines = explode("**", $this->cleanText($this->formdata["list"]));
                     $c = 0;
 
                     $dugnadGiven = 0;
@@ -138,10 +138,10 @@ class ImportBeboer extends Page
 
                     foreach ($txt_lines as $line) {
                         $c++;
-                        $splits = split("/", $line);
+                        $splits = explode("/", $line);
 
                         /* First name and last name is divided with a character different from each column: */
-                        list($last, $first) = split(",", $splits[0]);
+                        list($last, $first) = explode(",", $splits[0]);
 
                         $first = trim($first);
                         $last = trim($last);
@@ -219,14 +219,14 @@ class ImportBeboer extends Page
     {
         $c = 0;
         $success = true;
-        $txt_lines = split("\*\*", $this->cleanText($txt_data));
+        $txt_lines = explode("**", $this->cleanText($txt_data));
 
         foreach ($txt_lines as $line) {
             $c++;
-            $splits = split("/", $line);
+            $splits = explode("/", $line);
 
             if (strcmp($split_char, $split_name)) {
-                list($last, $first) = split($split_name, $splits[0]);
+                list($last, $first) = explode($split_name, $splits[0]);
             }
 
             $first = trim($first);
