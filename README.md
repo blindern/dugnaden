@@ -1,5 +1,11 @@
 # Dugnadssystemet
 
+https://foreningenbs.no/dugnaden/
+
+**Merk**: Det er påbegynt en omskriving av dette for å modernisere oppsettet
+og åpne opp får å enklere videreutvikle systemet. Se `modernize` branchen:
+https://github.com/blindern/dugnaden/tree/modernize
+
 ## Anretningsdugnader
 
 Slik gjorde vi det vår 2017:
