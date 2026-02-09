@@ -140,7 +140,7 @@
 							$query = "UPDATE bs_beboer SET beboer_passord = '". $formdata["pw_2"] ."' WHERE beboer_id = '". $formdata["beboer"] ."'";
 							@run_query($query);
 							
-							if(mysql_errno() == 0)
+							if(db_errno() == 0)
 							{
 								$feedback = rounded_feedback_box("green", "Ditt nye passord er lagret.");
 							}

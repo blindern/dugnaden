@@ -9,16 +9,16 @@ if ($proto == "https") {
     $_SERVER['HTTPS'] = 'on';
 }
 
-$config = array_merge($config, array(
-    'baseurlpath' => $proto . '://' . $_SERVER['HTTP_HOST'] . '/dugnaden/saml/',
-    'auth.adminpassword' => trim(file_get_contents("/run/secrets/simplesamlphp-admin-password")),
-    'secretsalt' => trim(file_get_contents("/run/secrets/simplesamlphp-secretsalt")),
-    'technicalcontact_name' => 'IT-gruppa',
-    'technicalcontact_email' => 'it-gruppa@foreningenbs.no',
-    'timezone' => 'Europe/Oslo',
-    'session.cookie.name' => 'saml_dugnaden_sid',
-    'session.cookie.path' => '/dugnaden/',
-    'session.cookie.secure' => false, // change to true when https is up
-    'session.authtoken.cookiename' => 'SimpleSAMLAuthToken_dugnaden',
-    'language.default' => 'no',
-));
+$config['baseurlpath'] = $proto . '://' . $_SERVER['HTTP_HOST'] . '/dugnaden/saml/';
+$config['auth.adminpassword'] = trim(file_get_contents("/run/secrets/simplesamlphp-admin-password"));
+$config['secretsalt'] = trim(file_get_contents("/run/secrets/simplesamlphp-secretsalt"));
+$config['technicalcontact_name'] = 'IT-gruppa';
+$config['technicalcontact_email'] = 'it-gruppa@foreningenbs.no';
+$config['timezone'] = 'Europe/Oslo';
+$config['session.cookie.name'] = 'saml_dugnaden_sid';
+$config['session.cookie.path'] = '/dugnaden/';
+$config['session.cookie.secure'] = ($proto === 'https');
+$config['session.cookie.samesite'] = ($proto === 'https') ? 'None' : 'Lax';
+$config['session.authtoken.cookiename'] = 'SimpleSAMLAuthToken_dugnaden';
+$config['language.default'] = 'no';
+$config['module.enable'] = ['core' => true, 'saml' => true];

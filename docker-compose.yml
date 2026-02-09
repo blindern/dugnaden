@@ -21,8 +21,7 @@ services:
 
   database:
     image: mysql:8
-    # Support for PHP 5.
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=UTF8MB3
+    command: --character-set-server=UTF8MB3
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/database-password
     volumes:

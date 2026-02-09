@@ -24,14 +24,14 @@ if ($request == "list")
 		ORDER BY dugnad_dato, beboer_for, beboer_etter");
 
 	/*$t = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = mysqli_fetch_assoc($result))
 	{
 		$t[] = $row;
 	};
 	var_dump($t);*/
 
 	$dugnader = array();
-	while ($row = mysql_fetch_assoc($result))
+	while ($row = mysqli_fetch_assoc($result))
 	{
 		if (!isset($dugnader[$row['dugnad_id']]))
 		{

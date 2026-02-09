@@ -11,6 +11,6 @@ $db  = $_ENV["DATABASE_NAME"];
 // If set to false, the database can not be deleted if
 // the first week with dugnads has passed.
 
-define(DEVELOPER_MODE, false);
+define('DEVELOPER_MODE', false);
 
 ?>

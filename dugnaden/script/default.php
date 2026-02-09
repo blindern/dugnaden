@@ -1,39 +1,39 @@
 <?php
 
-error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED);
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED);
 date_default_timezone_set("Europe/Oslo");
 
 require_once("auth.php");
 
 /* Version number
 ------------------------------------------------------------------------------------------ */
-define(VERSION, "v2.91-henrist");
+define('VERSION', "v2.91-henrist");
 
 /* Setting the url for the dugnad
 ------------------------------------------------------------------------------------------ */
-define(DUGNADURL, "http://blindern-studenterhjem.no/dugnaden/");
+define('DUGNADURL', "http://blindern-studenterhjem.no/dugnaden/");
 
 /* This is only used when the database does not include any valid passwords
 ------------------------------------------------------------------------------------------ */
-define(SUPERUSER, "DLWHBS");
+define('SUPERUSER', "DLWHBS");
 
 /* Set the maximum count for a dugnad before it is closed. A closed dugnad can not
 be selected by the kids when they are changing their dugnad date.
 ------------------------------------------------------------------------------------------ */
-define(MAX_KIDS, 20);
+define('MAX_KIDS', 20);
 
 /* Set the minimum count for a dugnad before a kid no longer can leave that dugnad by
 selectig another date. This is to prevent a dugnad to go empty of kids.
 ------------------------------------------------------------------------------------------ */
-define(MIN_KIDS, 10);
+define('MIN_KIDS', 10);
 
 /* The size of a bot.
 ------------------------------------------------------------------------------------------ */
-define(ONE_BOT, 500);
+define('ONE_BOT', 500);
 
 /* Show buatelefon.
 ------------------------------------------------------------------------------------------ */
-define(SHOW_BUATELEFON, true);
+define('SHOW_BUATELEFON', true);
 
 /* The buatelefon number.
 ------------------------------------------------------------------------------------------ */
@@ -64,9 +64,8 @@ else
 
 // --------------------------------------------------------------------------------------- */
 
-$link     = mysql_connect($srv, $usr, $pas);
-mysql_set_charset("utf8", $link);
-$database = mysql_select_db($db, $link);
+$link     = mysqli_connect($srv, $usr, $pas, $db);
+mysqli_set_charset($link, "utf8");
 
 function get_formdata()
 {
@@ -168,7 +167,7 @@ function do_admin()
 					$query = "INSERT INTO bs_bot (bot_beboer, bot_annulert) VALUES ('". $formdata["beboer"] ."', '-1')";
 					@run_query($query);
 
-					if(@mysql_affected_rows() == 1)
+					if(@db_affected_rows() == 1)
 					{
 						$content .= "<div class='success'>Ny annulering ble tilf&oslash;yd for ". get_beboer_name($formdata["beboer"], true) ."...</div>";
 					}
@@ -207,7 +206,7 @@ function do_admin()
 
 						$result = @run_query($query);
 
-						if(@mysql_num_rows($result) == 1)
+						if(@mysqli_num_rows($result) == 1)
 						{
 
 							/* We found a bot we can annulere, as it has not been annulert before..
@@ -227,7 +226,7 @@ function do_admin()
 							--------------------------------------------------------------------------------------------------------- */
 
 							/* getting the deltager_id from the query above: */
-							$row = @mysql_fetch_array($result);
+							$row = @mysqli_fetch_array($result);
 
 							if((int)$row["bot_registrert"] == 1)
 							{
@@ -261,7 +260,7 @@ function do_admin()
 							}
 						}
 
-						if(@mysql_errno())
+						if(@db_errno())
 						{
 							$page["feedback"] = "<div class='failure'>Det oppstod en feil under annulering av boten...</div>" . $page["feedback"];
 							$error = true;
@@ -323,9 +322,9 @@ function do_admin()
 
 			$min_dugnadsdato = $year .".". $month .".". $day ." 00:00:00";
 
-			if(@mysql_num_rows($result))
+			if(@mysqli_num_rows($result))
 			{
-				while($row = @mysql_fetch_array($result) )
+				while($row = @mysqli_fetch_array($result) )
 				{
 					// Setting text AND background color: requires a double if
 					if((int)$row["bot_annulert"] == 1)
@@ -407,7 +406,7 @@ function do_admin()
 
 			$bot_result = @run_query($query);
 
-			while(list($fornavn, $etternavn, $dato) = @mysql_fetch_row($bot_result))
+			while(list($fornavn, $etternavn, $dato) = @mysqli_fetch_row($bot_result))
 			{
 				// This item is disabled (annulert)
 				$row_Text_and_Background = "_disabled";
@@ -466,7 +465,7 @@ function do_admin()
 
 				@run_query($query);
 
-				if(@mysql_errno() == 0)
+				if(@db_errno() == 0)
 				{
 					$feedback .= "<div class='success'>Vellykket oppdatering, n&aring; heter beboeren ". get_beboerid_name($formdata["beboer"]) .".</div>";
 
@@ -589,14 +588,14 @@ function do_admin()
 
 			$query = "SELECT dugnad_id FROM bs_dugnad WHERE dugnad_slettet = '0' AND ". get_dugnad_range() ." ORDER BY dugnad_dato";
 			$result = @run_query($query);
-			$dugnad_count = @mysql_num_rows($result);
+			$dugnad_count = @mysqli_num_rows($result);
 
 
 			$query = "SELECT DISTINCT beboer_id AS id, beboer_spesial AS spesial
 						FROM bs_beboer
 						WHERE beboer_spesial = '0' OR beboer_spesial = '8'";
 			$result = @run_query($query);
-			$beboer_count = @mysql_num_rows($result);
+			$beboer_count = @mysqli_num_rows($result);
 
 			/* Calculates how many deltagere do we need on each dugnad. */
 			$per_dugnad = (int)(($beboer_count * 2) / $dugnad_count) + ((($beboer_count * 2) % $dugnad_count) > 0);
@@ -613,7 +612,7 @@ function do_admin()
 				$dugnadGiven = 0;
 				$forceCount = 0;
 
-				while(list($beboer_id, $special) = @mysql_fetch_row($result))
+				while(list($beboer_id, $special) = @mysqli_fetch_row($result))
 				{
 					if($special == 8)
 					{
@@ -748,7 +747,7 @@ function do_admin()
 
 			/* Adding all dugnadsledere */
 
-			while($row = @mysql_fetch_array($result) )
+			while($row = @mysqli_fetch_array($result) )
 			{
 				$all_dl .= "<input type='checkbox' name='del_dl[]' value='". $row['value'] ."'>". get_beboerid_name($row['value']) ."<br />";
 			}
@@ -915,7 +914,7 @@ function do_admin()
 				$result = @run_query($query);
 
 				$dugnadsledere = get_dugnadsledere();
-				while($row = @mysql_fetch_array($result))
+				while($row = @mysqli_fetch_array($result))
 				{
 					$undone_dugnads = get_undone_dugnads($row["beboer_id"]);
 
@@ -980,9 +979,9 @@ function do_admin()
 
 				$result = @run_query($query);
 
-				if(@mysql_num_rows($result))
+				if(@mysqli_num_rows($result))
 				{
-					while(list($id) = @mysql_fetch_row($result))
+					while(list($id) = @mysqli_fetch_row($result))
 					{
 						$query = "UPDATE bs_bot SET bot_registrert = '1' WHERE bot_registrert = '0' AND bot_id = ". $id;
 						@run_query($query);
@@ -1055,7 +1054,7 @@ function do_admin()
 
 				$result = @run_query($query);
 
-				while($row = @mysql_fetch_array($result) )
+				while($row = @mysqli_fetch_array($result) )
 				{
 
 					$dug_time = make_unixtime($row["id"]);
@@ -1097,7 +1096,7 @@ function do_admin()
 
 				$result = @run_query($query);
 
-				while($row = @mysql_fetch_array($result) )
+				while($row = @mysqli_fetch_array($result) )
 				{
 
 					$dug_time = "Etterbehandlet";
@@ -1169,7 +1168,7 @@ function do_admin()
 							AND dugnad_slettet ='0' AND dugnad_type = 'lordag' ORDER BY dugnad_dato  LIMIT 1 ";
 
 				$result = @run_query($query);
-				$row = @mysql_fetch_array($result);
+				$row = @mysqli_fetch_array($result);
 
 				$fullname = false;
 				$content = "<h1 class='big'>Dugnad". (!empty($formdata["dugnadsleder"]) && (int)$formdata["dugnadsleder"] != -1 ? " med " . ($name = get_beboerid_name($formdata["dugnadsleder"], $fullname)) . ($name == "Karl-Martin" ? " - 971 59 266" : ($name == "Theodor Tinius" ? " - 400 41 458" : "")) : "sinnkalling") ."</h1>
@@ -1201,7 +1200,7 @@ function do_admin()
 
 				$result = get_result("dugnadsleder");
 
-				while($row = @mysql_fetch_array($result))
+				while($row = @mysqli_fetch_array($result))
 				{
 					$fullname = false;
 					$select .= "<option value='". $row["value"] ."'>". get_beboerid_name($row["value"], $fullname) ."</option>";
@@ -1314,7 +1313,7 @@ function do_admin()
 						WHERE dugnad_slettet = '0'
 						ORDER BY dugnad_dato");
 					$all_dugnads = [];
-					while ($row = mysql_fetch_assoc($result)) {
+					while ($row = mysqli_fetch_assoc($result)) {
 						$all_dugnads[$row['dugnad_id']] = $row;
 					}
 
@@ -1430,10 +1429,10 @@ function do_admin()
 
 				$flyer_template = file_to_array("./layout/flyer_bot.html");
 
-				$query = "SELECT dugnad_id AS id, dugnad_dato AS dato FROM bs_dugnad WHERE dugnad_dato >= (SELECT dugnad_dato FROM bs_dugnad WHERE dugnad_id = ${formdata['show']}) AND dugnad_slettet ='0' ORDER BY dugnad_dato LIMIT 1";
+				$query = "SELECT dugnad_id AS id, dugnad_dato AS dato FROM bs_dugnad WHERE dugnad_dato >= (SELECT dugnad_dato FROM bs_dugnad WHERE dugnad_id = {$formdata['show']}) AND dugnad_slettet ='0' ORDER BY dugnad_dato LIMIT 1";
 
 				$result	= @run_query($query);
-				$denne_dugnaden	= @mysql_fetch_array($result);
+				$denne_dugnaden	= @mysqli_fetch_array($result);
 
 				$week			= date("W", make_unixtime($denne_dugnaden["id"]) );
 
@@ -1475,7 +1474,7 @@ function do_admin()
 				$result = @run_query($query);
 
 
-				while($row = @mysql_fetch_array($result) )
+				while($row = @mysqli_fetch_array($result) )
 				{
 					/* NEW DUGNAD
 					----------------------------------- */
@@ -1809,7 +1808,7 @@ function do_admin()
 							$query = "TRUNCATE TABLE bs_deltager";
 							@run_query($query);
 
-							if(@mysql_errno() == 0)
+							if(@db_errno() == 0)
 							{
 								$query = "TRUNCATE TABLE bs_dugnad";
 								@run_query($query);
@@ -1901,7 +1900,7 @@ function do_admin()
 
 				$result_deltager = run_query($query);
 
-				if(mysql_num_rows($result_deltager))
+				if(mysqli_num_rows($result_deltager))
 				{
 					global $paper;
 					$paper = "_paper";
@@ -1912,7 +1911,7 @@ function do_admin()
 
 					$flyer = file_to_array("./layout/flyer_passord.html");
 
-					while(list($beboer_id) = mysql_fetch_row($result_deltager))
+					while(list($beboer_id) = mysqli_fetch_row($result_deltager))
 					{
 						$query = "SELECT
 
@@ -1936,7 +1935,7 @@ function do_admin()
 						$result = @run_query($query);
 
 						$dugnadsledere = get_dugnadsledere();
-						while($row = @mysql_fetch_array($result))
+						while($row = @mysqli_fetch_array($result))
 						{
 							$undone_dugnads = get_undone_dugnads($row["beboer_id"]);
 
@@ -2020,7 +2019,7 @@ function do_admin()
 
 			$result = @run_query($query);
 
-			if(@mysql_num_rows($result) == 0)
+			if(@mysqli_num_rows($result) == 0)
 			{
 				$feedback .= "<div class='failure'>Det er ikke generert noen dugnadsdager, dette gj&oslash;res fra <a href='?do=admin&admin=Dugnadskalender'>Dugnadskalenderen</a>.</div>";
 			}
@@ -2121,16 +2120,16 @@ function do_admin()
 						$content .= "<p class='success'>Oppdatering av databasen var vellykket.</p>";
 
 						// ADDING SPECIAL STATUS TO ALL THAT HAD IT BEFORE DELETING ALL!
-						if(isset($special_result) && @mysql_num_rows($special_result))
+						if(isset($special_result) && @mysqli_num_rows($special_result))
 						{
 							$first_miss = true;
 
-							while(list($fornavn, $etternavn, $status) = @mysql_fetch_row($special_result))
+							while(list($fornavn, $etternavn, $status) = @mysqli_fetch_row($special_result))
 							{
 								$update_special = "UPDATE bs_beboer SET beboer_spesial = '". $status ."' WHERE beboer_for = '". $fornavn ."' AND beboer_etter = '". $etternavn ."'";
 								@run_query($update_special);
 
-								if(@mysql_affected_rows() == 0)
+								if(@db_affected_rows() == 0)
 								{
 									if($first_miss)
 									{
@@ -2145,12 +2144,12 @@ function do_admin()
 
 							// ADDING DUGNADSLEDERS!!
 							$first_miss = true;
-							while(list($id) = @mysql_fetch_row($dugnad_result))
+							while(list($id) = @mysqli_fetch_row($dugnad_result))
 							{
 								$update_special = "INSERT INTO bs_innstillinger (innstillinger_felt, innstillinger_verdi) VALUES ('dugnadsleder', '". $id ."')";
 								@run_query($update_special);
 
-								if(@mysql_affected_rows() == 0)
+								if(@db_affected_rows() == 0)
 								{
 									if($first_miss)
 									{
@@ -2170,7 +2169,7 @@ function do_admin()
 							/* Adding dugnads to newly added beboere:
 							------------------------------------------------- */
 
-							$txt_lines = split("\*\*", clean_txt($formdata["list"]) );
+							$txt_lines = explode("**", clean_txt($formdata["list"]) );
 							$c = 0;
 
 							$dugnadGiven = 0;
@@ -2179,10 +2178,10 @@ function do_admin()
 							foreach($txt_lines as $line)
 							{
 								$c++;
-								$splits = split("/", $line);
+								$splits = explode("/", $line);
 
 								/* First name and last name is divided with a character different from each column: */
-								list($last, $first) = split(",", $splits[0]);
+								list($last, $first) = explode(",", $splits[0]);
 
 								$first = trim($first);
 								$last  = trim($last);
@@ -2207,7 +2206,7 @@ function do_admin()
 										ORDER BY deltager_notat DESC";
 
 							$result = @run_query($query);
-							list($impValue) = @mysql_fetch_row($result);
+							list($impValue) = @mysqli_fetch_row($result);
 
 							$content .= "<form method='post' action='index.php'>
 											<input type='hidden' name='do' value='admin'>
@@ -2313,9 +2312,9 @@ function get_usage_count($full_message = true)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result))
+	if(@mysqli_num_rows($result))
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 
 		if($full_message)
 		{
@@ -2393,9 +2392,9 @@ function delete_beboer($beboer_id)
 
 		$result = @run_query($query);
 
-		if(@mysql_num_rows($result) )
+		if(@mysqli_num_rows($result) )
 		{
-			$row = @mysql_fetch_array($result);
+			$row = @mysqli_fetch_array($result);
 
 			$deltager_id = $row["id"];
 
@@ -2433,9 +2432,9 @@ function make_unixtime($dugnad_id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		$date_frags = explode("-", substr($row["dugnad_dato"], 0, 10));
 
 		return mktime(0, 0, 0, $date_frags[1], $date_frags[2], $date_frags[0]);
@@ -2476,19 +2475,19 @@ function store_data($txt_data, $split_char = "/", $split_name = ",")
 
 	$c = 0;
 	$success = true;
-	$txt_lines = split("\*\*", clean_txt($txt_data) );
+	$txt_lines = explode("**", clean_txt($txt_data) );
 
 	foreach($txt_lines as $line)
 	{
 		$c++;
-		$splits = split("/", $line);
+		$splits = explode("/", $line);
 
 		if(strcmp($split_char, $split_name) )
 		{
 
 			/* First name and last name is divided with a character different from each column: */
 
-			list($last, $first) = split($split_name, $splits[0]);
+			list($last, $first) = explode($split_name, $splits[0]);
 
 			/* Removed rooms, as Lene has formatted wrong.
 			// $room		= $splits[1];
@@ -2511,9 +2510,9 @@ function store_data($txt_data, $split_char = "/", $split_name = ",")
 			$phone_query = "SELECT rom_id FROM bs_rom WHERE CONCAT(rom_nr, rom_type) = '". trim($splits[1]) ."' LIMIT 1";
 
 			$phone_result = @run_query($phone_query);
-			if(@mysql_num_rows($phone_result))
+			if(@mysqli_num_rows($phone_result))
 			{
-				list($rom_id) = @mysql_fetch_array($phone_result);
+				list($rom_id) = @mysqli_fetch_array($phone_result);
 			}
 			else
 			{
@@ -2526,12 +2525,12 @@ function store_data($txt_data, $split_char = "/", $split_name = ",")
 
 			@run_query($query);
 
-			if(@mysql_errno() > 0)
+			if(@db_errno() > 0)
 			{
 				$success = false;
 			}
 
-			$id = @mysql_insert_id();
+			$id = @db_insert_id();
 		}
 		else
 		{
@@ -2603,9 +2602,9 @@ function get_note_id($id, $note)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return $row["id"];
 	}
 	else
@@ -2630,7 +2629,7 @@ function confirm_note_id($id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 		return true;
 	}
@@ -2658,7 +2657,7 @@ function valid_dugnad_id($id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 		if(!empty($dugnad_is_full[$id]))
 		{
@@ -2686,7 +2685,7 @@ function insert_dugnad($id, $date, $type = 1, $notat = null)
 {
 	if(!empty($date) )
 	{
-		$date_split = split("\.", $date);
+		$date_split = explode(".", $date);
 		$year = date("Y", time());
 
 		$date = get_valid_date_id($date_split[1], $date_split[0], $year);
@@ -2723,7 +2722,7 @@ function insert_dugnad_using_id($beboer_id, $dugnad_id, $type = 1, $notat = null
 
 		@run_query($query);
 
-		return (@mysql_affected_rows() == 1 ? true : false);
+		return (@db_affected_rows() == 1 ? true : false);
 	}
 
 	// Ending here is wrong
@@ -2772,13 +2771,13 @@ function get_saturdays()
 
 						@run_query($query);
 
-						if(@mysql_affected_rows() == 0)
+						if(@db_affected_rows() == 0)
 						{
 							$count++;
 						}
 						else
 						{
-							print @mysql_error();
+							print @db_error();
 						}
 
 					}
@@ -2807,7 +2806,7 @@ function allready_added_dugnad($id, $date)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 		return true;
 	}
@@ -2839,7 +2838,7 @@ function date_exist($month, $day, $year)
 
 			$result = @run_query($query);
 
-			if(@mysql_num_rows($result) == 1)
+			if(@mysqli_num_rows($result) == 1)
 			{
 				return true;
 			}
@@ -2882,7 +2881,7 @@ function date_is_disabled($month, $day, $year)
 
 			$result = @run_query($query);
 
-			if(@mysql_num_rows($result) == 1)
+			if(@mysqli_num_rows($result) == 1)
 			{
 				return true;
 			}
@@ -2925,9 +2924,9 @@ function get_valid_date_id($month, $day, $year)
 
 			$result = @run_query($query);
 
-			if(@mysql_num_rows($result) == 1)
+			if(@mysqli_num_rows($result) == 1)
 			{
-				$row = @mysql_fetch_array($result);
+				$row = @mysqli_fetch_array($result);
 				return $row["dugnad_id"];
 			}
 			else
@@ -2968,9 +2967,9 @@ function get_date_id($month, $day, $year)
 
 			$result = @run_query($query);
 
-			if(@mysql_num_rows($result) == 1)
+			if(@mysqli_num_rows($result) == 1)
 			{
-				$row = @mysql_fetch_array($result);
+				$row = @mysqli_fetch_array($result);
 				return $row["dugnad_id"];
 			}
 			else
@@ -3005,9 +3004,9 @@ function get_person_id($last, $first)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return $row["id"];
 	}
 	else
@@ -3032,7 +3031,7 @@ function find_person($last, $first)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 		return true;
 	}
@@ -3058,9 +3057,9 @@ function get_day_header($day)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 
 		$complex = explode("-", substr($row["dugnad_dato"], 0, 10));
 
@@ -3092,7 +3091,8 @@ function count_dugnad_barn()
 
 	$query = "SELECT
 						DISTINCT beboer_id AS id,
-						dugnad_id AS done_when
+						dugnad_id AS done_when,
+						dugnad_dato
 
 				FROM bs_deltager, bs_beboer, bs_dugnad
 
@@ -3104,10 +3104,10 @@ function count_dugnad_barn()
 				ORDER BY dugnad_dato";
 
 	$result = @run_query($query);
-	if(@mysql_num_rows($result))
+	if(@mysqli_num_rows($result))
 	{
-		$row = @mysql_fetch_array($result);
-		return array(@mysql_num_rows($result), get_day_header($row["done_when"]) );
+		$row = @mysqli_fetch_array($result);
+		return array(@mysqli_num_rows($result), get_day_header($row["done_when"]) );
 	}
 	else
 	{
@@ -3170,17 +3170,17 @@ function show_day($day, $show_expired_days = false, $editable = false, $dugnadsl
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) >= 1)
+	if(@mysqli_num_rows($result) >= 1)
 	{
 		$line_count = 0;
 
 		if(!$supress_header)
 		{
 			$entries .= "<div class='row_header'><h1>". get_day_header($day) ."</h1></div>\n\n";
-			$entries .= "<div class='row_explained_day'><div class='name_narrow'>Beboer (". @mysql_num_rows($result) ." deltagere)</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
+			$entries .= "<div class='row_explained_day'><div class='name_narrow'>Beboer (". @mysqli_num_rows($result) ." deltagere)</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
 		}
 
-		while(list($id, $first, $last, $rom, $type, $tlf, $when, $done, $kind, $note) = @mysql_fetch_row($result) )
+		while(list($id, $first, $last, $rom, $type, $tlf, $when, $done, $kind, $note) = @mysqli_fetch_row($result) )
 		{
 			if($show_expired_days)
 			{
@@ -3235,14 +3235,14 @@ function admin_show_day($day, $use_dayspacer = true)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) >= 1)
+	if(@mysqli_num_rows($result) >= 1)
 	{
 		$line_count = 0;
 
 		$entries .= "<div class='row_header'><h1>". get_day_header($day) ."</h1></div>\n\n";
 		$entries .= "<div class='row_explained_day'><div class='". (strcmp($formdata["admin"], "Dugnadsliste") ? "select_narrow" : "checkbox_narrow") ."'>". (strcmp($formdata["admin"], "Dugnadsliste") ? "Frav&aelig;r" : "Slett") ."</div><div class='name_narrow'>Beboer</div><div class='when_narrow'>Tildelte dugnader</div><div class='note'>Admin</div><div class='spacer'>&nbsp;</div></div>";
 
-		while(list($id, $first, $last, $when, $done, $kind, $note) = @mysql_fetch_row($result) )
+		while(list($id, $first, $last, $when, $done, $kind, $note) = @mysqli_fetch_row($result) )
 		{
 			if(!strcmp($formdata["sorts"], "last"))
 			{
@@ -3299,9 +3299,9 @@ function get_beboer_selectbox($beboer_id, $dugnad_id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		$selected[$row["gjort"]] = "selected='selected' ";
 	}
 
@@ -3359,7 +3359,7 @@ function get_notes($id, $admin = false)
 	}
 
 
-	while($row = @mysql_fetch_array($result) )
+	while($row = @mysqli_fetch_array($result) )
 	{
 		$admin_starta = "<a href='index.php?do=admin". $show . $navigate ."&admin=". $formdata["admin"] ."&sorts=". $sort_by ."&deln=". $row["notat_id"] ."'>";
 		$passord =  "\nPassord: ". $row["beboer_passord"];
@@ -3398,9 +3398,9 @@ function get_beboer_password($beboer_id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) )
+	if(@mysqli_num_rows($result) )
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return $row["beboer_passord"];
 	}
 	else
@@ -3429,7 +3429,7 @@ function get_dugnad_status($max_kids = MAX_KIDS)
 
 	$result = @run_query($query);
 
-	while($row = @mysql_fetch_array($result) )
+	while($row = @mysqli_fetch_array($result) )
 	{
 		if((int) $row["antall"] <= $row['dugnad_min_kids'])
 		{
@@ -3461,7 +3461,7 @@ function unchanged_dugnad($deltager_id, $new_dugnad)
 				LIMIT 1";
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 		return true;
 	}
@@ -3487,7 +3487,7 @@ function init_dugnads($beboer_id, $dugnad_array, $beboer_count_per_dugnad, $forc
 
 		$query = "SELECT dugnad_dato FROM bs_dugnad WHERE dugnad_id = '". $dugnad_id ."' LIMIT 1";
 		$result = @run_query($query);
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 
 		if($added_to == -1 && ($count < $beboer_count_per_dugnad || $force_count == 2) && valid_dugnad_id($dugnad_id) && !allready_added_dugnad($beboer_id, $dugnad_id) )
 		{
@@ -3545,9 +3545,12 @@ function smart_create_dugnad($beboer_id)
 
 	global $empty_dugnads, $full_dugnads;
 
+	$empty_dugnad = false;
 	if(!empty($empty_dugnads) )
 	{
-		$empty_dugnad = each($empty_dugnads);
+		$key = array_key_first($empty_dugnads);
+		$empty_dugnad = array('key' => $key, 'value' => $empty_dugnads[$key]);
+		unset($empty_dugnads[$key]);
 	}
 
 	if(!empty($empty_dugnad["key"]) && valid_dugnad_id($empty_dugnad["key"]) && !allready_added_dugnad($beboer_id, $empty_dugnad["key"]) )
@@ -3667,7 +3670,7 @@ function update_dugnads()
 
 				@run_query($query);
 
-				if(@mysql_errno() == 0)
+				if(@db_errno() == 0)
 				{
 					// Remove dugnads from this person
 					$query = "DELETE FROM bs_deltager WHERE deltager_beboer = '". $splits[1] ."'";
@@ -3685,7 +3688,7 @@ function update_dugnads()
 
 				@run_query($query);
 
-				if(@mysql_errno() == 0)
+				if(@db_errno() == 0)
 				{
 					$feedback .= "<div class='success'>En elefantfeil har blitt rettet opp...</div>";
 				}
@@ -3703,15 +3706,15 @@ function update_dugnads()
 
 				@run_query($query);
 
-				if(@mysql_errno() == 0)
+				if(@db_errno() == 0)
 				{
 					// Remove dugnads from this person
 					$query = "SELECT 1 FROM bs_deltager WHERE deltager_beboer = ". $splits[1] ."";
 					$result_bli = @run_query($query);
 
-					if(@mysql_num_rows($result_bli) > 1)
+					if(@mysqli_num_rows($result_bli) > 1)
 					{
-						$del_dugnads = @mysql_num_rows($result_bli) - (@mysql_num_rows($result_bli) - 1);
+						$del_dugnads = @mysqli_num_rows($result_bli) - (@mysqli_num_rows($result_bli) - 1);
 						// Remove dugnads from this person
 						$query = "DELETE FROM bs_deltager WHERE deltager_beboer = '". $splits[1] ."' LIMIT ". $del_dugnads;
 						@run_query($query);
@@ -3729,7 +3732,7 @@ function update_dugnads()
 
 				@run_query($query);
 
-				if(@mysql_errno() == 0)
+				if(@db_errno() == 0)
 				{
 					$feedback .= "<div class='success'>En beboer blir ikke elefant dette semestere likevel...</div>";
 				}
@@ -3747,7 +3750,7 @@ function update_dugnads()
 
 				@run_query($query);
 
-				if(@mysql_errno() == 0)
+				if(@db_errno() == 0)
 				{
 					// Remove dugnads from this person
 					$query = "DELETE FROM bs_deltager WHERE deltager_beboer = '". $splits[1] ."'";
@@ -3765,7 +3768,7 @@ function update_dugnads()
 
 				@run_query($query);
 
-				if(@mysql_errno() == 0)
+				if(@db_errno() == 0)
 				{
 					$feedback .= "<div class='success'>En er ikke lenger med i Festforeningen...</div>";
 				}
@@ -3782,7 +3785,7 @@ function update_dugnads()
 							WHERE beboer_id = '". $splits[1] ."'";
 				@run_query($query);
 
-				if(@mysql_errno() == 0)
+				if(@db_errno() == 0)
 				{
 
 					// Remove dugnads from this person
@@ -3802,7 +3805,7 @@ function update_dugnads()
 
 				@run_query($query);
 
-				if(@mysql_errno() == 0)
+				if(@db_errno() == 0)
 				{
 					$feedback .= "<div class='success'>En beboer har ikke lenger dugnadsfri...</div>";
 				}
@@ -3831,7 +3834,7 @@ function update_dugnads()
 
 					@run_query($query);
 
-					if(@mysql_errno() != 0)
+					if(@db_errno() != 0)
 					{
 						$feedback .= "<div class='failure'>Problemer med &aring; lagre ny dugnadstype, kontakt dugnadsleder.</div>";
 					}
@@ -3860,9 +3863,9 @@ function update_dugnads()
 
 					@run_query($query);
 
-					if(@mysql_errno() == 0)
+					if(@db_errno() == 0)
 					{
-						if(@mysql_affected_rows() )
+						if(@db_affected_rows() )
 						{
 							$feedback .= "<div class='success'>Dugnadsdatoen ble lagret.</div>";
 						}
@@ -3913,7 +3916,7 @@ function double_booked_dugnad($new_dugnad, $beboer_id, $deltager_id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 		return true;
 	}
@@ -3979,7 +3982,7 @@ function admin_make_select($user_id, $select_count, $date_id, $deltager_id = fal
 
 		$result = @run_query($query);
 
-		while ($row = @mysql_fetch_array($result))
+		while ($row = @mysqli_fetch_array($result))
 		{
 			$count_all = get_dugnad_count();
 			$count = isset($count_all[$row['id']]) ? $count_all[$row['id']] : 0;
@@ -4038,10 +4041,10 @@ function make_last_beboere_select()
 
 	$result = @run_query($query);
 
-	if(mysql_num_rows($result))
+	if(mysqli_num_rows($result))
 	{
 		$content .= "\n<select size='1' name='nyinnkalling'>\n";
-		while($row = @mysql_fetch_array($result) )
+		while($row = @mysqli_fetch_array($result) )
 		{
 			$content .= "<option value='". $row["notat"] ."' >Import ". sprintf("%03d", substr($row["notat"], 3)) ."</option>\n";
 		}
@@ -4083,7 +4086,7 @@ function beboer_make_select($user_id, $select_count, $date_id)
 		SELECT dugnad_id, dugnad_dato, dugnad_type
 		FROM bs_dugnad
 		WHERE dugnad_id = '".$date_id."'");
-	if ($dugnad = mysql_fetch_assoc($result)) {
+	if ($dugnad = mysqli_fetch_assoc($result)) {
 		$prefix = get_dugnad_type_prefix($row);
 	}
 
@@ -4105,9 +4108,9 @@ function beboer_make_select($user_id, $select_count, $date_id)
 
 		$result = @run_query($query);
 
-		if(@mysql_num_rows($result) == 1)
+		if(@mysqli_num_rows($result) == 1)
 		{
-			$row = @mysql_fetch_array($result);
+			$row = @mysqli_fetch_array($result);
 			$content .= "<option value='". $row["id"] ."' selected='selected' >" . $prefix . get_simple_date($row["da_date"], true) ."</option>\n";
 		}
 		else
@@ -4165,7 +4168,7 @@ function beboer_make_select($user_id, $select_count, $date_id)
 
 			$result = @run_query($query);
 
-			while($row = @mysql_fetch_array($result) )
+			while($row = @mysqli_fetch_array($result) )
 			{
 				if(!strcmp($row["id"], $date_id) )
 				{
@@ -4261,7 +4264,7 @@ function get_dugnads($id, $hide_outdated_dugnads = false)
 
 	$result = @run_query($query);
 
-	while($row = @mysql_fetch_array($result) )
+	while($row = @mysqli_fetch_array($result) )
 	{
 		$type = get_dugnad_type_prefix($row);
 
@@ -4371,7 +4374,7 @@ function admin_get_petter_select($beboer_id)
 	$result = @run_query($query);
 	$c = 0;
 
-	while($row = @mysql_fetch_array($result) )
+	while($row = @mysqli_fetch_array($result) )
 	{
 		/* admin_make_select($user_id, $select_count, $petter_code, $deltager_id = false) */
 		$content .= admin_make_select($beboer_id, $c++, $row["dugnad"], $row["id"]);
@@ -4418,7 +4421,7 @@ function admin_get_dugnads($id, $editable = true)
 	$result = @run_query($query);
 	$c = 0;
 
-	while($row = @mysql_fetch_array($result) )
+	while($row = @mysqli_fetch_array($result) )
 	{
 
 		if(!strcmp($row["checked"], "1") )
@@ -4522,7 +4525,7 @@ function change_status($user_id, $date_id = null)
 
 	$result = run_query($query);
 
-	if(mysql_num_rows($result))
+	if(mysqli_num_rows($result))
 	{
 		$select .= "\n<select size='1' name='admin_". $user_id ."_". $date_id ."'>
 
@@ -4577,7 +4580,7 @@ function beboer_get_dugnads($id)
 	$result = @run_query($query);
 	$c = 0;
 
-	while($row = @mysql_fetch_array($result) )
+	while($row = @mysqli_fetch_array($result) )
 	{
 		if(!strcmp($row["status"], "0") )
 		{
@@ -4648,9 +4651,9 @@ function get_undone_dugnads($id)
 
 	$result = @run_query($query);
 	$count = 0;
-	$total_count = @mysql_num_rows($result);
+	$total_count = @mysqli_num_rows($result);
 
-	while($row = @mysql_fetch_array($result) )
+	while($row = @mysqli_fetch_array($result) )
 	{
 		$count++;
 		$content .= $comma . get_dugnad_type_prefix($row) . get_simple_date($row["dugnad_dato"], true);
@@ -4725,9 +4728,9 @@ function show_vedlikehold_person($id, $line_count)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		list($first, $last, $tlf, $rom) = @mysql_fetch_row($result);
+		list($first, $last, $tlf, $rom) = @mysqli_fetch_row($result);
 
 		if($admin)
 		{
@@ -4795,9 +4798,9 @@ function show_person($id, $line_count, $admin = false)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		list($first, $last, $spesial, $tlf, $rom) = @mysql_fetch_row($result);
+		list($first, $last, $spesial, $tlf, $rom) = @mysqli_fetch_row($result);
 
 
 		// ONLY SUPER USER ARE ALLOWED TO DELETE BEBOERE
@@ -4914,9 +4917,9 @@ function show_beboer_ctrlpanel($id)
 	}
 
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		list($first, $last) = @mysql_fetch_row($result);
+		list($first, $last) = @mysqli_fetch_row($result);
 
 		$full_name = get_public_lastname($last, $first, false, true);
 
@@ -5133,7 +5136,7 @@ function output_full_list($admin = false)
 
 			$sort_date = "checked='checked' ";
 
-			$query = "SELECT DISTINCT dugnad_id AS id
+			$query = "SELECT DISTINCT dugnad_id AS id, dugnad_dato
 							FROM bs_dugnad
 							ORDER BY dugnad_dato";
 		}
@@ -5189,7 +5192,7 @@ function output_full_list($admin = false)
 
 		$content .= "<div class='row_explained'><div class='name'>". ($admin == 1 ? "Slett " : null) ."Beboer</div><div class='when_narrow'>Tildelte dugnader</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
 
-		while($row = @mysql_fetch_array($result) )
+		while($row = @mysqli_fetch_array($result) )
 		{
 			$content .= "\n\n". show_person($row["id"], $c++, $admin) ."\n";
 		}
@@ -5200,7 +5203,7 @@ function output_full_list($admin = false)
 		-------------------------------------------------------- */
 		$result = @run_query($query);
 
-		while($row = @mysql_fetch_array($result) )
+		while($row = @mysqli_fetch_array($result) )
 		{
 			if(!$admin)
 			{
@@ -5291,9 +5294,9 @@ function output_vedlikehold_list()
 
 	$content .= "<div class='row_explained'><div class='name_narrow'>Beboerens navn</div><div class='when_narrow'>Dugnadstatus</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
 
-	if(@mysql_num_rows($result) > 0)
+	if(@mysqli_num_rows($result) > 0)
 	{
-		while($row = @mysql_fetch_array($result) )
+		while($row = @mysqli_fetch_array($result) )
 		{
 			$content .= "\n\n". show_vedlikehold_person($row["id"], $c++);
 		}
@@ -5382,7 +5385,7 @@ function output_ryddevakt_list()
 
 	$content .= "<div class='row_explained'><div class='name_narrow'>Beboerens navn</div><div class='when_narrow'>Dugnadstatus</div><div class='note'>Notater</div><div class='spacer'>&nbsp;</div></div>";
 
-	while($row = @mysql_fetch_array($result) )
+	while($row = @mysqli_fetch_array($result) )
 	{
 		$content .= "\n\n". show_vedlikehold_person($row["id"], $c++);
 	}
@@ -5440,7 +5443,7 @@ function get_beboer_select($new_dugnadsleder = false)
 
 	$result = @run_query($query);
 
-	while($row = @mysql_fetch_array($result))
+	while($row = @mysqli_fetch_array($result))
 	{
 		if(!strcmp($formdata["beboer"], $row["id"]) )
 		{
@@ -5484,7 +5487,7 @@ function get_vedlikehold_beboer_select()
 
 	$result = @run_query($query);
 
-	while($row = @mysql_fetch_array($result))
+	while($row = @mysqli_fetch_array($result))
 	{
 		if(isset($formdata["sorts"]) && !strcmp($formdata["sorts"], "first") )
 		{
@@ -5618,7 +5621,7 @@ function valid_login()
 					LIMIT 1";
 		$result = @run_query($query);
 
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 
 		if(isset($formdata["pw"]) && !strcmp($row["beboer_passord"], $formdata["pw"]) )
 		{
@@ -5715,7 +5718,7 @@ function valid_admin_login()
 		$query = "SELECT 1 FROM bs_innstillinger WHERE innstillinger_felt LIKE 'pw_dugnadsleder' LIMIT 1";
 		$result = run_query($query);
 
-		if(mysql_num_rows($result))
+		if(mysqli_num_rows($result))
 		{
 			return false;
 		}
@@ -5766,9 +5769,9 @@ function get_beboer_name($id, $show_full = false)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) )
+	if(@mysqli_num_rows($result) )
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return get_public_lastname($row["beboer_etter"], $row["beboer_for"], false, $show_full);
 	}
 	else
@@ -5799,9 +5802,9 @@ function find_bot($beboer, $dugnad)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1 )
+	if(@mysqli_num_rows($result) == 1 )
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 
 		if(empty($row["bot"]) )
 		{
@@ -5837,9 +5840,9 @@ function get_deltager_id($beboer, $dugnad)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1 )
+	if(@mysqli_num_rows($result) == 1 )
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return $row["id"];
 	}
 	else
@@ -5878,9 +5881,9 @@ function get_dugnad_date($dugnad_id)
 				LIMIT 1";
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1 )
+	if(@mysqli_num_rows($result) == 1 )
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return get_simple_date($row["dato"]);
 	}
 	else
@@ -5939,9 +5942,9 @@ function get_notat($beboer_id, $notat)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1 )
+	if(@mysqli_num_rows($result) == 1 )
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return $row["notat"];
 	}
 	else
@@ -5968,9 +5971,9 @@ function get_next_dugnad_id($offset = 0)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return $row["id"];
 	}
 	else
@@ -6002,7 +6005,7 @@ function new_smart_dugnad($beboer_id, $dugnad_id, $deltager_gjort)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 0 )
+	if(@mysqli_num_rows($result) == 0 )
 	{
 
 		$query = "SELECT DISTINCT dugnad_id AS id, dugnad_dato AS dato
@@ -6014,11 +6017,11 @@ function new_smart_dugnad($beboer_id, $dugnad_id, $deltager_gjort)
 					ORDER BY dugnad_dato";
 
 		$result = @run_query($query);
-		$row_count = @mysql_num_rows($result);
+		$row_count = @mysqli_num_rows($result);
 
 		for($c = 0; $c < $row_count && $go_to_next; $c++)
 		{
-			$row = @mysql_fetch_array($result);
+			$row = @mysqli_fetch_array($result);
 
 			if(empty($dugnad_is_full[$row["id"]]) )
 			{
@@ -6065,9 +6068,9 @@ function remove_dugnad($beboer_id, $dugnad_id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1 )
+	if(@mysqli_num_rows($result) == 1 )
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 
 		$query = "DELETE FROM bs_deltager WHERE deltager_id = '". $row["id"] ."' AND deltager_beboer = '". $beboer_id ."'";
 		@run_query($query);
@@ -6112,7 +6115,7 @@ function new_dugnad($beboer_id, $dugnad_id, $deltager_gjort)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 0 )
+	if(@mysqli_num_rows($result) == 0 )
 	{
 		/* dugnad not found, making new ...
 		---------------------------------------- */
@@ -6245,7 +6248,7 @@ function valid_person_id($beboer, $day)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 		return true;
 	}
@@ -6271,7 +6274,7 @@ function verify_person_id($beboer_id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 		return true;
 	}
@@ -6298,9 +6301,9 @@ function get_straff_count($dugnad_id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) > 0)
+	if(@mysqli_num_rows($result) > 0)
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return $row["straffs"];
 	}
 	else
@@ -6325,7 +6328,7 @@ function get_bot_count()
 					AND bot_registrert = 0";
 
 	$result = @run_query($query);
-	$annuleringer = @mysql_num_rows($result);
+	$annuleringer = @mysqli_num_rows($result);
 
 	$query = "SELECT 1
 				FROM bs_bot, bs_deltager, bs_dugnad
@@ -6336,7 +6339,7 @@ function get_bot_count()
 
 	$result = @run_query($query);
 
-	return (@mysql_num_rows($result) + $annuleringer);
+	return (@mysqli_num_rows($result) + $annuleringer);
 }
 
 
@@ -6356,10 +6359,10 @@ function get_room_id($room_nr, $room_type)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return $row["rom_id"];
 	}
 	else
@@ -6385,9 +6388,9 @@ function get_beboer_room_id($beboer_id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return $row["rom_id"];
 	}
 	else
@@ -6412,7 +6415,7 @@ function confirm_room_id($room_id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 		return true;
 	}
@@ -6439,7 +6442,7 @@ function insert_room($room_nr, $room_type)
 					VALUES ('". $room_nr ."', '". $room_type ."')";
 
 		@run_query($query);
-		return @mysql_insert_id();
+		return @db_insert_id();
 	}
 	else
 	{
@@ -6501,7 +6504,7 @@ function get_room_select($beboer_id)
 
 	$select = "<select name='room'><option value='-1'>Velg</option>\n";
 
-	while($row = @mysql_fetch_array($result) )
+	while($row = @mysqli_fetch_array($result) )
 	{
 		if(!strcmp($row["rom_id"], $the_rom) )
 		{
@@ -6535,9 +6538,9 @@ function status_of_dugnad($dugnad_id)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result))
+	if(@mysqli_num_rows($result))
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		return $row["done"];
 	}
 	else
@@ -6568,7 +6571,7 @@ function get_innstilling($felt, $value = null)
 	if(isset($value))
 	{
 		// Return true/false:
-		if(@mysql_num_rows($result) >= 1)
+		if(@mysqli_num_rows($result) >= 1)
 		{
 			// One or more innstillings were found, return true
 			return true;
@@ -6582,7 +6585,7 @@ function get_innstilling($felt, $value = null)
 	else
 	{
 		// Return value
-		list($value) = @mysql_fetch_row($result);
+		list($value) = @mysqli_fetch_row($result);
 		return $value;
 	}
 }
@@ -6603,7 +6606,7 @@ function set_innstilling($felt, $value)
 					WHERE innstillinger_felt = '". $felt ."'";
 
 		@run_query($query);
-		return @mysql_errno();
+		return @db_errno();
 }
 
 
@@ -6640,7 +6643,7 @@ function set_password($new_pw, $field)
 
 	$result = get_result("pw_". $field);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
 		/* Password is set - update value: */
 
@@ -6649,7 +6652,7 @@ function set_password($new_pw, $field)
 					WHERE innstillinger_felt = 'pw_". $field ."'";
 
 		@run_query($query);
-		return @mysql_errno();
+		return @db_errno();
 	}
 	else
 	{
@@ -6659,7 +6662,7 @@ function set_password($new_pw, $field)
 					VALUES ('pw_". $field ."', '". $new_pw ."')";
 
 		@run_query($query);
-		return @mysql_errno();
+		return @db_errno();
 	}
 }
 
@@ -6674,7 +6677,7 @@ function delete_dugnadsleder($beboer_id)
 {
 	$result = get_result("dugnadsleder", $beboer_id);
 
-	if(@mysql_num_rows($result) >= 1)
+	if(@mysqli_num_rows($result) >= 1)
 	{
 		$query = "DELETE FROM bs_innstillinger
 					WHERE innstillinger_felt = 'dugnadsleder'
@@ -6683,7 +6686,7 @@ function delete_dugnadsleder($beboer_id)
 		@run_query($query);
 	}
 
-	return @mysql_errno();
+	return @db_errno();
 }
 
 
@@ -6699,7 +6702,7 @@ function set_dugnadsleder($beboer_id)
 
 	$result = get_result("dugnadsleder", $beboer_id);
 
-	if(@mysql_num_rows($result) == 0)
+	if(@mysqli_num_rows($result) == 0)
 	{
 		/* Adding new dugnadsleder: */
 
@@ -6707,7 +6710,7 @@ function set_dugnadsleder($beboer_id)
 					VALUES ('dugnadsleder', '". $beboer_id ."')";
 
 		@run_query($query);
-		return @mysql_errno();
+		return @db_errno();
 	}
 }
 
@@ -6731,9 +6734,9 @@ function get_beboerid_name($id, $fullname = true, $lastname = false)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 
 		if($lastname)
 		{
@@ -6754,7 +6757,7 @@ function get_beboerid_name($id, $fullname = true, $lastname = false)
 
 		@run_query($query);
 
-		if(@mysql_errno() == 0)
+		if(@db_errno() == 0)
 		{
 			$return .= "Dugnadslederen slettes. ";
 		}
@@ -6796,9 +6799,9 @@ function get_special_status_image($id, $line_count, $show_ff_details = false)
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 1)
+	if(@mysqli_num_rows($result) == 1)
 	{
-		$row = @mysql_fetch_array($result);
+		$row = @mysqli_fetch_array($result);
 		$dugnads = "";
 
 		/* Elefant business ... */
@@ -6877,7 +6880,7 @@ function update_blivende_elephants()
 			$query = "SELECT beboer_id FROM bs_beboer, bs_deltager WHERE beboer_spesial = '8' AND deltager_beboer = beboer_id";
 			$result = @run_query($query);
 
-			while(list($beboer_id) = @mysql_fetch_row($result) )
+			while(list($beboer_id) = @mysqli_fetch_row($result) )
 			{
 				// Remove dugnads from this person
 				$query = "DELETE FROM bs_deltager WHERE deltager_beboer = '". $beboer_id ."'";
@@ -6899,7 +6902,7 @@ function update_blivende_elephants()
 			$query = "SELECT beboer_id FROM bs_beboer, bs_deltager WHERE beboer_spesial = '8' AND deltager_beboer = beboer_id";
 			$result = @run_query($query);
 
-			while(list($beboer_id) = @mysql_fetch_row($result) )
+			while(list($beboer_id) = @mysqli_fetch_row($result) )
 			{
 				// Remove dugnads from this person
 				$query = "DELETE FROM bs_deltager WHERE deltager_beboer = '". $beboer_id ."'";
@@ -6937,9 +6940,9 @@ function get_dugnadsledere()
 
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result))
+	if(@mysqli_num_rows($result))
 	{
-		while($row = @mysql_fetch_array($result) )
+		while($row = @mysqli_fetch_array($result) )
 		{
 			$tlf = "";
 			if ($row['beboer_for'] == "Karl-Martin" && $row['beboer_etter'] == "Svastuen") $tlf = " - 971 5 9 266";
@@ -7016,7 +7019,7 @@ function get_beboer_count($dugnad_id)
 				GROUP BY dugnad_id";
 
 	$result = @run_query($query);
-	list($dugnad_id, $antall_deltagere) = @mysql_fetch_row($result);
+	list($dugnad_id, $antall_deltagere) = @mysqli_fetch_row($result);
 
 	return $antall_deltagere;
 }
@@ -7048,7 +7051,7 @@ function forceNewDugnads($beboer_id, $forceCount, $perDugnad, $note = null)
 	// Going through all dugnads; grouped by id with a count of the number
 	// of beboers added..
 
-	while(list($dugnad_id, $antall_deltagere) = @mysql_fetch_row($result))
+	while(list($dugnad_id, $antall_deltagere) = @mysqli_fetch_row($result))
 	{
 		// We keep adding to this date as long as the added count of beboere
 		// is less than the required amount..
@@ -7111,7 +7114,7 @@ function get_buatelefon()
 	$query = "SELECT innstillinger_verdi FROM bs_innstillinger WHERE innstillinger_felt = 'buatelefon' LIMIT 1";
 	$result = @run_query($query);
 
-	list($buatelefon) = @mysql_fetch_row($result);
+	list($buatelefon) = @mysqli_fetch_row($result);
 	return $buatelefon;
 }
 
@@ -7132,8 +7135,8 @@ function update_buatelefon($new_buatelefon)
 	$query = "UPDATE bs_innstillinger SET innstillinger_verdi = '". $new_buatelefon ."' WHERE innstillinger_felt = 'buatelefon'";
 	@run_query($query);
 
-	print @mysql_error();
-	return @mysql_affected_rows();
+	print @db_error();
+	return @db_affected_rows();
 }
 
 
@@ -7160,9 +7163,9 @@ function get_all_barn()
 				ORDER BY dugnad_dato";
 
 	$result = @run_query($query);
-	if(@mysql_num_rows($result))
+	if(@mysqli_num_rows($result))
 	{
-		list($dugnad_id) = @mysql_fetch_row($result);
+		list($dugnad_id) = @mysqli_fetch_row($result);
 
 		$show_expired_days = false;
 		$editable = false;
@@ -7226,7 +7229,7 @@ function database_health()
 	$query = "SELECT 1 FROM bs_rom LIMIT 1";
 	$result = @run_query($query);
 
-	if(@mysql_num_rows($result) == 0)
+	if(@mysqli_num_rows($result) == 0)
 	{
 
 		return "<p>&nbsp;</p>\n\t\t\t\t\t<div class='bl_red'>
@@ -7287,7 +7290,7 @@ function truncateAllowed($future_check = false)
 
 		$result = run_query($query);
 
-		if(mysql_num_rows($result) == 0)
+		if(mysqli_num_rows($result) == 0)
 		{
 			// If no valid dugnads because we have only
 			// added beboere, but no dugnads yet
@@ -7338,7 +7341,7 @@ function truncateAllowed($future_check = false)
 
 		$result = @run_query($query);
 
-		if(mysql_num_rows($result))
+		if(mysqli_num_rows($result))
 		{
 			return false;
 		}
@@ -7354,14 +7357,32 @@ function truncateAllowed($future_check = false)
 
 function run_query($query)
 {
-	$result = mysql_query($query);
+	global $link;
+	$result = mysqli_query($link, $query);
 	if (!$result && DEVELOPER_MODE)
 	{
-		die("MySQL spørring feilet: (#".mysql_errno().") ".mysql_error()." -- Spørringen var: ".$query);
+		die("MySQL spørring feilet: (#".mysqli_errno($link).") ".mysqli_error($link)." -- Spørringen var: ".$query);
 	}
 
 	$GLOBALS['queries'][] = $query;
 	return $result;
+}
+
+function db_errno() {
+	global $link;
+	return mysqli_errno($link);
+}
+function db_error() {
+	global $link;
+	return mysqli_error($link);
+}
+function db_affected_rows() {
+	global $link;
+	return mysqli_affected_rows($link);
+}
+function db_insert_id() {
+	global $link;
+	return mysqli_insert_id($link);
 }
 
 
@@ -7378,7 +7399,7 @@ function get_dugnad_count()
 					GROUP BY deltager_dugnad";
 
 		$result = @run_query($query);
-		while ($row = @mysql_fetch_array($result)) {
+		while ($row = @mysqli_fetch_array($result)) {
 			$list[$row['id']] = $row['antall'];
 		}
 	}
