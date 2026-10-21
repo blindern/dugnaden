@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.3.36-apache
 
 ENV SIMPLESAMLPHP_VERSION=2.4.4
 
